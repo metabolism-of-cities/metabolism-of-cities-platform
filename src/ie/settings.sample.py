@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from django.utils.translation import gettext_lazy as _
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -141,10 +142,10 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
 
     #'django.middleware.cache.UpdateCacheMiddleware',
-    #'django.middleware.common.CommonMiddleware',
     #'django.middleware.cache.FetchFromCacheMiddleware',
 
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -280,3 +281,10 @@ CACHES = {
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 #SESSION_COOKIE_DOMAIN=".metabolismofcities.org"
+LOCALE_PATHS = [
+    '/src/locale',
+]
+LANGUAGES = [
+    ("en-us", _("English")),
+    ("fr", _("French")),
+]

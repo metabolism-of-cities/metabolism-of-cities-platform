@@ -2,20 +2,21 @@
 
 {% block content %}
 
-  <h1 class="mb-0">{% block title %}Our team{% endblock %}</h1>
+<div class="manage_users">
+  <h1 class="mb-0">{% block title %}{{ _("Our team") }}{% endblock %}</h1>
   <a href="../" class="btn btn-primary-basic mb-4">
     <i class="fal fa-angle-left"></i>
-    Back to control panel
+    {{ _("Back to control panel") }}
   </a>
 
   <table class="table table-striped datatable">
     <thead>
       <tr>
-        <th>User</th>
-        <th>Type</th>
-        <th>Since</th>
+        <th>{{ _("User") }}</th>
+        <th>{{ _("Type") }}</th>
+        <th>{{ _("Since") }}</th>
         {% if show_child %}
-          <th>Signed up to</th>
+          <th>{{ _("Signed up to") }}</th>
         {% endif %}
       </tr>
     </thead>
@@ -41,14 +42,15 @@
     </tbody>
   </table>
 
-  <a class="mt-4 btn btn-default-outline" href="create/?next={{ request.get_full_path|urlencode }}"><i class="fal fa-plus"></i> Add existing user to the list</a>
-  <a class="mt-4 btn btn-default-outline" href="new/?next={{ request.get_full_path|urlencode }}"><i class="fal fa-plus"></i> Add external person to list</a>
+  <a class="mt-4 btn btn-default-outline add_existing" href="create/?next={{ request.get_full_path|urlencode }}"><i class="fal fa-plus"></i> {{ _("Add existing users to the list") }}</a>
+  <a class="mt-4 btn btn-default-outline add_new" href="new/?next={{ request.get_full_path|urlencode }}"><i class="fal fa-plus"></i> {{ _("Add external person to the list") }}</a>
 
   <div>
     <a href="../" class="btn btn-primary-basic mt-4">
       <i class="fal fa-angle-left"></i>
-      Back to control panel
+      {{ _("Back to control panel") }}
     </a>
   </div>
+</div>
 
 {% endblock %}

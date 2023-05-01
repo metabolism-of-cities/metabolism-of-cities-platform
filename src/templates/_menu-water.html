@@ -1,37 +1,52 @@
+{% load static %}
 <li class="nav-item">
-  <a class="nav-link {% if section == "homepage" %}active{% endif %}" href="{% url "water:index" %}"> Accueil</a>
+  <a class="nav-link {% if section == "homepage" %}active{% endif %}" href="{% url "water:index" %}"> {{ _("Home") }}</a>
 </li>
 <li class="nav-item">
-  <a class="nav-link {% if section == "energy" or section == "water" or section == "emissions" %}active{% endif %}" href="{% url "water:water" %}?region=1"> Metabolisme Eau d'Azur</a>
+  <a class="nav-link {% if section == "energy" or section == "water" or section == "emissions" %}active{% endif %}" href="{% url "water:water" %}?region=1"> {{ _("Eau d'Azur Metabolism") }}</a>
 </li>
 <li class="nav-item">
-  <a class="nav-link {% if section == "about" %}active{% endif %}" href="{% url "water:about" %}"> A propos</a>
+  <a class="nav-link {% if section == "about" %}active{% endif %}" href="{% url "water:about" %}"> {{ _("About") }}</a>
 </li>
 <li class="nav-item">
-  <a class="nav-link {% if section == "contact" %}active{% endif %}" href="{% url "water:contact" %}"> Contact</a>
+  <a class="nav-link {% if section == "contact" %}active{% endif %}" href="{% url "water:contact" %}"> {{ _("Contact") }}</a>
 </li>
 {% if user.is_authenticated %}
 <li class="nav-item">
-  <a class="nav-link {% if section == "login" %}active{% endif %}" href="{% url "water:logout" %}"> Déconnexion</a>
+  <a class="nav-link {% if section == "login" %}active{% endif %}" href="{% url "water:logout" %}"> {{ _("Log out") }}</a>
 </li>
 {% endif %}
 {% if not user.is_authenticated %}
 <li class="nav-item">
-  <a class="nav-link {% if section == "login" %}active{% endif %}" href="{% url "water:water_login" %}"> Se connecter</a>
+  <a class="nav-link {% if section == "login" %}active{% endif %}" href="{% url "water:water_login" %}"> {{ _("Log in") }}</a>
 </li>
 {% elif "curator" in PERMISSIONS or request.user.is_staff or "admin" in PERMISSIONS %}
 <li class="nav-item ml-auto" style="padding:.5rem 1rem">
   <a class=" {% if section == "controlpanel" %}badge badge-secondary{% endif %}" href="{% url "water:controlpanel" %}"
   style="font-size:100%;font-weight:normal;.5rem 1rem">
     <i class="fa fa-cog"></i>
-    Control panel
+    {{ _("Control panel") }}
   </a>
 </li>
 
+{% endif %}
 <li class="nav-item" style="padding:.5rem 1rem">
   <a style="font-size:100%;font-weight:normal" href="{% url "water:index" %}">
-    <i class="fa fa-user"></i>
-    {{ request.user.people }}
   </a>
 </li>
-{% endif %}
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="view-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    {% if request.language == "en" %}
+      <img src="{% static "img/flag_en.png" %}" alt="" style="height:22px" />
+    {% else %}
+      <img src="{% static "img/flag_fr.png" %}" alt="" style="height:22px" />
+    {% endif %}
+  </a>
+  <div class="dropdown-menu" aria-labelledby="view-dropdown">
+
+    <a class="dropdown-item" href="{% url "water:language" %}?lan=fr&amp;next={{ request.get_full_path }}">{{ _("French") }}</a>
+    <a class="dropdown-item" href="{% url "water:language" %}?lan=en&amp;next={{ request.get_full_path }}">{{ _("English") }}</a>
+
+  </div>
+</li>
+

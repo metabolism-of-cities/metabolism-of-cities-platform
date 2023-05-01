@@ -9,6 +9,7 @@ But that had to be rewritten because it was for a very old Django version
 
 from django.conf import settings
 from django.urls import set_urlconf
+from django.utils import translation
 
 class MultiHostMiddleware:
     def __init__(self, get_response):
@@ -48,6 +49,15 @@ class MultiHostMiddleware:
         except:
             pass 
 
+        # The "water" project defaults to French; other sites are in English
+        if "django_language" in request.COOKIES:
+            language_code = request.COOKIES.get("django_language")
+        elif project == 1011035:
+            language_code = "fr"
+        else:
+            language_code = "en"
+        translation.activate(language_code)
+        request.language = language_code
         request.project = project
         response = self.get_response(request)
 

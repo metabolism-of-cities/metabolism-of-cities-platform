@@ -4,7 +4,7 @@
 
 <div class="text-center mt-5">
 
-<h1>Bienvenue sur le site du Métabolisme des Services de l’Eau et de l’Assainissement de la Métropole Nice Côte d’Azur</h1>
+<h1>{{ _("Welcome to the metabolism website of the water and wastewater services of Nice Côte d'Azur") }}</h1>
 
 <img src="/media/water/homepage.webp" class="img-thumbnail" alt="" />
 
@@ -12,7 +12,9 @@
 <a href="{% url "water:water" %}?region=1">
   <img src="/media/water/thumbnail.png" alt="" />
 </a>
-<a class="btn btn-primary" href="{% url "water:water" %}?region=1">Cliquez ici pour accéder au Métabolisme Eau d’Azur</a>
+<a class="btn btn-primary" href="{% url "water:water" %}?region=1">
+{{ _("Click here to explore the metabolism of Eau d'Azur") }}
+</a>
 </div>
 
 </div>

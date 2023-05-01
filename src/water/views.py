@@ -22,12 +22,13 @@ from django.core.files.base import ContentFile
 
 # For the translations
 from django.utils.translation import gettext_lazy as _
+from django.utils import translation
 
 DIAGRAM_ID = 1013292
 
 def index(request):
     context = {
-        "title": "Accueil",
+        "title": _("Homepage"),
         "section": "homepage",
     }
     return render(request, "water/index.html", context)
@@ -209,10 +210,10 @@ def water_login(request):
 
         if user is not None:
             login(request, user)
-            messages.success(request, "You are logged in.")
+            messages.success(request, _("You are logged in."))
             return redirect(redirect_url)
         else:
-            messages.error(request, "We could not authenticate you, please try again.")
+            messages.error(request, _("We could not authenticate you, please try again."))
 
     context = {
         "project": project,
@@ -388,7 +389,7 @@ def controlpanel_flows(request):
             try:
                 part_of_flow = WaterSystemFlow.objects.get(category_id=request.POST["type"], level=1, identifier=request.POST["part_of_flow"])
             except:
-                messages.warning(request, "We could not find the level-1 flow that you entered so we left this field blank.")
+                messages.warning(request, _("We could not find the level-1 flow that you entered so we left this field blank."))
         info.part_of_flow = part_of_flow
         info.save()
         messages.success(request, _("Information was saved"))
@@ -622,6 +623,19 @@ def controlpanel_file(request, id):
         "category": category,
     }
     return render(request, "water/controlpanel/file.html", context)
+
+def language(request):
+    if "next" in request.GET and request.GET["next"]:
+        response = redirect(request.GET["next"])
+    else:
+        response = redirect("water:index")
+    if request.GET.get("lan") == "en":
+        language = "en"
+        messages.warning(request, "Please note that not everything on our website is available in English, but most of the navigation and key filters are available in English.")
+    else:
+        language = "fr"
+    response.set_cookie("django_language", language, 60*60*25*365)
+    return response
 
 # ARCHIVED CODE
 # The code below was created in 2022 and it was used to take the meter-based

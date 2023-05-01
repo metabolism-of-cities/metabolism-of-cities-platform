@@ -3,7 +3,9 @@
 
 {% block content %}
 
-  <h1 class="mb-4">{{ title }}</h1>
+<h1 class="mb-4">{{ title }}</h1>
+
+<div class="manage_user">
 
   <div class="border rounded bg-light p-3 mb-2">
     Use this form to add an external person's details to the website.
@@ -13,7 +15,7 @@
   </div>
 
   {% if info %}
-    <a class="btn btn-primary mb-4" href="{{ info.get_absolute_url }}">
+    <a class="btn btn-primary mb-4 view_user" href="{{ info.get_absolute_url }}">
       <i class="fal fa-fw fa-user"></i> View user profile
     </a>
   {% endif %}
@@ -22,20 +24,20 @@
     {% bootstrap_form form layout="horizontal" %}
 
     {% if relationships %}
-      <div class="form-group row">
+      <div class="form-group row hide-water">
         <label class="col-sm-3 col-form-label">Relationship</label>
         <div class="col-sm-9">
           <select class="custom-select" name="relationship" required>
             <option value=""></option>
             {% for each in relationships %}
-              <option {% if each == info.relationship %}selected{% endif %} value="{{ each.id }}">{{ each }}</option>
+              <option {% if each == info.relationship or PROJECT.slug == "water" and not info and each.id == 21 %}selected{% endif %} value="{{ each.id }}">{{ each }}</option>
             {% endfor %}
           </select>
         </div>
       </div>
     {% endif %}
 
-    <div class="form-group row">
+    <div class="form-group row hide-water">
     <label class="col-md-3 col-form-label" for="id_type">Formatting</label>
     <div class="col-md-9">
     <select name="format" class="form-control" id="id_type">
@@ -46,7 +48,7 @@
     </div>
     </div>
 
-    <div class="form-group markdown-textarea">
+    <div class="form-group markdown-textarea hide-water">
       {% include "_markdown.html" %}
       <textarea class="form-control mb-4" id="text" rows="30" name="description">{{ info.description|default_if_none:"" }}</textarea>
     </div>
@@ -56,7 +58,7 @@
         <div class="col-12">
           <button type="submit" class="btn btn-success">
             <i class="fa fa-fw fa-save"></i>
-            Save
+            {{ _("Save") }}
          </button>
         </div>
       </div>
@@ -66,7 +68,8 @@
 
   <a href="javascript:history.back()" class="btn btn-primary-basic mt-4">
     <i class="fal fa-angle-left"></i>
-    Back
+    {{ _("Back") }}
   </a>
+</div>
 
 {% endblock %}

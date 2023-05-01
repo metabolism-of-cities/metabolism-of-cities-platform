@@ -1,0 +1,6 @@
+sudo docker exec -it moc_web django-admin makemessages --ignore media/* -l fr_FR
+echo "A number of .po files were created in /locales. In order to update translations for a certain language, simply open the .po files and edit them. Once this is done, run this command to generate .mo files and activate them:"
+
+echo "sudo docker exec -it moc_web django-admin compilemessages"
+
+echo "For more information, see: https://docs.djangoproject.com/en/4.2/topics/i18n/translation/#localization-how-to-create-language-files"

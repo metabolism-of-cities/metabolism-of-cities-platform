@@ -21,7 +21,7 @@
       <input class="form-control" name="name" required value="{{ info.name }}">
     </div>
     <div class="form-actions">
-      <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Save</button>
+      <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> {{ _("Save") }}</button>
     </div>
     {% csrf_token %}
   </form>

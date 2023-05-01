@@ -2,59 +2,52 @@
 
 {% block content %}
 
-  <h2>{% block title %}Sankey diagram data{% endblock %}</h2>
+  <h2>{% block title %}{{ _("Sankey diagram data") }}{% endblock %}</h2>
 
   <div class="alert alert-info mt-2">
-  <p><strong>Instructions:</strong></p>
+  <p><strong>{{ _("Instructions:") }}</strong></p>
   <ul>
     <li>
-      If you are uploading data for a single year, then leave the 'Mois' column empty.
-      Fill out the year in the 'An' column and then fill out the values for each of the 
-      territories.
+      {{ _("Download the template file. Use the sample data to review the format, and use this same format for the new data you want to upload.") }}
     </li>
     <li>
-      If you are uploading data for a single month, then enter the month number (January = 1, 
-      December = 12) under 'Mois', and enter the year under 'An'. Then fill out the values for 
-      each of the territories.
+      {{ _("Delete all rows that are not relevant for your dataset. Enter 'Unknown' if you have no data for a particular cell but you want the flow to appear on the sankey diagram.") }}
     </li>
     <li>
-      If you are uploading data for multiple months, then start with the steps above to fill
-      out the first month, and then copy all the rows for each of the flows and paste them 
-      below the existing rows. Change the month number and fill out the values for each
-      of the territories. You can repeat this as many times as you want.
+      {{ _("You can add rows for as many months or years as you want to upload. You can also duplicate the sheet if you want to separate data of different years into multiple sheets.") }}
     </li>
     <li>
-      Please fill out data using the following units:
+      {{ _("Please fill out data using the following units:") }}
       <ul>
-        <li>Water: km3</li>
-        <li>Energy: MWh</li>
-        <li>Emissions: TCO2EQ</li>
+        <li>{{ _("Water") }}: km3</li>
+        <li>{{ _("Energy") }}: MWh</li>
+        <li>{{ _("Emissions") }}: TCO2EQ</li>
       </ul>
     </li>
   </ul>
   </div>
 
   <section class="mt-5">
-    <h3>Download templates</h3>
+    <h3>{{ _("Download templates") }}</h3>
     <p>
-      You can use the templates below to upload new data. 
+      {{ _("You can use the templates below to upload new data.") }}
     </p>
     <a href="/media/water/templates/water.xlsx" class="btn btn-secondary" target="_blank">
       <i class="fa fa-download"></i>
-      Water data template
+      {{ _("Ẁater data template") }}
     </a>
     <a href="/media/water/templates/energy.xlsx" class="btn btn-secondary" target="_blank">
       <i class="fa fa-download"></i>
-      Energy data template
+      {{ _("Energy data template") }}
     </a>
     <a href="/media/water/templates/emissions.xlsx" class="btn btn-secondary" target="_blank">
       <i class="fa fa-download"></i>
-      Emissions data template
+      {{ _("Emissions data template") }}
     </a>
   </section>
 
   <section>
-    <h3>Upload data</h3>
+    <h3>{{ _("Upload data") }}</h3>
     <form method="post" enctype="multipart/form-data">
       
       <div class="mb-3">

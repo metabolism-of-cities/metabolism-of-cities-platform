@@ -87,3 +87,8 @@ svg {
 .unknown-flow-content {
   display: none;
 }
+.top-message-box {
+  z-index: 99999;
+  position: relative;
+  text-align: center;
+}

@@ -45,6 +45,7 @@ import pytz
 
 from functools import wraps
 import json
+from django.utils.translation import gettext_lazy as _
 
 # Social media imports
 import twitter
@@ -1117,12 +1118,21 @@ def controlpanel_events(request):
 @login_required
 def controlpanel_people_form(request, id=None):
 
-    project = request.project
-    if not has_permission(request, project, ["curator", "admin", "publisher"]):
+    project = get_project(request)
+    if not has_permission(request, project.id, ["curator", "admin", "publisher"]):
         unauthorized_access(request)
-
     info = None
-    ModelForm = modelform_factory(People, fields=("name", "affiliation", "email", "website", "twitter", "google_scholar", "orcid", "researchgate", "linkedin", "image", "research_interests", "is_deleted"))
+    labels = None
+    if project.slug == "water":
+        fields = ["name", "email"]
+        labels = {
+            "name": _("Name"),
+            "email": _("E-mail"),
+        }
+    else:
+        fields = ["name", "affiliation", "email", "website", "twitter", "google_scholar", "orcid", "researchgate", "linkedin", "image", "research_interests", "is_deleted"]
+
+    ModelForm = modelform_factory(People, fields=fields, labels=labels)
     if id:
         info = get_object_or_404(People, pk=id)
     form = ModelForm(request.POST or None, request.FILES or None, instance=info)
@@ -1145,7 +1155,7 @@ def controlpanel_people_form(request, id=None):
                 relationship.relationship_id = request.POST.get("relationship")
                 relationship.save()
 
-            messages.success(request, "Information was saved.")
+            messages.success(request, _("Information was saved."))
             if "next" in request.GET:
                 return redirect(request.GET.get("next"))
             else:
@@ -1155,9 +1165,9 @@ def controlpanel_people_form(request, id=None):
 
     context = {
         "form": form,
-        "relationships": Relationship.objects.filter(pk__in=[7,6,31]) if not id else None,
+        "relationships": Relationship.objects.filter(pk__in=[7,6,31,21]) if not id else None,
         "info": info,
-        "title": info.name if info else "Add person",
+        "title": info.name if info else _("Add person"),
         "load_markdown": True,
     }
     return render(request, "controlpanel/people.form.html", context)

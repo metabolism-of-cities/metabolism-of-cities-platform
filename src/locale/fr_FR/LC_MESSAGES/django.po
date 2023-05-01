@@ -1,0 +1,650 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-05-01 16:26+0000\n"
+"PO-Revision-Date: 2023-05-01 18:26+0200\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.2.2\n"
+
+#: core/models.py:3736 templates/water/controlpanel/upload.html:54
+#: templates/water/controlpanel/upload.html:66
+msgid "File"
+msgstr "Fichier"
+
+#: core/models.py:3761
+msgid "Month"
+msgstr "Mois"
+
+#: core/models.py:3762
+msgid "Year"
+msgstr "Année"
+
+#: core/views.py:1129 templates/water/controlpanel/flows.html:89
+#: templates/water/controlpanel/nodes.html:53
+msgid "Name"
+msgstr "Nom"
+
+#: core/views.py:1130
+msgid "E-mail"
+msgstr "E-mail"
+
+#: core/views.py:1158
+msgid "Information was saved."
+msgstr "Les informations ont été enregistrées."
+
+#: core/views.py:1170
+msgid "Add person"
+msgstr "Ajouter une personne"
+
+#: ie/settings.py:343 ie/settings.sample.py:288 templates/_menu-water.html:48
+msgid "English"
+msgstr "Anglaise"
+
+#: ie/settings.py:344 ie/settings.sample.py:289 templates/_menu-water.html:47
+msgid "French"
+msgstr "Français"
+
+#: templates/_menu-water.html:3
+msgid "Home"
+msgstr "Accueil"
+
+#: templates/_menu-water.html:6
+msgid "Eau d'Azur Metabolism"
+msgstr "Metabolisme Eau d'Azur"
+
+#: templates/_menu-water.html:9
+msgid "About"
+msgstr "A propos"
+
+#: templates/_menu-water.html:12
+msgid "Contact"
+msgstr "Contact"
+
+#: templates/_menu-water.html:16
+msgid "Log out"
+msgstr "Déconnexion"
+
+#: templates/_menu-water.html:21
+msgid "Log in"
+msgstr "Se connecter"
+
+#: templates/_menu-water.html:28 templates/water/controlpanel/index.html:5
+msgid "Control panel"
+msgstr "Commande"
+
+#: templates/_sidebar-water.html:4 templates/water/controlpanel/flows.html:33
+#: templates/water/sankey.html:52
+msgid "Flow"
+msgstr "Flux"
+
+#: templates/_sidebar-water.html:7 templates/water/controlpanel/upload.html:22
+msgid "Water"
+msgstr "Eaux"
+
+#: templates/_sidebar-water.html:10 templates/water/controlpanel/upload.html:23
+msgid "Energy"
+msgstr "Energies"
+
+#: templates/_sidebar-water.html:13
+msgid "GHG Emissions"
+msgstr "Gaz à Effet de Serre"
+
+#: templates/_sidebar-water.html:16
+msgid "Materials"
+msgstr "Matières et Matériaux"
+
+#: templates/_sidebar-water.html:19
+msgid "Material stock"
+msgstr "Stocks"
+
+#: templates/_sidebar-water.html:25
+msgid "Territory"
+msgstr "Territoire"
+
+#: templates/_sidebar-water.html:42 templates/water/sankey.html:54
+msgid "Period"
+msgstr "Période"
+
+#: templates/_sidebar-water.html:95
+msgid "Change"
+msgstr "Changer"
+
+#: templates/controlpanel/people.form.html:61
+#: templates/water/controlpanel/flows.html:113
+#: templates/water/controlpanel/nodes.html:82
+#: templates/water/controlpanel/spaces.html:24
+#: templates/water/controlpanel/timeframes.html:43
+msgid "Save"
+msgstr "Sauvegarder"
+
+#: templates/controlpanel/people.form.html:71
+msgid "Back"
+msgstr "Retour"
+
+#: templates/controlpanel/users.html:6
+msgid "Our team"
+msgstr "Notre équipe"
+
+#: templates/controlpanel/users.html:9 templates/controlpanel/users.html:51
+msgid "Back to control panel"
+msgstr "Retour au panneau de contrôle"
+
+#: templates/controlpanel/users.html:15
+msgid "User"
+msgstr "Utilisateur"
+
+#: templates/controlpanel/users.html:16
+#: templates/water/controlpanel/file.html:35
+#: templates/water/controlpanel/flows.html:66
+#: templates/water/controlpanel/upload.html:67
+msgid "Type"
+msgstr "Type"
+
+#: templates/controlpanel/users.html:17
+msgid "Since"
+msgstr "Depuis"
+
+#: templates/controlpanel/users.html:19
+msgid "Signed up to"
+msgstr "Inscrit à"
+
+#: templates/controlpanel/users.html:45
+msgid "Add existing users to the list"
+msgstr "Ajouter des utilisateurs existants à la liste"
+
+#: templates/controlpanel/users.html:46
+msgid "Add external person to the list"
+msgstr "Ajouter une personne externe à la liste"
+
+#: templates/education/courses/module.html:31
+msgid ""
+"You are not enrolled in this course. To get started, please enroll below."
+msgstr ""
+"Vous n'êtes pas inscrit à ce cours. Pour commencer, veuillez vous inscrire "
+"ci-dessous."
+
+#: templates/library/form.html:60
+msgid "You are adding a screenshot or image to an existing document."
+msgstr "Vous ajoutez une capture d'écran ou une image à un document existant."
+
+#: templates/water/_javascript.html:440
+#: templates/water/controlpanel/upload.html:68
+msgid "Date"
+msgstr "Date"
+
+#: templates/water/_javascript.html:440 templates/water/_javascript.html:486
+msgid "Quantity"
+msgstr "Quantité"
+
+#: templates/water/_javascript.html:448
+msgid "Total"
+msgstr "Total"
+
+#: templates/water/_modal.html:19
+msgid "Close"
+msgstr "Fermer"
+
+#: templates/water/_modal.html:25
+msgid "Chart"
+msgstr "Graphique"
+
+#: templates/water/_modal.html:28
+msgid "Data"
+msgstr "Données"
+
+#: templates/water/controlpanel/categories.html:14
+msgid "Add a new category"
+msgstr "Ajouter"
+
+#: templates/water/controlpanel/file.html:23
+msgid "Original file"
+msgstr "Fichier d'origine"
+
+#: templates/water/controlpanel/file.html:24
+msgid "Download file"
+msgstr "Télécharger un fichier"
+
+#: templates/water/controlpanel/file.html:26
+msgid "Year(s) covered"
+msgstr "Année(s) couverte(s)"
+
+#: templates/water/controlpanel/file.html:32
+msgid "Number of rows"
+msgstr "Nombre de rangées"
+
+#: templates/water/controlpanel/file.html:38
+msgid "Processed?"
+msgstr "Transformé?"
+
+#: templates/water/controlpanel/file.html:39
+msgid "Yes"
+msgstr "Oui"
+
+#: templates/water/controlpanel/file.html:39
+msgid "No"
+msgstr "Non"
+
+#: templates/water/controlpanel/file.html:44
+msgid "Data overview"
+msgstr "Aperçu des données"
+
+#: templates/water/controlpanel/file.html:46
+msgid "data points recorded."
+msgstr "points de données enregistrés."
+
+#: templates/water/controlpanel/file.html:48
+msgid ""
+"The data in this spreadsheet have been recorded in the database and are used "
+"to create the sankey diagrams."
+msgstr ""
+"Les données de cette feuille de calcul ont été enregistrées dans la base de "
+"données et sont utilisées pour créer les diagrammes de Sankey."
+
+#: templates/water/controlpanel/file.html:49
+msgid "Click here if you want to download the original data."
+msgstr "Cliquez ici si vous souhaitez télécharger les données d'origine."
+
+#: templates/water/controlpanel/file.html:52
+msgid "Delete data"
+msgstr "Suprimmer les données"
+
+#: templates/water/controlpanel/file.html:53
+msgid ""
+"Use the button below to remove the data from the database. We will keep the "
+"file (for now), which you can decide to delete later."
+msgstr ""
+"Utilisez le bouton ci-dessous pour supprimer les données de la base de "
+"données. Nous conserverons le fichier (pour l'instant), que vous pourrez "
+"décider de supprimer ultérieurement."
+
+#: templates/water/controlpanel/file.html:55
+msgid "Delete data from database"
+msgstr "Supprimer les données de la base de données"
+
+#: templates/water/controlpanel/file.html:60
+msgid "Spreadsheet overview"
+msgstr "Présentation de la feuille de calcul"
+
+#: templates/water/controlpanel/file.html:62
+msgid ""
+"The data below shows all the rows that were successfully detected in your "
+"spreadsheet. Remember that only level-2 data is being detected and stored. "
+"The system will NOT remove any existing data. If you upload data for "
+"existing periods, then you should remove the old data first as not to "
+"duplicate data."
+msgstr ""
+"Les données ci-dessous montrent toutes les lignes qui ont été détectées avec "
+"succès dans votre feuille de calcul. N'oubliez pas que seules les données de "
+"niveau 2 sont détectées et stockées. Le système ne supprimera PAS les "
+"données existantes. Si vous téléchargez des données pour des périodes "
+"existantes, vous devez d'abord supprimer les anciennes données afin de ne "
+"pas dupliquer les données."
+
+#: templates/water/controlpanel/file.html:68
+msgid "What do you want to do with this file?"
+msgstr "Que voulez-vous faire avec ce fichier ?"
+
+#: templates/water/controlpanel/file.html:70
+msgid "Import data"
+msgstr "Importer des données"
+
+#: templates/water/controlpanel/file.html:77
+msgid "Are you sure?"
+msgstr "Es-tu sûr?"
+
+#: templates/water/controlpanel/file.html:78
+msgid "Delete file"
+msgstr "Supprimer le fichier"
+
+#: templates/water/controlpanel/file.html:85
+msgid "Back to overview"
+msgstr "Retour à l'aperçu"
+
+#: templates/water/controlpanel/flows.html:5
+msgid "Manage flows"
+msgstr "Gérer les flux"
+
+#: templates/water/controlpanel/flows.html:31
+#: templates/water/controlpanel/flows.html:76
+#: templates/water/controlpanel/nodes.html:78 templates/water/sankey.html:26
+#: templates/water/sankey.html:29 templates/water/sankey.html:33
+#: templates/water/sankey.html:53
+msgid "Level"
+msgstr "Niveau"
+
+#: templates/water/controlpanel/flows.html:34
+#: templates/water/controlpanel/flows.html:93
+msgid "Description"
+msgstr "Description"
+
+#: templates/water/controlpanel/flows.html:46
+msgid "Level 1"
+msgstr "Niveau 1"
+
+#: templates/water/controlpanel/flows.html:46
+msgid "Flow #"
+msgstr "Flux #"
+
+#: templates/water/controlpanel/flows.html:57
+msgid "Add a new flow"
+msgstr "Ajouter un nouveau flux"
+
+#: templates/water/controlpanel/flows.html:59
+msgid ""
+"NOTE: for new flows to become visible in the system diagram, graphic design "
+"changes are required."
+msgstr ""
+"REMARQUE : pour que les nouveaux flux deviennent visibles dans le schéma du "
+"système, des modifications de conception graphique sont nécessaires."
+
+#: templates/water/controlpanel/flows.html:85
+msgid "Number"
+msgstr "Numéro"
+
+#: templates/water/controlpanel/flows.html:97
+msgid "Part of flow"
+msgstr "Partie du flux"
+
+#: templates/water/controlpanel/flows.html:100
+msgid ""
+"Most level-2 flows are part of a level-1 flows. Please enter the number of "
+"the level-1 flow here."
+msgstr ""
+"La plupart des flux de niveau 2 font partie d'un flux de niveau 1. Veuillez "
+"saisir ici le numéro du flux de niveau 1."
+
+#: templates/water/controlpanel/flows.html:105
+msgid "Include when calculating line width"
+msgstr "Inclure lors du calcul de la largeur de ligne"
+
+#: templates/water/controlpanel/flows.html:108
+msgid "Uncheck if this flow is extraordinarily large"
+msgstr "Décochez si ce flux est extraordinairement important"
+
+#: templates/water/controlpanel/index.html:14
+msgid "Sankey data"
+msgstr "Données Sankey"
+
+#: templates/water/controlpanel/index.html:23
+msgid "Default timeframe"
+msgstr "Délai par défaut"
+
+#: templates/water/controlpanel/index.html:32
+msgid "Flows"
+msgstr "Les flux"
+
+#: templates/water/controlpanel/index.html:41
+msgid "Nodes"
+msgstr "Nœuds"
+
+#: templates/water/controlpanel/index.html:50
+msgid "Categories"
+msgstr "Catégories"
+
+#: templates/water/controlpanel/index.html:59
+msgid "Territories"
+msgstr "Territoires"
+
+#: templates/water/controlpanel/index.html:68
+msgid "Design settings"
+msgstr "Paramètres de conception"
+
+#: templates/water/controlpanel/index.html:77
+msgid "Pages"
+msgstr "Pages"
+
+#: templates/water/controlpanel/index.html:86
+msgid "Team"
+msgstr "Équipe"
+
+#: templates/water/controlpanel/index.html:92
+msgid "Work-in-progress"
+msgstr "Travail en cours"
+
+#: templates/water/controlpanel/index.html:95
+msgid ""
+"Parts of these sections have been built, but development has been paused "
+"until required data can be made available. The links and code are conserved "
+"here for future use."
+msgstr ""
+"Certaines parties de ces sections ont été construites, mais le développement "
+"a été suspendu jusqu'à ce que les données requises soient disponibles. Les "
+"liens et le code sont conservés ici pour une utilisation future."
+
+#: templates/water/controlpanel/index.html:104
+msgid "Master dataset"
+msgstr "Jeu de données principal"
+
+#: templates/water/controlpanel/index.html:114
+msgid "All datasets"
+msgstr "Tous les ensembles de données"
+
+#: templates/water/controlpanel/nodes.html:5
+msgid "Manage nodes"
+msgstr "Gérer les nœuds"
+
+#: templates/water/controlpanel/nodes.html:28
+msgid "nodes found"
+msgstr "nœuds trouvés"
+
+#: templates/water/controlpanel/nodes.html:47
+msgid "Add a new node"
+msgstr "Ajouter un nouveau nœud"
+
+#: templates/water/controlpanel/nodes.html:57
+msgid "Identifier"
+msgstr "Identifiant"
+
+#: templates/water/controlpanel/nodes.html:61
+msgid "Category"
+msgstr "Catégorie"
+
+#: templates/water/controlpanel/nodes.html:70
+msgid "Entry flows"
+msgstr "Flux d'entrée"
+
+#: templates/water/controlpanel/nodes.html:74
+msgid "Exit flows"
+msgstr "Flux de sortie"
+
+#: templates/water/controlpanel/spaces.html:5
+msgid "Manage territories"
+msgstr "Gérer les territoires"
+
+#: templates/water/controlpanel/spaces.html:14
+msgid "Add a new territory"
+msgstr "Ajouter un nouveau territoire"
+
+#: templates/water/controlpanel/timeframes.html:5
+msgid "Manage timeframes"
+msgstr "Gérer les délais"
+
+#: templates/water/controlpanel/timeframes.html:10
+msgid "What should be the default timeframe for the sankey diagrams?"
+msgstr "Quel devrait être le délai par défaut pour les diagrammes de Sankey ?"
+
+#: templates/water/controlpanel/upload.html:5
+msgid "Sankey diagram data"
+msgstr "Données du diagramme de Sankey"
+
+#: templates/water/controlpanel/upload.html:8
+msgid "Instructions:"
+msgstr "Instructions :"
+
+#: templates/water/controlpanel/upload.html:11
+msgid ""
+"Download the template file. Use the sample data to review the format, and "
+"use this same format for the new data you want to upload."
+msgstr ""
+"Téléchargez le fichier modèle. Utilisez les exemples de données pour revoir "
+"le format et utilisez ce même format pour les nouvelles données que vous "
+"souhaitez télécharger."
+
+#: templates/water/controlpanel/upload.html:14
+msgid ""
+"Delete all rows that are not relevant for your dataset. Enter 'Unknown' if "
+"you have no data for a particular cell but you want the flow to appear on "
+"the sankey diagram."
+msgstr ""
+"Supprimez toutes les lignes qui ne sont pas pertinentes pour votre jeu de "
+"données. Entrez \"Inconnu\" si vous n'avez pas de données pour une cellule "
+"particulière mais que vous souhaitez que le flux apparaisse sur le diagramme "
+"de Sankey."
+
+#: templates/water/controlpanel/upload.html:17
+msgid ""
+"You can add rows for as many months or years as you want to upload. You can "
+"also duplicate the sheet if you want to separate data of different years "
+"into multiple sheets."
+msgstr ""
+"Vous pouvez ajouter des lignes pour autant de mois ou d'années que vous "
+"souhaitez télécharger. Vous pouvez également dupliquer la feuille si vous "
+"souhaitez séparer les données de différentes années en plusieurs feuilles."
+
+#: templates/water/controlpanel/upload.html:20
+msgid "Please fill out data using the following units:"
+msgstr "Veuillez remplir les données en utilisant les unités suivantes :"
+
+#: templates/water/controlpanel/upload.html:24
+msgid "Emissions"
+msgstr "Gaz à Effet de Serre"
+
+#: templates/water/controlpanel/upload.html:31
+msgid "Download templates"
+msgstr "Télécharger des modèles"
+
+#: templates/water/controlpanel/upload.html:33
+msgid "You can use the templates below to upload new data."
+msgstr ""
+"Vous pouvez utiliser les modèles ci-dessous pour télécharger de nouvelles "
+"données."
+
+#: templates/water/controlpanel/upload.html:37
+msgid "Ẁater data template"
+msgstr "Modèle de données Eau"
+
+#: templates/water/controlpanel/upload.html:41
+msgid "Energy data template"
+msgstr "Modèle de données Energies"
+
+#: templates/water/controlpanel/upload.html:45
+msgid "Emissions data template"
+msgstr "Modèle de données Gaz à Effet de Serre"
+
+#: templates/water/controlpanel/upload.html:50
+msgid "Upload data"
+msgstr "Télécharger des données"
+
+#: templates/water/controlpanel/upload.html:58
+msgid "Next"
+msgstr "Suivante"
+
+#: templates/water/controlpanel/upload.html:62
+msgid "Uploaded files"
+msgstr "Fichiers téléchargés"
+
+#: templates/water/controlpanel/upload.html:69
+msgid "Uploader"
+msgstr "Téléchargeur"
+
+#: templates/water/controlpanel/upload.html:70
+msgid "Data stored"
+msgstr "Données stockées"
+
+#: templates/water/controlpanel/upload.html:82
+msgid "No data stored"
+msgstr "Aucune donnée stockée"
+
+#: templates/water/index.html:7
+msgid ""
+"Welcome to the metabolism website of the water and wastewater services of "
+"Nice Côte d'Azur"
+msgstr ""
+"Bienvenue sur le site du Métabolisme des Services de l’Eau et de "
+"l’Assainissement de la Métropole Nice Côte d’Azur"
+
+#: templates/water/index.html:16
+msgid "Click here to explore the metabolism of Eau d'Azur"
+msgstr "Cliquez ici pour accéder au Métabolisme Eau d’Azur"
+
+#: templates/water/sankey.html:51
+msgid "Metabolism"
+msgstr "Métabolisme"
+
+#: templates/water/sankey.html:67
+msgid "Animation"
+msgstr "Activer le mode animation"
+
+#: water/views.py:31
+msgid "Homepage"
+msgstr "Accueil"
+
+#: water/views.py:213
+msgid "You are logged in."
+msgstr "Vous êtes authentifié."
+
+#: water/views.py:216
+msgid "We could not authenticate you, please try again."
+msgstr "Nous n'avons pas pu vous authentifier, veuillez réessayer."
+
+#: water/views.py:248 water/views.py:272 water/views.py:327 water/views.py:352
+#: water/views.py:395
+msgid "Information was saved"
+msgstr "Les informations ont été enregistrées"
+
+#: water/views.py:392
+msgid ""
+"We could not find the level-1 flow that you entered so we left this field "
+"blank."
+msgstr ""
+"Nous n'avons pas pu trouver le flux de niveau 1 que vous avez entré, nous "
+"avons donc laissé ce champ vide."
+
+#: water/views.py:401
+msgid "All flows updated"
+msgstr "Tous les flux mis à jour"
+
+#: water/views.py:423
+msgid "The file was uploaded successfully. Please review the data below."
+msgstr ""
+"Le fichier a été téléchargé avec succès. Veuillez consulter les données ci-"
+"dessous."
+
+#: water/views.py:442
+msgid "The file was deleted successfully"
+msgstr "Le fichier a été supprimé avec succès"
+
+#: water/views.py:449
+msgid ""
+"The data was deleted successfully from the database. You can reload it "
+"below, or delete the original file."
+msgstr ""
+"Les données ont été supprimées avec succès de la base de données. Vous "
+"pouvez le recharger ci-dessous ou supprimer le fichier d'origine."
+
+#: water/views.py:585
+msgid "Year/month information is not valid."
+msgstr "Les informations année/mois ne sont pas valides."
+
+#: water/views.py:611
+msgid "The data has been saved in the database"
+msgstr "Les données ont été enregistrées dans la base de données"
+
+#: water/views.py:613
+msgid ""
+"Sorry, we could not save your data. Are all the quantities filled in "
+"correctly? The error is printed below: "
+msgstr ""
+"Désolé, nous n'avons pas pu enregistrer vos données. Toutes les quantités "
+"sont-elles correctement renseignées ? L'erreur est imprimée ci-dessous : "

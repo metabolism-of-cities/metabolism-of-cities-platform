@@ -1,28 +1,28 @@
 <div id="sidebar-container">
 
   <div id="sidebar" class="text-center pt-3 pb-3">
-    <h3>Flux</h3>
+    <h3>{{ _("Flow") }}</h3>
     <ul class="nav flex-column mt-4 region-link">
       <li class="nav-item">
-        <a class="btn {% if section == "water" %}btn-dark d-inline-block{% endif %}" href="{% url "water:water" %}" data-link="{% url "water:water" %}"> Eaux</a>
+        <a class="btn {% if section == "water" %}btn-dark d-inline-block{% endif %}" href="{% url "water:water" %}" data-link="{% url "water:water" %}"> {{ _("Water") }}</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link btn {% if section == "energy" %}btn-dark d-inline-block{% endif %}" href="{% url "water:energy" %}" data-link="{% url "water:energy" %}"> Energies</a>
+        <a class="nav-link btn {% if section == "energy" %}btn-dark d-inline-block{% endif %}" href="{% url "water:energy" %}" data-link="{% url "water:energy" %}"> {{ _("Energy") }}</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link btn {% if section == "emissions" %}btn-dark d-inline-block{% endif %}" href="{% url "water:emissions" %}" data-link="{% url "water:emissions" %}"> Gaz à Effet de Serre</a>
+        <a class="nav-link btn {% if section == "emissions" %}btn-dark d-inline-block{% endif %}" href="{% url "water:emissions" %}" data-link="{% url "water:emissions" %}"> {{ _("GHG Emissions") }}</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link disabled" href="#"> Matières et Matériaux</a>
+        <a class="nav-link disabled" href="#"> {{ _("Materials") }}</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link disabled" href="#"> Stocks</a>
+        <a class="nav-link disabled" href="#"> {{ _("Material stock") }}</a>
       </li>
     </ul>
   </div>
 
   <div id="sidebar-territory" class="text-center pt-3 pb-3" {% if category.slug == "emissions" %}hidden{% endif %}>
-    <h3>Territoire</h3>
+    <h3>{{ _("Territory") }}</h3>
     <ul class="nav flex-column mt-4 region-bar">
     {% for key,value in REGIONS.items %}
       <li class="nav-item">
@@ -39,7 +39,7 @@
   </div>
 
   <div id="sidebar-period" class="text-center pt-3 pb-3">
-    <h3>Période</h3>
+    <h3>{{ _("Period") }}</h3>
 
     <form class="form period-dropdown p-2" id="changedate">
       <select class="form-control mb-2" name="date_start">

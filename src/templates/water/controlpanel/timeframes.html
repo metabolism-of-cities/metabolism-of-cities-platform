@@ -2,12 +2,12 @@
 
 {% block content %}
 
-  <h2>{% block title %}Manage timeframes{% endblock %}</h2>
+  <h2>{% block title %}{{ _("Manage timeframes") }}{% endblock %}</h2>
 
   <form method="post" enctype="multipart/form-data">
 
     <div class="alert alert-info">
-      What should be the default timeframe for the sankey diagrams?
+      {{ _("What should be the default timeframe for the sankey diagrams?") }}
     </div>
     
     <form class="form form-inline period-dropdown p-2">
