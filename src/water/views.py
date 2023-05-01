@@ -45,12 +45,19 @@ def sankey(request, category):
         svg += str(level)
     svg += ".svg"
 
+    if request.GET.get("region"):
+        region = request.GET.get("region")
+    else:
+        region = 1
+
+    selected_regions = ["1"] if category.slug == "emissions" or not "region" in request.GET else request.GET.getlist("region")
+
     context = {
         "title": category,
         "section": category.slug,
         "link": reverse("water:" + category.slug),
         "show_submenu": True,
-        "region": NICE_REGIONS.get(int(request.GET['region'])),
+        "region": NICE_REGIONS.get(int(region)),
         "category": category,
         "time_frames": WaterSystemData.objects.filter(category_id=category).values("date", "timeframe").distinct().order_by("date"),
         "flows": WaterSystemFlow.objects.filter(category_id=category, level=level),
@@ -59,7 +66,7 @@ def sankey(request, category):
         "svg": svg,
         "is_admin": is_admin,
         "level": int(level),
-        "selected_regions": request.GET.getlist("region"),
+        "selected_regions": selected_regions,
     }
     return render(request, "water/sankey.html", context)
 

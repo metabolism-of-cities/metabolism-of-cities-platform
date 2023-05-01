@@ -8,27 +8,40 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <ul class="nav nav-tabs mt-2 ml-2">
-        <li class="nav-item">
-          <a class="nav-link swap-tab active" href="#" data-show="chartbox">{{ _("Chart") }}</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link swap-tab" href="#" data-show="tablebox">{{ _("Data") }}</a>
-        </li>
-        <li class="nav-item ml-auto mr-2">
-          <a class="export-png cursor-pointer">
-          <i class="fas fa-fw fa-save"></i>
-          </a>
-        </li>
-        <li class="nav-item mr-4">
-          <a class="print-chart cursor-pointer">
-          <i class="fas fa-fw fa-print"></i>
-          </a>
-        </li>
-      </ul>
-      <div class="modal-body" id="chartbox">
+      <div class="unknown-flow-content">
+        <div class="modal-body">
+          <div class="alert alert-warning p-3">
+            <h3>
+            <i class="fa fa-fw fa-exclamation-triangle"></i>
+              On laisse un flux apparent mais sans valeur.
+            </h3>
+          </div>
+            <button data-dismiss="modal" class="btn btn-light" ><i class="fas fa-times"></i> {{ _("Close") }}</button>
+        </div>
       </div>
-      <div class="modal-body" id="tablebox">
+      <div class="known-flow-content">
+        <ul class="nav nav-tabs mt-2 ml-2">
+          <li class="nav-item">
+            <a class="nav-link swap-tab active" href="#" data-show="chartbox">{{ _("Chart") }}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link swap-tab" href="#" data-show="tablebox">{{ _("Data") }}</a>
+          </li>
+          <li class="nav-item ml-auto mr-2">
+            <a class="export-png cursor-pointer">
+            <i class="fas fa-fw fa-save"></i>
+            </a>
+          </li>
+          <li class="nav-item mr-4">
+            <a class="print-chart cursor-pointer">
+            <i class="fas fa-fw fa-print"></i>
+            </a>
+          </li>
+        </ul>
+        <div class="modal-body" id="chartbox">
+        </div>
+        <div class="modal-body" id="tablebox">
+        </div>
       </div>
     </div>
   </div>

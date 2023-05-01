@@ -79,8 +79,14 @@
       link += "&region=" + region;
     });
     link += "&date_start=" + $("select[name='date_start']").val() + "&date_end=" + $("select[name='date_end']").val();
+
+    $(".region-link .btn").each(function(){
+      var page = $(this).data("link");
+      $(this).attr("href", page + link);
+    });
+
     link += "&level=";
-    $("#top-tabs li a").each(function(){
+    $("#top-tabs li a.btn").each(function(){
       var level = $(this).data("level");
       $(this).attr("href", link + level);
     });
@@ -147,6 +153,7 @@
         if (val == null) {
           flow.css("stroke-width", min_width + "px");
           flow.attr("title", "Inconnu");
+          flow.addClass("unknown-flow");
           var title = document.createElementNS("http://www.w3.org/2000/svg", "title");
           var titletext  = document.createTextNode({% if is_admin %}"FLOW #" + key + " - " + {% endif %}"Inconnu");
           title.appendChild(titletext);
@@ -160,6 +167,7 @@
             width = max_width;
           }
           flow.css("stroke-width", width + "px");
+          flow.removeClass("unknown-flow");
           var title = document.createElementNS("http://www.w3.org/2000/svg", "title");
           var titletext  = document.createTextNode({% if is_admin %}"FLOW #" + key + " - " + {% endif %}formatter.format(val) + " {{ category.unit.symbol }}");
           title.appendChild(titletext);
@@ -395,52 +403,59 @@
     $("#chartTitle").text("Territoire : " + $("#title_region").text());
     $("#chart").modal();
 
-    $("#chartbox").highcharts().setTitle({text:title});
+    if ($(this).hasClass("unknown-flow")) {
+      $(".unknown-flow-content").show();
+      $(".known-flow-content").hide();
+    } else {
+      $(".unknown-flow-content").hide();
+      $(".known-flow-content").show();
+      $("#chartbox").highcharts().setTitle({text:title});
 
-    if ($("#chartbox").highcharts().get("chart_data")) {
-      $("#chartbox").highcharts().get("chart_data").remove();
-    };
+      if ($("#chartbox").highcharts().get("chart_data")) {
+        $("#chartbox").highcharts().get("chart_data").remove();
+      };
 
-    get_id_number = get_id.split("-")[1]; // The id will be something like 'path-51' so we need to get just 51
+      get_id_number = get_id.split("-")[1]; // The id will be something like 'path-51' so we need to get just 51
 
-    // Let's see which period is selected (nth child), because we need to ONLY show those periods that 
-    // have been selected. We do this by removing the periods BEFORE the nth child from the list that
-    // holds all the periods (used in the x_axis labels)
-    selected_date = $("select[name=date_start] option:selected");
-    items_to_remove = selected_date.index();
-    x_labels = [...time_frames];
-    if (items_to_remove > 0) {
-      x_labels.splice(0, items_to_remove);
-    }
-
-    jsonURL = "{% url "water:ajax_chart_data" %}?flow=" + get_id_number + "&category={{ category.id }}&level=" + $("input[name=level]").val();
-    jsonURL += "&date_start=" + $("select[name='date_start']").val() + "&date_end=" + $("select[name='date_end']").val();
-
-    $(".region-bar a.btn-dark").each(function(){
-      jsonURL += "&space=" + $(this).data("region");
-    });
-
-    $.getJSON(jsonURL)
-    .done(function(response) {
-
-      table = '<table class="table table-striped"><thead><tr><th>{{ _("Date") }}</th><th>{{ _("Quantity") }} ({{ category.unit.symbol }})</th></tr></thead><tbody>';
-      data = [];
-      total = 0;
-      for (let x of response) {
-        data.push(x["quantity"]);
-        table += '<tr><td>' + x["date"] + '</td><td>' + x["quantity"] + '</td></tr>';
-        total += x["quantity"];
+      // Let's see which period is selected (nth child), because we need to ONLY show those periods that 
+      // have been selected. We do this by removing the periods BEFORE the nth child from the list that
+      // holds all the periods (used in the x_axis labels)
+      selected_date = $("select[name=date_start] option:selected");
+      items_to_remove = selected_date.index();
+      x_labels = [...time_frames];
+      if (items_to_remove > 0) {
+        x_labels.splice(0, items_to_remove);
       }
-      table += '</tbody><tfoot><tr><th>{{ _("Total") }}</th><th>' + total + '</th></tr></tfoot></table>';
-      $("#tablebox").html(table);
 
-      chart = $("#chartbox").highcharts();
-      chart.addSeries({ id: "chart_data", data: data}); 
-      chart.xAxis[0].setCategories(x_labels);
-    })
-    .fail(function() {
-      errorMessage("Failed to load data. Are you connected to the internet? Please reload the page or try again later.")
-    })
+      jsonURL = "{% url "water:ajax_chart_data" %}?flow=" + get_id_number + "&category={{ category.id }}&level=" + $("input[name=level]").val();
+      jsonURL += "&date_start=" + $("select[name='date_start']").val() + "&date_end=" + $("select[name='date_end']").val();
+
+      $(".region-bar a.btn-dark").each(function(){
+        jsonURL += "&space=" + $(this).data("region");
+      });
+
+      $.getJSON(jsonURL)
+      .done(function(response) {
+
+        table = '<table class="table table-striped"><thead><tr><th>{{ _("Date") }}</th><th>{{ _("Quantity") }} ({{ category.unit.symbol }})</th></tr></thead><tbody>';
+        data = [];
+        total = 0;
+        for (let x of response) {
+          data.push(x["quantity"]);
+          table += '<tr><td>' + x["date"] + '</td><td>' + x["quantity"] + '</td></tr>';
+          total += x["quantity"];
+        }
+        table += '</tbody><tfoot><tr><th>{{ _("Total") }}</th><th>' + total + '</th></tr></tfoot></table>';
+        $("#tablebox").html(table);
+
+        chart = $("#chartbox").highcharts();
+        chart.addSeries({ id: "chart_data", data: data}); 
+        chart.xAxis[0].setCategories(x_labels);
+      })
+      .fail(function() {
+        errorMessage("Failed to load data. Are you connected to the internet? Please reload the page or try again later.")
+      });
+    }
   });
 
   // We load an empty highchart, which will be populated with actual chart data once
@@ -487,7 +502,7 @@
     $(this).addClass("active");    
     e.preventDefault();
     var show = $(this).data("show");
-    $(".modal-body").hide();
+    $(".known-flow-content .modal-body").hide();
     $("#" + show).show();
   });
 

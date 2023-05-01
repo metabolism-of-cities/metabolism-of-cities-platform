@@ -2,15 +2,15 @@
 
   <div id="sidebar" class="text-center pt-3 pb-3">
     <h3>Flux</h3>
-    <ul class="nav flex-column mt-4">
+    <ul class="nav flex-column mt-4 region-link">
       <li class="nav-item">
-        <a class="btn {% if section == "water" %}btn-dark d-inline-block{% endif %}" href="{% url "water:water" %}?region={{ request.GET.region }}"> Eaux</a>
+        <a class="btn {% if section == "water" %}btn-dark d-inline-block{% endif %}" href="{% url "water:water" %}" data-link="{% url "water:water" %}"> Eaux</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link btn {% if section == "energy" %}btn-dark d-inline-block{% endif %}" href="{% url "water:energy" %}?region={{ request.GET.region }}"> Energies</a>
+        <a class="nav-link btn {% if section == "energy" %}btn-dark d-inline-block{% endif %}" href="{% url "water:energy" %}" data-link="{% url "water:energy" %}"> Energies</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link btn {% if section == "emissions" %}btn-dark d-inline-block{% endif %}" href="{% url "water:emissions" %}?region={{ request.GET.region }}"> Gaz à Effet de Serre</a>
+        <a class="nav-link btn {% if section == "emissions" %}btn-dark d-inline-block{% endif %}" href="{% url "water:emissions" %}" data-link="{% url "water:emissions" %}"> Gaz à Effet de Serre</a>
       </li>
       <li class="nav-item">
         <a class="nav-link disabled" href="#"> Matières et Matériaux</a>
