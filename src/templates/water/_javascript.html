@@ -128,6 +128,7 @@
       });
 
       max_width = 10;
+      min_width = 0.7;
       all_flows = [];
       node_totals = {}
       /* every time we run this script, we copy all_nodes into hidden_nodes
@@ -144,13 +145,19 @@
       $.each(response, function(key, val) {
         flow = $("#path-" + key);
         if (val == null) {
-          flow.css("stroke-width", "0.3px");
+          flow.css("stroke-width", min_width + "px");
           flow.attr("title", "Inconnu");
+          var title = document.createElementNS("http://www.w3.org/2000/svg", "title");
+          var titletext  = document.createTextNode({% if is_admin %}"FLOW #" + key + " - " + {% endif %}"Inconnu");
+          title.appendChild(titletext);
+          flow.append(title);
         } else {
           fraction = val/max_flow; /* Here we can calculate the flow proportionate to the max_flow */
           width = fraction*max_width; /* This makes the width of THIS flow proportionate to the max */
-          if (width > 0 && width < 0.3) {
-            width = 0.3;
+          if (width > 0 && width < min_width) {
+            width = min_width;
+          } else if (width > max_width) {
+            width = max_width;
           }
           flow.css("stroke-width", width + "px");
           var title = document.createElementNS("http://www.w3.org/2000/svg", "title");
