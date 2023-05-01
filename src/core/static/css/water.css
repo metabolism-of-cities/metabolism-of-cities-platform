@@ -75,53 +75,6 @@ svg {
 #w2 {
   display:none;
 }
-.path.green {
-  stroke: #39ff00;
-}
-
-.path.yellow {
-  stroke: gold;
-}
-
-.path.purple {
-  stroke: purple;
-}
-
-.page-water .path.purple {
-  stroke: #9F9CF8;
-}
-
-.path.blue {
-  stroke: blue;
-}
-
-.page-water .path.blue {
-  stroke: #96E2E9;
-}
-
-.path.orange {
-  stroke: orange;
-}
-.page-water .path.orange {
-  stroke: #FFC592;
-}
-.page-water .path.light-orange {
-  stroke: #FFCEB1;
-}
-
-.path.brown {
-  stroke: brown;
-}
-.page-water .path.brown {
-  stroke: #CCB7B3;
-}
-
-.path.grey {
-  stroke: grey;
-}
-.page-water .path.grey {
-  stroke: #9996BB;
-}
 #tablebox {
   display: none;
 }

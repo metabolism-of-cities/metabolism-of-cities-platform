@@ -166,7 +166,7 @@
           } else if (width > max_width) {
             width = max_width;
           }
-          flow.css("stroke-width", width + "px");
+          flow.attr("stroke-width", width + "px");
           flow.removeClass("unknown-flow");
           var title = document.createElementNS("http://www.w3.org/2000/svg", "title");
           var titletext  = document.createTextNode({% if is_admin %}"FLOW #" + key + " - " + {% endif %}formatter.format(val) + " {{ category.unit.symbol }}");
@@ -546,6 +546,47 @@
     map_copy.removeClass("active-space");
     map_copy.addClass("clone-region");
   });
+
+  /* 
+   * The scripts below change the attributes of the SVG paths to define
+   * the stroke color by setting the style attribute. Technically, we could
+   * also do this by using CSS but if we do that, then if a user saves the 
+   * image it will NOT have a stroke style, resulting in very odd-looking
+   * images. Alternatively, if we hard-code the style in the SVG then we can
+   * NOT easily change/manage the colors by setting classes, so this here 
+   * seems to be the best balance of both. 
+   * Note that the colors in the water graph are a bit different and thus
+   * defind separately.
+   */
+
+  {% if category.slug == "water" %}
+    css_class_colors = {
+      "green": "#39ff00",
+      "yellow": "gold",
+      "grey": "#9996BB",
+      "brown": "#CCB7B3",
+      "orange": "#FFC592",
+      "light-orange": "#FFCEB1",
+      "blue": "#96E2E9",
+      "purple": "#9F9CF8",
+    }
+  {% else %}
+    css_class_colors = {
+      "green": "#39ff00",
+      "yellow": "gold",
+      "purple": "purple",
+      "blue": "blue",
+      "orange": "orange",
+      "brown": "brown",
+      "grey": "grey",
+    }
+  {% endif %}
+
+  $(".path").attr("style", "fill:none;stroke:#000");
+  for ([key, value] of Object.entries(css_class_colors)) {
+    $(".path." + key).attr("style", "fill:none;stroke:" + value); 
+    console.log(key,value);
+  }
 
   setDateLabels();
   setRegionLabels();
