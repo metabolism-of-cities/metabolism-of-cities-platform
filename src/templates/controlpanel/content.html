@@ -5,7 +5,7 @@
   <h1 class="mb-0">{{ title }}</h1>
   <a href="../" class="btn btn-primary-basic mb-4">
     <i class="fal fa-angle-left"></i>
-    Back to control panel
+    {{ _("Back to Control Panel") }}
   </a>
   <a class="btn btn-default-basic float-right mb-4" href="create/?tag={{ tag.id }}&amp;next={{ request.get_full_path|urlencode }}"><i class="fal fa-plus"></i> Add new</a>
 
@@ -31,7 +31,7 @@
   <a class="btn btn-default-basic float-right mt-4" href="create/?tag={{ tag.id }}&amp;next={{ request.get_full_path|urlencode }}"><i class="fal fa-plus"></i> Add new</a>
   <a href="../" class="btn btn-primary-basic mt-4">
     <i class="fal fa-angle-left"></i>
-    Back to control panel
+    {{ _("Back to Control Panel") }}
   </a>
 
 {% endblock %}

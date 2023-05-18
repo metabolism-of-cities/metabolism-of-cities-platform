@@ -2,6 +2,11 @@
 
 {% block content %}
 
+  <a href="{% url "water:controlpanel_index" %}" class="btn btn-primary-basic float-right mt-3">
+    <i class="fal fa-angle-left"></i>
+    {{ _("Back to Control Panel") }}
+  </a>
+
   <h2>{% block title %}{{ _("Sankey diagram data") }}{% endblock %}</h2>
 
   <div class="alert alert-info mt-2">
@@ -101,5 +106,11 @@
     </table>
 
   </section>
+
+  <a href="{% url "water:controlpanel_index" %}" class="btn btn-primary-basic mt-4">
+    <i class="fal fa-angle-left"></i>
+    {{ _("Back to Control Panel") }}
+  </a>
+
 
 {% endblock %}

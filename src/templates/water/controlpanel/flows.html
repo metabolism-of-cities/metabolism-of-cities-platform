@@ -2,6 +2,11 @@
 
 {% block content %}
 
+  <a href="{% url "water:controlpanel_index" %}" class="btn btn-primary-basic float-right mt-3">
+    <i class="fal fa-angle-left"></i>
+    {{ _("Back to Control Panel") }}
+  </a>
+
   <h2>{% block title %}{{ _("Manage flows") }}{% endblock %}</h2>
 
   <ul class="nav nav-pills d-print-none mb-2">
@@ -113,6 +118,12 @@
       <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> {{ _("Save") }}</button>
     </div>
   </form>
+
+  <a href="{% url "water:controlpanel_index" %}" class="btn btn-primary-basic mt-4">
+    <i class="fal fa-angle-left"></i>
+    {{ _("Back to Control Panel") }}
+  </a>
+
 
 {% endblock %}
 

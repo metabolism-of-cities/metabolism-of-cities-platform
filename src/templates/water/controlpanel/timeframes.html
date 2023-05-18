@@ -2,6 +2,11 @@
 
 {% block content %}
 
+  <a href="{% url "water:controlpanel_index" %}" class="btn btn-primary-basic float-right mt-3">
+    <i class="fal fa-angle-left"></i>
+    {{ _("Back to Control Panel") }}
+  </a>
+
   <h2>{% block title %}{{ _("Manage timeframes") }}{% endblock %}</h2>
 
   <form method="post" enctype="multipart/form-data">
@@ -43,5 +48,10 @@
       <button type="submit" class="btn btn-success">{{ _("Save") }}</button>
         {% csrf_token %}
     </form>
+
+    <a href="{% url "water:controlpanel_index" %}" class="btn btn-primary-basic mt-4">
+      <i class="fal fa-angle-left"></i>
+      {{ _("Back to Control Panel") }}
+    </a>
 
 {% endblock %}

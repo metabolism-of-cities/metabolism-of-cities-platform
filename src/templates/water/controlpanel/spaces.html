@@ -2,7 +2,13 @@
 
 {% block content %}
 
+  <a href="{% url "water:controlpanel_index" %}" class="btn btn-primary-basic float-right mt-3">
+    <i class="fal fa-angle-left"></i>
+    {{ _("Back to Control Panel") }}
+  </a>
+
   <h2>{% block title %}{{ _("Manage territories") }}{% endblock %}</h2>
+
 
   {% if not info %}
     <ul>
@@ -25,5 +31,10 @@
     </div>
     {% csrf_token %}
   </form>
+
+  <a href="{% url "water:controlpanel_index" %}" class="btn btn-primary-basic mt-4">
+    <i class="fal fa-angle-left"></i>
+    {{ _("Back to Control Panel") }}
+  </a>
 
 {% endblock %}
