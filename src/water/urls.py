@@ -29,6 +29,7 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
 
     path("controlpanel/index/", views.controlpanel_index, name="controlpanel_index"),
     path("controlpanel/upload/", views.controlpanel_upload, name="controlpanel_upload"),
+    path("controlpanel/upload/level3/", views.controlpanel_upload_level3, name="controlpanel_upload_level3"),
     path("controlpanel/upload/<int:id>/", views.controlpanel_file, name="controlpanel_file"),
     path("controlpanel/categories/", views.controlpanel_categories, name="controlpanel_categories"),
     path("controlpanel/nodes/", views.controlpanel_nodes, name="controlpanel_nodes"),

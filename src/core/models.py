@@ -3728,6 +3728,8 @@ class WaterSystemFile(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     uploader = models.ForeignKey(People, on_delete=models.CASCADE)
     is_processed = models.BooleanField(default=False, db_index=True)
+    level = models.PositiveSmallIntegerField(default=2)
+    name = models.CharField(max_length=255, null=True, blank=True) # Only used for level-3 files
 
     def get_absolute_url(self):
         return reverse("water:controlpanel_file", args=[self.id])

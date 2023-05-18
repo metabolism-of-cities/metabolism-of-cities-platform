@@ -410,6 +410,35 @@ def controlpanel_flows(request):
     return render(request, "water/controlpanel/flows.html", context)
 
 @login_required
+def controlpanel_upload_level3(request):
+    if not has_permission(request, request.project, ["curator", "admin"]):
+        unauthorized_access(request)
+
+    if "delete" in request.GET:
+        info = WaterSystemFile.objects.filter(pk=request.GET["delete"])
+        if info.exists():
+            info.delete()
+            messages.success(request, _("The file was deleted successfully."))
+
+    if request.method == "POST":
+        info = WaterSystemFile.objects.create(
+            file = request.FILES["file"],
+            uploader = request.user.people,
+            level = 3,
+            category_id = 1,
+            name = request.POST["year"],
+        )
+
+        messages.success(request, _("The file was uploaded successfully."))
+
+    context = {
+        "types": WaterSystemCategory.objects.all(),
+        "files": WaterSystemFile.objects.filter(level=3),
+        "section": "controlpanel",
+    }
+    return render(request, "water/controlpanel/upload.level3.html", context)
+
+@login_required
 def controlpanel_upload(request):
     if not has_permission(request, request.project, ["curator", "admin"]):
         unauthorized_access(request)
