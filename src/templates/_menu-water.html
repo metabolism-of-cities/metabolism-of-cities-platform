@@ -29,6 +29,14 @@
   </a>
 </li>
 
+<li class="nav-item" style="padding:.5rem 0">
+<a class="badge badge-light ml-1" href="#"
+  style="font-size:100%;font-weight:normal;.5rem 1rem;cursor:default">
+  <i class="fa fa-user mr-1"></i> {{ request.user.people }}
+</a>
+</li>
+
+
 {% endif %}
 <li class="nav-item" style="padding:.5rem 1rem">
   <a style="font-size:100%;font-weight:normal" href="{% url "water:index" %}">

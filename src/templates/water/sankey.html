@@ -71,7 +71,7 @@
           {% include svg %}
           {% include "water/_modal.html" %}
 
-          {% if is_admin %}
+          {% if is_admin and DEBUG %}
             <div class="alert alert-info mt-5 d-print-none">
               <strong>Admin tools</strong><br>
               <span id="show_nodes" class="btn btn-default-outline">Show all nodes</span>
