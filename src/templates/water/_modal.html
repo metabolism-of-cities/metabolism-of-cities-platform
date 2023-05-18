@@ -27,6 +27,9 @@
           <li class="nav-item">
             <a class="nav-link swap-tab" href="#" data-show="tablebox">{{ _("Data") }}</a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link swap-tab" href="#" data-show="descriptionbox">{{ _("Description") }}</a>
+          </li>
           <li class="nav-item ml-auto mr-2">
             <a class="export-png cursor-pointer">
             <i class="fas fa-fw fa-save"></i>
@@ -41,6 +44,13 @@
         <div class="modal-body" id="chartbox">
         </div>
         <div class="modal-body" id="tablebox">
+        </div>
+        <div class="modal-body" id="descriptionbox">
+          {% for each in flows %}
+            <div id="description-{{ each.identifier }}" class="description">
+              {{ each.description|default_if_none:"" }}
+            </div>
+          {% endfor %}
         </div>
       </div>
     </div>

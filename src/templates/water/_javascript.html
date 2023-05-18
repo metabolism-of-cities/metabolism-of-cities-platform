@@ -10,6 +10,9 @@
   const formatter = new Intl.NumberFormat('fr-FR', {
     maximumFractionDigits: 0
   });
+  const formatter_single_digit = new Intl.NumberFormat('fr-FR', {
+    maximumFractionDigits: 1
+  });
 
   flow_titles = {}
   ignore_size = []
@@ -442,12 +445,14 @@
         total = 0;
         for (let x of response) {
           data.push(x["quantity"]);
-          table += '<tr><td>' + x["date"] + '</td><td>' + x["quantity"] + '</td></tr>';
+          table += '<tr><td>' + x["date"] + '</td><td>' + formatter_single_digit.format(x["quantity"]) + '</td></tr>';
           total += x["quantity"];
         }
-        table += '</tbody><tfoot><tr><th>{{ _("Total") }}</th><th>' + total + '</th></tr></tfoot></table>';
+        table += '</tbody><tfoot><tr><th>{{ _("Total") }}</th><th>' + formatter_single_digit.format(total) + '</th></tr></tfoot></table>';
         $("#tablebox").html(table);
 
+        $(".description").hide();
+        $("#description-" + get_id_number).show();
         chart = $("#chartbox").highcharts();
         chart.addSeries({ id: "chart_data", data: data}); 
         chart.xAxis[0].setCategories(x_labels);
@@ -470,7 +475,7 @@
         },
       },
       tooltip: {
-        pointFormat: '<b>{point.y} {{ category.unit.symbol }}</b>'
+        pointFormat: '<b>{point.y:" ".0f} {{ category.unit.symbol }}</b>'
       },
       chart: {
           type: "column"

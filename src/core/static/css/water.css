@@ -75,7 +75,7 @@ svg {
 #w2 {
   display:none;
 }
-#tablebox {
+#tablebox, #descriptionbox {
   display: none;
 }
 .highcharts-exporting-group {
@@ -91,4 +91,8 @@ svg {
   z-index: 99999;
   position: relative;
   text-align: center;
+}
+
+.modal .description {
+  display: none;
 }
