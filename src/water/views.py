@@ -333,6 +333,7 @@ def controlpanel_nodes(request):
                 try:
                     flow = WaterSystemFlow.objects.get(category_id=request.POST["category"], identifier=each, level=info.level)
                     info.entry_flows.add(flow)
+                    messages.success(request, info.entry_flows.count())
                 except:
                     messages.error(request, "The following item could not be saved in the entry flows: " + each)
 
@@ -344,6 +345,7 @@ def controlpanel_nodes(request):
                 try:
                     flow = WaterSystemFlow.objects.get(category_id=request.POST["category"], identifier=each, level=info.level)
                     info.exit_flows.add(flow)
+                    messages.success(request, info.exit_flows.count())
                 except:
                     messages.error(request, "The following item could not be saved in the exit flows: " + each)
 
