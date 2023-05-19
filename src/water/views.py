@@ -332,7 +332,7 @@ def controlpanel_nodes(request):
                 messages.error(request, "each: " + each)
                 flow = WaterSystemFlow.objects.get(category_id=request.POST["category"], identifier=each, level=info.level)
                 messages.success(request, flow)
-                messages.success(request, info.entry_flows.count())
+                messages.success(request, "Total is: " + str(info.entry_flows.count()))
                 info.entry_flows.add(flow)
 
         exit_flows = request.POST.get("exit_flows")
@@ -342,7 +342,7 @@ def controlpanel_nodes(request):
                 messages.warning(request, "each: " + each)
                 flow = WaterSystemFlow.objects.get(category_id=request.POST["category"], identifier=each, level=info.level)
                 messages.success(request, flow)
-                messages.success(request, info.exit_flows.count())
+                messages.success(request, "Total is: " + str(info.exit_flows.count()))
                 info.exit_flows.add(flow)
 
         messages.success(request, _("Information was saved"))
