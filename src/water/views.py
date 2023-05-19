@@ -331,6 +331,7 @@ def controlpanel_nodes(request):
             for each in entry_flows.split(","):
                 messages.error(request, "each: " + each)
                 flow = WaterSystemFlow.objects.get(category_id=request.POST["category"], identifier=each, level=info.level)
+                messages.success(request, flow)
                 info.entry_flows.add(flow)
                 messages.success(request, info.entry_flows.count())
 
@@ -340,6 +341,7 @@ def controlpanel_nodes(request):
             for each in exit_flows.split(","):
                 messages.warning(request, "each: " + each)
                 flow = WaterSystemFlow.objects.get(category_id=request.POST["category"], identifier=each, level=info.level)
+                messages.success(request, flow)
                 info.exit_flows.add(flow)
                 messages.success(request, info.exit_flows.count())
 
