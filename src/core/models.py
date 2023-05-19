@@ -3722,9 +3722,18 @@ class WaterSystemNode(models.Model):
     class Meta:
         ordering = ["category", "identifier"]
 
+def waterfile_path(instance, filename):
+    path = "water/"
+    if instance.level == 3:
+        # Level-3 files are private, so we use an uuid for the filename
+        filename, file_extension = os.path.splitext(filename)
+        return path + str(uuid.uuid4()) + file_extension
+    else:
+        return path + filename
+
 class WaterSystemFile(models.Model):
     category = models.ForeignKey(WaterSystemCategory, on_delete=models.CASCADE, blank=True, null=True)
-    file = models.FileField(null=True, blank=True, upload_to="water", max_length=255)
+    file = models.FileField(null=True, blank=True, upload_to=waterfile_path, max_length=255)
     date_created = models.DateTimeField(auto_now_add=True)
     uploader = models.ForeignKey(People, on_delete=models.CASCADE)
     is_processed = models.BooleanField(default=False, db_index=True)

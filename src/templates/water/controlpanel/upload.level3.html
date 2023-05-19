@@ -43,7 +43,7 @@
       {% for each in files %}
         <tr>
           <td>{{ each.id }}</td>
-          <td>{{ each.name }}</td>
+          <td><a href="{% url "water:download" each.id %}">{{ each.name }}</a></td>
           <td>{{ each.date_created|date:"M d, Y" }}</td>
           <td>{{ each.uploader }}</td>
           <td><a href="?delete={{ each.id }}" onclick="javascript:return confirm('{{ _("Are you sure you want to delete this file?") }}')">{{ _("Delete file") }}</a></td>

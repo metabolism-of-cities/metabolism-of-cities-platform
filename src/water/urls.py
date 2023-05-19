@@ -26,6 +26,7 @@ urlpatterns = baseline_urlpatterns + baseline_staf_urlpatterns + [
     path("ajax/", views.ajax, name="ajax"),
     path("language/", views.language, name="language"),
     path("ajax/chart/", views.ajax_chart_data, name="ajax_chart_data"),
+    path("sankey/download/<int:id>/", views.download, name="download"),
 
     path("controlpanel/index/", views.controlpanel_index, name="controlpanel_index"),
     path("controlpanel/upload/", views.controlpanel_upload, name="controlpanel_upload"),

@@ -9,6 +9,12 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"> 
 
+{% if level == 3 %}
+<style type="text/css">
+footer{display:none}
+</style>
+{% endif %}
+
 {% endblock %}
 
 {% block content %}
@@ -30,55 +36,90 @@
         </li>
         {% if category.slug == "water" %}
           <li class="nav-item">
-            <a class="nav-link disabled" href="#" data-id="w2">{{ _("Level") }} 3</a>
+            <a data-level="3" class="btn {% if level == 3 %}btn-dark{% endif %}" href="?region={{ request.GET.region }}&amp;level=3">{{ _("Level") }} 3</a>
           </li>
         {% endif %}
-        <li class="nav-item ml-auto">
-          <a href="#" id="download"><i class="fa fa-download"></i></a>
-        </li>
 
-        <li class="nav-item ml-2">
-          <a href="javascript:print()"><i class="fa fa-print"></i></a>
-        </li>
+        {% if level != 3 %}
+          <li class="nav-item ml-auto">
+            <a href="#" id="download"><i class="fa fa-download"></i></a>
+          </li>
+
+          <li class="nav-item ml-2">
+            <a href="javascript:print()"><i class="fa fa-print"></i></a>
+          </li>
+        {% endif %}
 
       </ul> 
       <div class="main-body level-{{ request.GET.level }}">
 
         <div class="watergraphs">
 
-          <p class="text-center mt-2 mb-1">
-            «
-              {{ _("Metabolism") }} <strong id="title_region"></strong> -
-              {{ _("Flow") }} : <strong>{{ category }}</strong> -
-              {{ _("Level") }} : <strong id="title_level">{{ level }}</strong> -
-              {{ _("Period") }} : <strong class="title_date"></strong>
-            »
-          </p>
+          {% if level < 3 %}
 
-          <div id="w1">
+            <p class="text-center mt-2 mb-1">
+              «
+                {{ _("Metabolism") }} <strong id="title_region"></strong> -
+                {{ _("Flow") }} : <strong>{{ category }}</strong> -
+                {{ _("Level") }} : <strong id="title_level">{{ level }}</strong> -
+                {{ _("Period") }} : <strong class="title_date"></strong>
+              »
+            </p>
 
-          <span class="loading">
-            <i class="fas fa-spinner-third fa-spin"></i>
-          </span>
+            <div id="w1">
 
-          <span class="animate-toggle d-print-none">
-            <label class="btn font-weight-bold">
-              <input type="checkbox" id="animate" value="true">
-              {{ _("Animation") }}
-            </label>
-          </span>
+            <span class="loading">
+              <i class="fas fa-spinner-third fa-spin"></i>
+            </span>
 
-          {% include svg %}
-          {% include "water/_modal.html" %}
+            <span class="animate-toggle d-print-none">
+              <label class="btn font-weight-bold">
+                <input type="checkbox" id="animate" value="true">
+                {{ _("Animation") }}
+              </label>
+            </span>
 
-          {% if is_admin and DEBUG %}
-            <div class="alert alert-info mt-5 d-print-none">
-              <strong>Admin tools</strong><br>
-              <span id="show_nodes" class="btn btn-default-outline">Show all nodes</span>
-              <span id="show_node_numbers" class="btn btn-default-outline">Show node numbers</span>
-              <span id="show_flows" class="btn btn-default-outline">Show all flows</span>
-              <span id="show_data" class="btn btn-default-outline">Show data</span>
-              <pre class="pt-3" id="show_data_box"></pre>
+            {% include svg %}
+            {% include "water/_modal.html" %}
+
+            {% if is_admin and DEBUG %}
+              <div class="alert alert-info mt-5 d-print-none">
+                <strong>Admin tools</strong><br>
+                <span id="show_nodes" class="btn btn-default-outline">Show all nodes</span>
+                <span id="show_node_numbers" class="btn btn-default-outline">Show node numbers</span>
+                <span id="show_flows" class="btn btn-default-outline">Show all flows</span>
+                <span id="show_data" class="btn btn-default-outline">Show data</span>
+                <pre class="pt-3" id="show_data_box"></pre>
+              </div>
+            {% endif %}
+
+          {% else %}
+            <div class="pt-4">
+
+              {% if not is_team_member %}
+              <div class="alert alert-warning">
+                <i class="fa fa-fw fa-exclamation-triangle"></i>
+                <strong>
+                {{ _("Authentication required") }}
+                </strong>
+                <br>
+                {{ _("Please log in to see level 3 data.") }}
+              </div>
+              {% else %}
+                <section class="row btn-cards">
+                {% for each in files %}
+                  <div class="col-md-3 mb-3">
+                    <a class="card icon-card btn-card" href="{% url "water:download" each.id %}">
+                      <div class="icon">
+                        <i class="fal fa-fw fa-file-spreadsheet"></i>
+                      </div>
+                      <div class="card-header">{{ each.name }}</div>
+                    </a>
+                  </div>
+                {% endfor %}
+                </section>
+              {% endif %}
+            
             </div>
           {% endif %}
 

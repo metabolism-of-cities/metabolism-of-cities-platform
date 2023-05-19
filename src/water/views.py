@@ -24,6 +24,9 @@ from django.core.files.base import ContentFile
 from django.utils.translation import gettext_lazy as _
 from django.utils import translation
 
+# For downloading files
+from django.http import FileResponse
+
 DIAGRAM_ID = 1013292
 
 def index(request):
@@ -69,7 +72,23 @@ def sankey(request, category):
         "level": int(level),
         "selected_regions": selected_regions,
     }
+
+    if int(level) == 3:
+        # Level 3 is only available to people that are part of the team.
+        if has_permission(request, request.project, ["curator", "admin", "team_member"]):
+            context["is_team_member"] = True
+            context["files"] = WaterSystemFile.objects.filter(category_id=category, level=3)
+
     return render(request, "water/sankey.html", context)
+
+def download(request, id):
+    if has_permission(request, request.project, ["curator", "admin", "team_member"]):
+        file = WaterSystemFile.objects.get(pk=id)
+        name, file_extension = os.path.splitext(file.file.path)
+        filename = file.name + file_extension
+        return FileResponse(open(file.file.path, "rb"), as_attachment=True, filename=filename)
+    else:
+        unauthorized_access(request)
 
 def about(request):
     info = Webpage.objects.get(part_of_project=get_project(request), slug="/about/")
