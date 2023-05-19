@@ -729,88 +729,88 @@ remove line: ctrl+x
      sodipodi:insensitive="true" />
   <path
      d="M 27.882498,52.097068 C 41.96253,55.975956 72.085571,62.110809 94.806153,75.882447"
-     id="path-14"
-     class="path forward green"
-     sodipodi:nodetypes="cc"
-     inkscape:label="path-14" />
-  <path
-     d="M 38.008819,97.611296 C 78.338181,94.068636 119.34382,99.235799 143.77723,74.692399"
-     id="path-13"
-     class="path forward black"
-     sodipodi:nodetypes="cc"
-     inkscape:label="path-13" />
-  <path
-     d="M 41.274285,98.029201 C 63.173949,93.051407 151.95339,114.58511 163.56913,115.16621"
-     id="path-12"
-     class="path forward black"
-     sodipodi:nodetypes="cc"
-     inkscape:label="path-12" />
-  <path
-     d="m 33.367468,96.829496 c 34.266131,2.334422 56.336676,22.357394 78.654792,43.018324 11.50762,10.65315 29.44222,19.62263 50.74581,19.91551"
-     id="path-11"
-     class="path forward black"
-     sodipodi:nodetypes="csc"
-     inkscape:label="path-11" />
-  <path
-     d="M 42.981642,141.0215 C 80.087465,118.23422 68.744694,121.86873 157.92577,78.688667"
      id="path-10"
-     class="path forward yellow"
+     class="path forward green"
      sodipodi:nodetypes="cc"
      inkscape:label="path-10" />
   <path
-     d="m 41.42614,141.08398 c 41.342583,1.70435 78.1263,-15.91733 121.82222,-17.42959"
-     id="path-9"
-     class="path forward yellow"
+     d="M 38.008819,97.611296 C 78.338181,94.068636 119.34382,99.235799 143.77723,74.692399"
+     id="path-1"
+     class="path forward black"
      sodipodi:nodetypes="cc"
-     inkscape:label="path-9" />
+     inkscape:label="path-1" />
   <path
-     d="m 33.559149,145.92676 c 78.979231,-3.17108 91.360671,20.07762 128.377501,20.98596"
-     id="path-8"
-     class="path forward yellow"
-     sodipodi:nodetypes="cc"
-     inkscape:label="path-8" />
-  <path
-     d="M 42.205595,181.44829 C 116.65389,168.04092 117.20633,112.36977 155.02885,87.911993"
-     id="path-7"
-     class="path forward purple"
-     sodipodi:nodetypes="cc"
-     inkscape:label="path-7" />
-  <path
-     d="m 41.837383,184.66496 c 82.230987,-8.3795 63.247057,-31.64081 121.648727,-52.16059"
-     id="path-6"
-     class="path forward purple"
-     sodipodi:nodetypes="cc"
-     inkscape:label="path-6" />
-  <path
-     d="m 44.537838,186.18049 c 38.008315,3.63276 81.821812,-21.13401 117.850652,-15.43422"
-     id="path-5"
-     class="path forward purple"
-     sodipodi:nodetypes="cc"
-     inkscape:label="path-5" />
-  <path
-     d="m 153.84471,77.997517 c 33.67418,-0.472384 43.81548,20.130232 93.29214,20.737488"
-     id="path-4"
-     class="path forward green"
-     sodipodi:nodetypes="cc"
-     inkscape:label="path-4" />
-  <path
-     d="m 171.08984,119.12163 c 41.31157,-6.883 92.19208,29.07278 139.01212,5.24458"
-     id="path-3"
-     class="path forward green"
-     sodipodi:nodetypes="cc"
-     inkscape:label="path-3" />
-  <path
-     d="m 171.10475,123.19444 c 57.56262,-4.14585 81.32524,40.41563 139.24682,42.76866"
+     d="M 41.274285,98.029201 C 63.173949,93.051407 151.95339,114.58511 163.56913,115.16621"
      id="path-2"
-     class="path forward green"
+     class="path forward black"
      sodipodi:nodetypes="cc"
      inkscape:label="path-2" />
   <path
-     d="m 163.40437,123.11368 c 35.34241,8.65961 26.7703,28.54577 81.31817,44.96527"
-     id="path-1"
+     d="m 33.367468,96.829496 c 34.266131,2.334422 56.336676,22.357394 78.654792,43.018324 11.50762,10.65315 29.44222,19.62263 50.74581,19.91551"
+     id="path-3"
+     class="path forward black"
+     sodipodi:nodetypes="csc"
+     inkscape:label="path-3" />
+  <path
+     d="M 42.981642,141.0215 C 80.087465,118.23422 68.744694,121.86873 157.92577,78.688667"
+     id="path-4"
+     class="path forward yellow"
+     sodipodi:nodetypes="cc"
+     inkscape:label="path-4" />
+  <path
+     d="m 41.42614,141.08398 c 41.342583,1.70435 78.1263,-15.91733 121.82222,-17.42959"
+     id="path-5"
+     class="path forward yellow"
+     sodipodi:nodetypes="cc"
+     inkscape:label="path-5" />
+  <path
+     d="m 33.559149,145.92676 c 78.979231,-3.17108 91.360671,20.07762 128.377501,20.98596"
+     id="path-6"
+     class="path forward yellow"
+     sodipodi:nodetypes="cc"
+     inkscape:label="path-6" />
+  <path
+     d="M 42.205595,181.44829 C 116.65389,168.04092 117.20633,112.36977 155.02885,87.911993"
+     id="path-13"
+     class="path forward purple"
+     sodipodi:nodetypes="cc"
+     inkscape:label="path-13" />
+  <path
+     d="m 41.837383,184.66496 c 82.230987,-8.3795 63.247057,-31.64081 121.648727,-52.16059"
+     id="path-14"
+     class="path forward purple"
+     sodipodi:nodetypes="cc"
+     inkscape:label="path-14" />
+  <path
+     d="m 44.537838,186.18049 c 38.008315,3.63276 81.821812,-21.13401 117.850652,-15.43422"
+     id="path-15"
+     class="path forward purple"
+     sodipodi:nodetypes="cc"
+     inkscape:label="path-15" />
+  <path
+     d="m 153.84471,77.997517 c 33.67418,-0.472384 43.81548,20.130232 93.29214,20.737488"
+     id="path-7"
      class="path forward green"
      sodipodi:nodetypes="cc"
-     inkscape:label="path-1" />
+     inkscape:label="path-7" />
+  <path
+     d="m 171.08984,119.12163 c 41.31157,-6.883 92.19208,29.07278 139.01212,5.24458"
+     id="path-9"
+     class="path forward green"
+     sodipodi:nodetypes="cc"
+     inkscape:label="path-9" />
+  <path
+     d="m 171.10475,123.19444 c 57.56262,-4.14585 81.32524,40.41563 139.24682,42.76866"
+     id="path-11"
+     class="path forward green"
+     sodipodi:nodetypes="cc"
+     inkscape:label="path-11" />
+  <path
+     d="m 163.40437,123.11368 c 35.34241,8.65961 26.7703,28.54577 81.31817,44.96527"
+     id="path-8"
+     class="path forward green"
+     sodipodi:nodetypes="cc"
+     inkscape:label="path-8" />
   <g
      id="node-5"
      class="node"
