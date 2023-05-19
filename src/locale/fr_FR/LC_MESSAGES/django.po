@@ -7,15 +7,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-19 13:00+0000\n"
-"PO-Revision-Date: 2023-05-19 15:01+0200\n"
+"POT-Creation-Date: 2023-05-19 12:19+0000\n"
+"PO-Revision-Date: 2023-05-19 16:10+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_FR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.3.1\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #: core/models.py:3747 templates/water/controlpanel/upload.html:59
 #: templates/water/controlpanel/upload.html:71
@@ -125,7 +125,7 @@ msgstr "Période"
 
 #: templates/_sidebar-water.html:95
 msgid "Change"
-msgstr "Changer"
+msgstr "Actualiser"
 
 #: templates/auth/login.html:22 templates/auth/login.html:36
 msgid "Sign in"
@@ -236,20 +236,16 @@ msgstr ""
 msgid "You are adding a screenshot or image to an existing document."
 msgstr "Vous ajoutez une capture d'écran ou une image à un document existant."
 
-#: templates/water/_javascript.html:178
-msgid "NOTE: flow width is not to scale"
-msgstr "REMARQUE : la largeur du flux n'est pas à l'échelle"
-
-#: templates/water/_javascript.html:452
+#: templates/water/_javascript.html:443
 #: templates/water/controlpanel/upload.html:73
 msgid "Date"
 msgstr "Date"
 
-#: templates/water/_javascript.html:452 templates/water/_javascript.html:500
+#: templates/water/_javascript.html:443 templates/water/_javascript.html:491
 msgid "Quantity"
 msgstr "Valeurs"
 
-#: templates/water/_javascript.html:460
+#: templates/water/_javascript.html:451
 msgid "Total"
 msgstr "Total"
 
@@ -284,7 +280,7 @@ msgstr "Télécharger un fichier"
 
 #: templates/water/controlpanel/file.html:26
 msgid "Year(s) covered"
-msgstr "Année(s) couverte(s)"
+msgstr "Année(s) concernée(s)"
 
 #: templates/water/controlpanel/file.html:32
 msgid "Number of rows"
@@ -433,7 +429,7 @@ msgstr "Inclure lors du calcul de la largeur de ligne"
 
 #: templates/water/controlpanel/flows.html:113
 msgid "Uncheck if this flow is extraordinarily large"
-msgstr "Décochez si ce flux est extraordinairement important"
+msgstr "Décochez si ce flux est trop large"
 
 #: templates/water/controlpanel/index.html:14
 msgid "Sankey data"
@@ -536,11 +532,13 @@ msgstr "Ajouter un nouveau territoire"
 
 #: templates/water/controlpanel/timeframes.html:10
 msgid "Manage timeframes"
-msgstr "Gérer les délais"
+msgstr "Gérer les intervalles de temps"
 
 #: templates/water/controlpanel/timeframes.html:15
 msgid "What should be the default timeframe for the sankey diagrams?"
-msgstr "Quel devrait être le délai par défaut pour les diagrammes de Sankey ?"
+msgstr ""
+"Quel devrait être l'intervalle de temps par défaut pour les diagrammes de "
+"Sankey ?"
 
 #: templates/water/controlpanel/upload.html:10
 msgid "Sankey diagram data"
@@ -555,9 +553,9 @@ msgid ""
 "Download the template file. Use the sample data to review the format, and "
 "use this same format for the new data you want to upload."
 msgstr ""
-"Téléchargez le fichier modèle. Utilisez les exemples de données pour revoir "
-"le format et utilisez ce même format pour les nouvelles données que vous "
-"souhaitez télécharger."
+"Téléchargez le fichier modèle. Utilisez les exemples de données pour "
+"examiner le format et utilisez ce même format pour les nouvelles données que "
+"vous souhaitez téléverser."
 
 #: templates/water/controlpanel/upload.html:19
 msgid ""
@@ -577,7 +575,7 @@ msgid ""
 "into multiple sheets."
 msgstr ""
 "Vous pouvez ajouter des lignes pour autant de mois ou d'années que vous "
-"souhaitez télécharger. Vous pouvez également dupliquer la feuille si vous "
+"souhaitez téléverser. Vous pouvez également dupliquer la feuille si vous "
 "souhaitez séparer les données de différentes années en plusieurs feuilles."
 
 #: templates/water/controlpanel/upload.html:25
@@ -612,7 +610,7 @@ msgstr "Maquette de données Gaz à Effet de Serre"
 
 #: templates/water/controlpanel/upload.html:55
 msgid "Upload data"
-msgstr "Télécharger des données"
+msgstr "Téléverser des données"
 
 #: templates/water/controlpanel/upload.html:63
 msgid "Next"
@@ -621,7 +619,7 @@ msgstr "Suivant"
 #: templates/water/controlpanel/upload.html:67
 #: templates/water/controlpanel/upload.level3.html:31
 msgid "Uploaded files"
-msgstr "Fichiers téléchargés"
+msgstr "Fichiers téléversés"
 
 #: templates/water/controlpanel/upload.html:74
 #: templates/water/controlpanel/upload.level3.html:38
@@ -638,7 +636,7 @@ msgstr "Aucune donnée stockée"
 
 #: templates/water/controlpanel/upload.level3.html:37
 msgid "Uploaded"
-msgstr "Téléchargé"
+msgstr "Téléversé"
 
 #: templates/water/controlpanel/upload.level3.html:39
 msgid "Options"
