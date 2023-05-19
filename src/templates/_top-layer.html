@@ -138,7 +138,7 @@
   {% endif %}
 
   <nav class="navbar navbar-expand-{% if PROJECT.slug == "water" %}md{% else %}lg{% endif %} navbar-{{ DESIGN.header_color }} main-nav-project-{{ PROJECT.id }}" {% if PROJECT.id == 16 and request.user.is_authenticated %}hidden{% endif %}>
-    <div class="container">
+    <div class="container{% if PROJECT.slug == "water" %}-fluid{% endif %}">
       <a class="navbar-brand" href="{% if DEBUG %}/{% if PROJECT.id != 1 %}{{ PROJECT.slug }}{% endif %}{% else %}{{ PROJECT.get_website }}{% endif %}">
         <img alt="{{ PROJECT }}" src="{{ LOGO }}?u=true">
       </a>

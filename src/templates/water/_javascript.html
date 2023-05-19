@@ -598,6 +598,10 @@
   getData();
   updateLevelLinks();
 
+  {% if not DEBUG %}
+      $("#animate").click();
+  {% endif %}
+
 </script>
 
 {% if is_admin %}

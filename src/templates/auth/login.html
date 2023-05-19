@@ -19,22 +19,22 @@
 
 {% block content %}
   <div class="login-container">
-    <h1>Sign in</h1>
+    <h1>{{ _("Sign in") }}</h1>
 
     <div class="card login">
       <div class="card-body">
         <form method="post" action="">
           {% csrf_token %}
           <div class="form-group">
-            <label for="email">E-mail</label>
+            <label for="email">{{ _("E-mail") }}</label>
             <input type="email" class="form-control" id="email" name="email">
           </div>
           <div class="form-group">
             <label for="password">Password</label>
             <input type="password" class="form-control" id="password" name="password">
           </div>
-          <button type="submit" class="btn btn-primary"><i class="fal fa-fw fa-sign-in"></i> Sign in</button>
-          <a class="btn btn-primary-basic" href="{% url reset_link %}">I forgot my password</a>
+          <button type="submit" class="btn btn-primary"><i class="fal fa-fw fa-sign-in"></i> {{ _("Sign in") }}</button>
+          <a class="btn btn-primary-basic" href="{% url reset_link %}">{{ _("I forgot my password") }}</a>
         </form>
 
         {% if not project %}

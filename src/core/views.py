@@ -218,7 +218,7 @@ def user_login(request, project=None):
 def user_logout(request, project=None):
     project = request.project
     logout(request)
-    messages.warning(request, "You are now logged out")
+    messages.warning(request, _("You are now logged out"))
 
     if "next" in request.GET:
         return redirect(request.GET.get("next"))
