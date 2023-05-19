@@ -169,10 +169,19 @@
           } else if (width > max_width) {
             width = max_width;
           }
+
+          /* We apply minimum width if the flow has been manually set to ignore regular scaling */
+          additional_text = "";
+          index = ignore_size.indexOf(parseInt(key));
+          if (index > -1) {
+            width = min_width; 
+            additional_text = " - {{ _("NOTE: flow width is not to scale") }}";
+          }
+
           flow.attr("stroke-width", width + "px");
           flow.removeClass("unknown-flow");
           var title = document.createElementNS("http://www.w3.org/2000/svg", "title");
-          var titletext  = document.createTextNode({% if is_admin %}"FLOW #" + key + " - " + {% endif %}formatter.format(val) + " {{ category.unit.symbol }}");
+          var titletext  = document.createTextNode({% if is_admin %}"FLOW #" + key + " - " + {% endif %}formatter.format(val) + " {{ category.unit.symbol }}" + additional_text);
           title.appendChild(titletext);
           flow.append(title);
         }
@@ -599,7 +608,7 @@
   updateLevelLinks();
 
   {% if not DEBUG %}
-      $("#animate").click();
+    $("#animate").click();
   {% endif %}
 
 </script>

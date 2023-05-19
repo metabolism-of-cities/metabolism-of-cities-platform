@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-19 12:19+0000\n"
-"PO-Revision-Date: 2023-05-19 14:22+0200\n"
+"POT-Creation-Date: 2023-05-19 13:00+0000\n"
+"PO-Revision-Date: 2023-05-19 15:01+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_FR\n"
@@ -236,16 +236,20 @@ msgstr ""
 msgid "You are adding a screenshot or image to an existing document."
 msgstr "Vous ajoutez une capture d'écran ou une image à un document existant."
 
-#: templates/water/_javascript.html:443
+#: templates/water/_javascript.html:178
+msgid "NOTE: flow width is not to scale"
+msgstr "REMARQUE : la largeur du flux n'est pas à l'échelle"
+
+#: templates/water/_javascript.html:452
 #: templates/water/controlpanel/upload.html:73
 msgid "Date"
 msgstr "Date"
 
-#: templates/water/_javascript.html:443 templates/water/_javascript.html:491
+#: templates/water/_javascript.html:452 templates/water/_javascript.html:500
 msgid "Quantity"
 msgstr "Valeurs"
 
-#: templates/water/_javascript.html:451
+#: templates/water/_javascript.html:460
 msgid "Total"
 msgstr "Total"
 
