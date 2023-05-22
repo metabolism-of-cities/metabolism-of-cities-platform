@@ -253,6 +253,47 @@ STATICFILES_FINDERS = [
     'sass_processor.finders.CssFinder',
 ]
 
+# Modify default config so that TinyMCE loads an image insert option
+TINYMCE_DEFAULT_CONFIG = {
+    "theme": "silver",
+    "height": 500,
+    "menubar": False,
+    "plugins": "advlist,autolink,lists,link,image,charmap,print,preview,anchor,preview,"
+    "searchreplace,visualblocks,code,fullscreen,insertdatetime,media,table,paste,"
+    "code,help,wordcount",
+    "toolbar": "undo redo | formatselect | "
+    "bold italic backcolor | alignleft aligncenter "
+    "alignright alignjustify | bullist numlist outdent indent | image | preview"
+    "removeformat | help",
+    "automatic_uploads": True,
+    "image_advtab": True,
+    "file_picker_types": "image",
+
+    "file_picker_callback": 'function (cb, value, meta) {'
+      'var input = document.createElement("input");'
+      'input.setAttribute("type", "file");'
+      'if (meta.filetype == "image") {'
+          'input.setAttribute("accept", "image/*");}'
+      'if (meta.filetype == "media") {'
+      'input.setAttribute("accept", "video/*");}'
+
+      'input.onchange = function () {     '
+          'var file = this.files[0];'
+          'var reader = new FileReader();'
+          'reader.onload = function () {'
+              'var id = "blobid" + (new Date()).getTime();'
+              'var blobCache =  tinymce.activeEditor.editorUpload.blobCache;'
+              'var base64 = reader.result.split(",")[1];'
+              'var blobInfo = blobCache.create(id, file, base64);'
+              'blobCache.add(blobInfo);'
+             'cb(blobInfo.blobUri(), { title: file.name });'
+           '};'
+           'reader.readAsDataURL(file);'
+       '};'
+       'input.click();'
+    '}',
+}
+
 from django.contrib.messages import constants as messages
 
 MESSAGE_TAGS = {
