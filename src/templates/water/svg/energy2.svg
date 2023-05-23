@@ -1300,7 +1300,7 @@ remove line: ctrl+x
      d="M 435.58615,52.780737 C 423.97916,77.301651 365.60941,96.392169 369.5438,109.42594"
      sodipodi:nodetypes="cc"
      id="path-29"
-     class="path forward green"
+     class="path backward green"
      inkscape:label="path-29" />
   <path
      d="m 404.49861,117.97083 52.80801,-15.01676"
