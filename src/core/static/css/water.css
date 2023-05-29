@@ -26,7 +26,6 @@
   fill: none;
   stroke-dasharray: 0; /* Change to 1 to animate the flow */
   opacity:0.7;
-  stroke: #000;
 }
 .path:hover {
     opacity:1;

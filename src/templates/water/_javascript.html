@@ -585,9 +585,10 @@
     "red": "#e15843",
   }
 
-  $(".path").attr("style", "fill:none;stroke:#000");
+  $(".custom-stroke").attr("style", "fill:none");
+  $(".path").not(".custom-stroke").attr("style", "fill:none;stroke:#000");
   for ([key, value] of Object.entries(css_class_colors)) {
-    $(".path." + key).attr("style", "fill:none;stroke:" + value); 
+    $(".path." + key).not(".custom-stroke").attr("style", "fill:none;stroke:" + value); 
   }
 
   setDateLabels();
