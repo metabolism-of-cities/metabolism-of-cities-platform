@@ -573,35 +573,21 @@
    * defind separately.
    */
 
-  {% if category.slug == "water" %}
-    css_class_colors = {
-      "green": "#39ff00",
-      "yellow": "gold",
-      "grey": "#9996BB",
-      "brown": "#CCB7B3",
-      "orange": "#FFC592",
-      "light-orange": "#FFCEB1",
-      "blue": "#96E2E9",
-      "purple": "#9F9CF8",
-      "red": "red",
-    }
-  {% else %}
-    css_class_colors = {
-      "green": "#39ff00",
-      "yellow": "gold",
-      "purple": "purple",
-      "blue": "blue",
-      "red": "red",
-      "orange": "orange",
-      "brown": "brown",
-      "grey": "grey",
-    }
-  {% endif %}
+  css_class_colors = {
+    "green": "#61ec4d",
+    "yellow": "#ecef54",
+    "lightblue": "#96e1e8",
+    "darkpurple": "#a88cce",
+    "purple": "#9692fe",
+    "orange": "#f1b460",
+    "brown": "#ccb8b3",
+    "grey": "grey",
+    "red": "#e15843",
+  }
 
   $(".path").attr("style", "fill:none;stroke:#000");
   for ([key, value] of Object.entries(css_class_colors)) {
     $(".path." + key).attr("style", "fill:none;stroke:" + value); 
-    console.log(key,value);
   }
 
   setDateLabels();
