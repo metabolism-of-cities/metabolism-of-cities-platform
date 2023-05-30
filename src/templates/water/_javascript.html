@@ -280,12 +280,6 @@
         alternative = "E";
       } else if (includes_nice && !includes_moyenpays && includes_vesubie) {
         alternative = "D";
-        /* For alternative D, the total displayed in one of the nodes should be linked to a non-standard flow */
-        if (value_flow_30) {
-          $("#node-7 .qty").text(formatter.format(value_flow_30) + " {{ category.unit.symbol }}");
-        } else {
-          $("#node-7 .qty").text("");
-        }
       } else if (includes_nice && !includes_moyenpays && !includes_vesubie) {
         alternative = "C";
       } else if (!includes_nice && !includes_moyenpays && includes_vesubie) {
@@ -304,6 +298,16 @@
         $("#alternative_design").html("");
         console.log("The default design was loaded");
       }
+
+      if (alternative == "C" || alternative == "D") {
+        /* For some designs, the total displayed in one of the nodes should be linked to a non-standard flow */
+        if (value_flow_30) {
+          $("#node-7 .qty").text(formatter.format(value_flow_30) + " {{ category.unit.symbol }}");
+        } else {
+          $("#node-7 .qty").text("");
+        }
+      }
+
       /* END OF ALTERNATIVE DESIGN IMPLEMENTATION */
 
       $(".show-this-node").show("fast");
