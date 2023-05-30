@@ -272,15 +272,14 @@
         }
       });
       alternative = false;
+      /* NOTE: alternative E existed in the past, but it was a duplicate alternative so it was discarded */
       if (includes_nice && includes_moyenpays && includes_vesubie) {
         alternative = "G";
       } else if (!includes_nice && includes_moyenpays && includes_vesubie) {
         alternative = "F";
-      } else if (includes_nice && includes_moyenpays && !includes_vesubie) {
-        alternative = "E";
       } else if (includes_nice && !includes_moyenpays && includes_vesubie) {
         alternative = "D";
-      } else if (includes_nice && !includes_moyenpays && !includes_vesubie) {
+      } else if (includes_nice && !includes_vesubie) {
         alternative = "C";
       } else if (!includes_nice && !includes_moyenpays && includes_vesubie) {
         alternative = "B";
