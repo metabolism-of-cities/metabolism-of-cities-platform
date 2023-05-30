@@ -448,25 +448,25 @@ remove line: ctrl+x
      sodipodi:insensitive="true" />
   <path
      d="m 153.44201,156.929 c 26.6888,10.91103 58.05817,-1.83287 84.49807,3.62781"
-     id="path-4"
+     data-id="path-4"
      class="path forward green"
      sodipodi:nodetypes="cc"
      inkscape:label="path-4" />
   <path
      d="m 174.19281,107.72626 c 27.597,11.73829 40.93577,12.71936 63.47369,52.00646"
-     id="path-3"
+     data-id="path-3"
      class="path forward green"
      sodipodi:nodetypes="cc"
      inkscape:label="path-3" />
   <path
      d="m 157.66809,150.32229 c 48.43358,-18.9874 84.33811,-25.6987 118.33614,-61.891364"
-     id="path-2"
+     data-id="path-2"
      class="path forward"
      sodipodi:nodetypes="cc"
      inkscape:label="path-2" />
   <path
      d="m 176.49589,107.23827 c 27.41289,4.63552 65.20636,-25.224093 101.56271,-16.79336"
-     id="path-1"
+     data-id="path-1"
      class="path forward"
      sodipodi:nodetypes="cc"
      inkscape:label="path-1" />

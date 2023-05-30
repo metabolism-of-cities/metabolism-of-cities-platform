@@ -152,7 +152,7 @@
 
       $(".path title").remove(); // Remove all titles so we can create new ones below
       $.each(response, function(key, val) {
-        flow = $("#path-" + key);
+        flow = $("[data-id=path-" + key + "]");
         if (val == null) {
           flow.css("stroke-width", min_width + "px");
           flow.attr("title", "Inconnu");
@@ -203,7 +203,7 @@
           }
         }
 
-        $("#path-" + key).show();
+        $("[data-id=path-" + key + "]").show();
 
         all_flows = all_flows.filter(item => item !== Number(key)); /* We keep track which flows exist in the dataset, see below why */
 
@@ -230,7 +230,7 @@
 
       /* Whichever flow was NOT included in the ajax response needs to be removed from the map */
       $.each(all_flows, function(index, value) {
-        $("#path-" + value).hide("fast");
+        $("[data-id=path-" + value + "]").hide("fast");
       });
 
       $("svg").css("opacity", "1");
@@ -245,7 +245,59 @@
         }
         get_node.removeClass("show-this-node");
       }
+
+    {% if category.slug == "water" and level == 2 %}
+      /* 
+        ALTERNATIVE DESIGNS
+        In water level 2, when certain conditions are met (i.e. specific territories are activated),
+        then an alternative design needs to be shown. This means that specific flows or boxes are hidden, 
+        and others are shown. 
+      */
+      includes_nice = false;
+      includes_moyenpays = false;
+      includes_vesubie = false;
+      $(".region-bar a.btn-dark").each(function(){
+        var region = $(this).data("region");
+        if (region == 2) {
+          includes_nice = true;
+        } else if (region == 5) {
+          includes_moyenpays = true;
+        } else if (region == 7) {
+          includes_vesubie = true;
+        }
+      });
+      alternative = false;
+      if (includes_nice && includes_moyenpays && includes_vesubie) {
+        alternative = "G";
+      } else if (!includes_nice && includes_moyenpays && includes_vesubie) {
+        alternative = "F";
+      } else if (includes_nice && includes_moyenpays && !includes_vesubie) {
+        alternative = "E";
+      } else if (includes_nice && !includes_moyenpays && includes_vesubie) {
+        alternative = "D";
+      } else if (includes_nice && !includes_moyenpays && !includes_vesubie) {
+        alternative = "C";
+      } else if (!includes_nice && !includes_moyenpays && includes_vesubie) {
+        alternative = "B";
+      } else if (!includes_nice && includes_moyenpays && !includes_vesubie) {
+        alternative = "A";
+      }
+      $(".alternative-element").hide();
+      if (alternative) {
+        $("#alternative_design").html("Alternative design: " + alternative);
+        $(".hide-in-alternative-" + alternative).removeClass("show-this-node");
+        $(".hide-in-alternative-" + alternative).hide();
+        $(".show-in-alternative-" + alternative).show();
+        console.log("The following alternative design was loaded: " + alternative);
+      } else {
+        $("#alternative_design").html("");
+        console.log("The default design was loaded");
+      }
+      /* END OF ALTERNATIVE DESIGN IMPLEMENTATION */
+
       $(".show-this-node").show("fast");
+
+    {% endif %}
 
     })
     .fail(function() {
@@ -303,7 +355,6 @@
 
   function setRegionLabels() {
 
-    var activated_regions = $(".region-bar a.btn-dark").length;
     title_region = "";
     $(".region-bar a.btn-dark").each(function(){
       title_region += $(this).text() + ", ";
@@ -381,7 +432,6 @@
     updateLevelLinks();
   });
 
-
   /* We need to resize the sidebar so that it fits on the screen without the need to scroll */
   var bodyWidth = $(window).width();
   if (bodyWidth > 990) {
@@ -409,7 +459,7 @@
 
   // If you click on a flow then we show a chart with all historic data for the entire period
   $(".path").click(function(){
-    get_id = $(this).attr("id");
+    get_id = $(this).data("id");
     title = flow_titles[get_id];
 
     $("#chartTitle").text("Territoire : " + $("#title_region").text());
@@ -577,6 +627,7 @@
     "green": "#61ec4d",
     "yellow": "#ecef54",
     "lightblue": "#96e1e8",
+    "blue": "#96e1e8",
     "darkpurple": "#a88cce",
     "purple": "#9692fe",
     "orange": "#f1b460",
