@@ -190,6 +190,9 @@
         if (key == 30) {
           value_flow_30 = val;
         }
+        if (key == 19) {
+          value_flow_19 = val;
+        }
 
         if (val == null || val > 0) {
           /* If this flow has a value (or is UNKNOWN), then we should automatically SHOW all the nodes that are 
@@ -296,6 +299,13 @@
         console.log("The default design was loaded");
       }
 
+      if (alternative == "F") {
+        if (value_flow_19) {
+          $("#node-11 .qty").text(formatter.format(value_flow_19) + " {{ category.unit.symbol }}");
+        } else {
+          $("#node-11 .qty").text("");
+        }
+      }
       if (alternative == "C" || alternative == "D") {
         /* For some designs, the total displayed in one of the nodes should be linked to a non-standard flow */
         if (value_flow_30) {
