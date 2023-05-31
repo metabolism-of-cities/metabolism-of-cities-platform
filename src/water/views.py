@@ -235,7 +235,7 @@ def ajax_chart_data(request):
     # order to avoid a certain double / under-counting. The reason is that import and export flows
     # can not just be added up if they involve multiple areas, and they are imported or exported
     # from and to these same areas. This structure is not optimal but implemented as such 
-    # due to time constraints. 
+    # due to time constraints. DRY is nowhere to be found.
     
     # SPECIAL CONDITION 1: MPRG totals (space 5) are used even though two other specific areas are selected
     spaces = request.GET.getlist("space")
@@ -262,7 +262,36 @@ def ajax_chart_data(request):
     spaces = request.GET.getlist("space")
     if request.GET.get("level") == "1" and len(spaces) == 3:
         if "5" in spaces and "6" in spaces and "7" in spaces and request.GET["flow"] == "4":
-            pass
+            # First we take the Nice flow 5 data as a baseline... and save that in a dictionary 
+            data = WaterSystemData.objects.filter(
+                category_id=request.GET["category"], 
+                flow__part_of_flow__identifier=5,
+                space=2,
+                date__gte=date_start, date__lte=date_end
+            ).values("date", "timeframe").annotate(total=Sum("quantity")).order_by("date")
+            nice_results = {}
+            for each in data:
+                nice_results[each["date"]] = each["total"]
+
+            # And then we subtract the Est Littoral flow 4 from this
+            data = WaterSystemData.objects.filter(
+                category_id=request.GET["category"], 
+                flow__part_of_flow__identifier=4,
+                space=4,
+                date__gte=date_start, date__lte=date_end
+            ).values("date", "timeframe").annotate(total=Sum("quantity")).order_by("date")
+            results = []
+            for each in data:
+                date = each["date"]
+                if each["timeframe"] == "month":
+                    date = date.strftime("%b %Y")
+                else:
+                    date = date.strftime("%Y")
+                results.append({
+                    "date": date, 
+                    "timeframe": each["timeframe"], 
+                    "quantity": nice_results[each["date"]]-each["total"],
+                })
 
     # END OF SPECIAL CONDITIONS
 
