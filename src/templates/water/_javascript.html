@@ -187,9 +187,6 @@
         }
 
         /* We need this for a particular exception, see below */
-        if (key == 30) {
-          value_flow_30 = val;
-        }
         if (key == 19) {
           value_flow_19 = val;
         }
@@ -304,14 +301,6 @@
           $("#node-11 .qty").text(formatter.format(value_flow_19) + " {{ category.unit.symbol }}");
         } else {
           $("#node-11 .qty").text("");
-        }
-      }
-      if (alternative == "C" || alternative == "D") {
-        /* For some designs, the total displayed in one of the nodes should be linked to a non-standard flow */
-        if (value_flow_30) {
-          $("#node-7 .qty").text(formatter.format(value_flow_30) + " {{ category.unit.symbol }}");
-        } else {
-          $("#node-7 .qty").text("");
         }
       }
 
