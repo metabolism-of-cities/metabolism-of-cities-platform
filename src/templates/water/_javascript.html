@@ -475,6 +475,7 @@
 
     $("#chartTitle").text("Territoire : " + $("#title_region").text());
     $("#chart").modal();
+    $(".modal .nav-tabs a.swap-tab[data-show=chartbox]").click(); // Show the chart by default
 
     if ($(this).hasClass("unknown-flow")) {
       $(".unknown-flow-content").show();

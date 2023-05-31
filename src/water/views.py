@@ -177,10 +177,10 @@ def ajax(request):
     # from and to these same areas. This structure is not optimal but implemented as such 
     # due to time constraints. 
 
-    regions = request.GET.getlist("region")
-    if len(regions) == 3:
-        if "5" in regions and "6" in regions and "7" in regions:
-            # If these three regions are selected, then we modify the numbers
+    spaces = request.GET.getlist("region")
+    if len(spaces) == 3:
+        if "5" in spaces and "6" in spaces and "7" in spaces:
+            # If these three spaces are selected, then we modify the numbers
             # For the export flow (flow #5), we only get the total for MPRG (space 5)
 
             baseline = WaterSystemData.objects.filter(category_id=request.GET["category"], date__gte=date_start, date__lte=date_end)
@@ -189,12 +189,15 @@ def ajax(request):
             except:
                 results[5] = ""
 
+            # For the import flow, we take the Nice total (space 2) and subtract the Est Littoral total (space 4)
             try:
                 nice_total = baseline.filter(space=2, flow__part_of_flow__identifier=5).values("flow__part_of_flow__identifier").annotate(total=Sum("quantity"))[0]["total"]
                 est_littoral_total = baseline.filter(space=4, flow__part_of_flow__identifier=4).values("flow__part_of_flow__identifier").annotate(total=Sum("quantity"))[0]["total"]
                 results[4] = nice_total-est_littoral_total
             except:
                 results[4] = ""
+
+    # END OF SPECIAL CONDITIONS
 
     return JsonResponse(results)
 
@@ -227,6 +230,20 @@ def ajax_chart_data(request):
 
     data = data.filter(date__gte=date_start, date__lte=date_end)
 
+    # SPECIAL CONDITIONS
+    # These are certain conditions under which we need to adjust the values that are returned, in
+    # order to avoid a certain double / under-counting. The reason is that import and export flows
+    # can not just be added up if they involve multiple areas, and they are imported or exported
+    # from and to these same areas. This structure is not optimal but implemented as such 
+    # due to time constraints. 
+    
+    # SPECIAL CONDITION 1: MPRG totals (space 5) are used even though two other specific areas are selected
+    spaces = request.GET.getlist("space")
+    if request.GET.get("level") == "1" and len(spaces) == 3:
+        if "5" in spaces and "6" in spaces and "7" in spaces and request.GET["flow"] == "5":
+            data = data.filter(space=5)
+    # END OF SPECIAL CONDITIONS
+
     for each in data:
         date = each["date"]
         if each["timeframe"] == "month":
@@ -238,6 +255,17 @@ def ajax_chart_data(request):
             "timeframe": each["timeframe"], 
             "quantity": each["total"],
         })
+
+    # SPECIAL CONDITIONS
+    # SPECIAL CONDITION 2: for flow 4 we need to subtract flows from two very different areas.
+    # This forces us to rebuild the entire list and needs more than just a change in the SQL query
+    spaces = request.GET.getlist("space")
+    if request.GET.get("level") == "1" and len(spaces) == 3:
+        if "5" in spaces and "6" in spaces and "7" in spaces and request.GET["flow"] == "4":
+            pass
+
+    # END OF SPECIAL CONDITIONS
+
     return JsonResponse(results, safe=False)
 
 def water_login(request):
