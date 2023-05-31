@@ -169,6 +169,33 @@ def ajax(request):
                         results[part_of] += each["total"]
                 else:
                     results[part_of] = each["total"]
+
+    # SPECIAL CONDITIONS
+    # These are certain conditions under which we need to adjust the values that are returned, in
+    # order to avoid a certain double / under-counting. The reason is that import and export flows
+    # can not just be added up if they involve multiple areas, and they are imported or exported
+    # from and to these same areas. This structure is not optimal but implemented as such 
+    # due to time constraints. 
+
+    regions = request.GET.getlist("region")
+    if len(regions) == 3:
+        if "5" in regions and "6" in regions and "7" in regions:
+            # If these three regions are selected, then we modify the numbers
+            # For the export flow (flow #5), we only get the total for MPRG (space 5)
+
+            baseline = WaterSystemData.objects.filter(category_id=request.GET["category"], date__gte=date_start, date__lte=date_end)
+            try:
+                results[5] = baseline.filter(space=5, flow__part_of_flow__identifier=5).values("flow__part_of_flow__identifier").annotate(total=Sum("quantity"))[0]["total"]
+            except:
+                results[5] = ""
+
+            try:
+                nice_total = baseline.filter(space=2, flow__part_of_flow__identifier=5).values("flow__part_of_flow__identifier").annotate(total=Sum("quantity"))[0]["total"]
+                est_littoral_total = baseline.filter(space=4, flow__part_of_flow__identifier=4).values("flow__part_of_flow__identifier").annotate(total=Sum("quantity"))[0]["total"]
+                results[4] = nice_total-est_littoral_total
+            except:
+                results[4] = ""
+
     return JsonResponse(results)
 
 def ajax_chart_data(request):
