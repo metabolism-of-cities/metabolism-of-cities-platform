@@ -286,7 +286,9 @@
       }
       $(".alternative-element").hide();
       if (alternative) {
-        $("#alternative_design").html("Alternative design: " + alternative);
+        {% if is_admin %}
+          $("#alternative_design").html("Alternative design: " + alternative);
+        {% endif %}
         $(".hide-in-alternative-" + alternative).removeClass("show-this-node");
         $(".hide-in-alternative-" + alternative).hide();
         $(".show-in-alternative-" + alternative).show();
