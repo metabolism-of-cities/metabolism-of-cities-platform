@@ -1063,11 +1063,6 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             fields.remove("language")
             fields.remove("url")
 
-        if project.slug == "untraceable":
-            if "tags" not in fields:
-                fields.append("tags")
-            initial["tags"] = request.GET.get("tag")
-
         if project.slug == "water":
             # For the water project we always activate ALL of the spaces in the list
             initial["spaces"] = ReferenceSpace.objects.filter(activated__part_of_project=project)
@@ -1161,8 +1156,6 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         form.fields["activities"].queryset = Activity.objects.filter(catalog_id=3655)
         form.fields["materials"].queryset = Material.objects.filter(Q(catalog_id=19001)|Q(catalog_id=18998)|Q(catalog_id=32553))
 
-    if project.slug == "untraceable":
-        form.fields["tags"].queryset = Tag.objects.filter(parent_tag_id=828)
     elif project.slug == "water" and "tags" in form.fields:
         form.fields["tags"].queryset = Tag.objects.filter(parent_tag__parent_tag_id=get_parent_layer(request))
     elif project.slug == "cityloops" and "tags" in form.fields:

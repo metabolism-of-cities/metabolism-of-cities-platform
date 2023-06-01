@@ -58,9 +58,7 @@ PROJECT_ID_LIST = {
     "podcast": 3458,
     "education": 32018,
     "stocks": 18683,
-    "peeide": 51458,
     "cityloops": 6,
-    "untraceable": 32542,
     "water": 1011035,
 }
 
@@ -80,9 +78,7 @@ PROJECT_LIST = {
     "podcast": { "id": 3458, "url": "podcast/" },
     "education": { "id": 32018, "url": "education/" },
     "stocks": { "id": 18683, "url": "stocks/" },
-    "peeide": { "id": 51458, "url": "peeide/" },
     "cityloops": { "id": 6, "url": "cityloops/" },
-    "untraceable": { "id": 32542, "url": "untraceable/" },
     "water": { "id": 1011035, "url": "water/" },
 }
 
