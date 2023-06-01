@@ -1,12 +1,22 @@
 {% extends "_base.html" %}
 
+{% block head %}
+<style type="text/css">
+video::-webkit-media-controls {
+  display: none;
+}
+</style>
+{% endblock %}
+
 {% block content %}
 
 <div class="text-center mt-5">
 
 <h1 class="mb-4">{{ _("Welcome to the metabolism website of the water and wastewater services of Nice Côte d'Azur") }}</h1>
 
-<img src="/media/water/homepage-animation.gif" style="max-width:100%" alt="" />
+<video controls style="width:100%;pointer-events: none" autoplay muted disablepictureinpicture loop>
+  <source src="/media/water/homepage.mp4" type="video/mp4">
+</video>
 
 <div class="p-5 bg-white mt-4 img-thumbnail" style="display:inline-block">
 <a href="{% url "water:water" %}?region=1">
