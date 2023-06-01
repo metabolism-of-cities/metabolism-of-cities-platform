@@ -1297,7 +1297,13 @@ remove line: ctrl+x
      class="path forward green"
      inkscape:label="path-28" />
   <path
-     d="M 435.58615,52.780737 C 423.97916,77.301651 365.60941,96.392169 369.5438,109.42594"
+     d="M 435.58615,52.780737 C 423.97916,77.301651 370.07672,103.53209 374.01111,116.56586"
+     sodipodi:nodetypes="cc"
+     data-id="path-29"
+     class="path backward green"
+     inkscape:label="path-29" />
+  <path
+     d="m 371.42606,109.27999 c -14.25433,18.11584 -42.50964,7.78586 -58.15285,24.59628"
      sodipodi:nodetypes="cc"
      data-id="path-29"
      class="path backward green"
