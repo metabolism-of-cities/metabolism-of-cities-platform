@@ -607,6 +607,10 @@ def template_folium(request):
 
 def projects(request):
     article = get_object_or_404(Webpage, pk=PAGE_ID["projects"])
+
+    host = request.META.get("HTTP_HOST")
+    messages.success(request, host)
+
     context = {
         "list": Project.objects.filter(show_on_moc=True).order_by("name"),
         "article": article,

@@ -20,10 +20,6 @@ class MultiHostMiddleware:
         project = 1
         host = request.META.get("HTTP_HOST")
 
-        import logging
-        logger = logging.getLogger(__name__)
-        logger.error(host)
-
         try:
             if settings.DEBUG:
                 # In local mode we want to open /subsite so we need to load
