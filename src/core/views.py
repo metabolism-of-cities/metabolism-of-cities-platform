@@ -2290,7 +2290,15 @@ def mooc_module(request, id, module):
 
     return render(request, "mooc/module.html", context)
 
-# Temp stuff
+# Database trimmer for anonymization
+# This function is used when preparing a public data dump
+# Use this after loading the db locally
+# Remove the staff_login_required temporarily to open this page without the need to be logged in
+# which is important as all users are deleted so you can't actually be logged in
+# After running this script for the first time, execute the commands in adminer that pop up
+# Then dump the db: 
+# docker container exec -it moc_db pg_dump -U postgres moc > ~/dump.sql
+# gzip this file and upload to the server. Update the file size and timestamp in README.md
 
 @staff_member_required
 def trim_database(request):
@@ -2298,10 +2306,18 @@ def trim_database(request):
     if not settings.DEBUG:
         return render(request, "template/blank.html", context)
     else:
-        User.objects.all().delete()
         MaterialDemand.objects.all().delete()
+        User.objects.all().delete()
         Message.objects.all().delete()
         People.objects.all().delete()
+        WaterSystemSpace.objects.all().delete()
+        CityLoopsIndicator.objects.all().delete()
+        CityLoopsSCAReport.objects.all().delete()
+        CityLoopsUCAReport.objects.all().delete()
+        PublicProject.objects.all().delete()
+        SocialMedia.objects.all().delete()
+        ZoteroCollection.objects.all().delete()
+        WaterSystemCategory.objects.all().delete()
         Relationship.objects.filter(pk=1).delete() # Remove platformu admins
         # We should re-create this level though! Otherwise PlatformU won't work!
         Relationship.objects.create(
@@ -2317,14 +2333,21 @@ def trim_database(request):
         LibraryItem.objects_unfiltered.filter(Q(is_deleted=True)|Q(is_public=False)).delete()
         Organization.objects_unfiltered.filter(Q(is_deleted=True)|Q(is_public=False)).delete()
         Tag.objects_unfiltered.filter(Q(is_deleted=True)|Q(is_public=False)).delete()
+        Record.objects_unfiltered.filter(Q(is_deleted=True)|Q(is_public=False)).delete()
+        Data.objects_include_private.filter(is_public=False).delete()
+
         if "remove_referenspace" in request.GET:
-            ReferenceSpace.objects.exclude(activated__isnull=False).delete()
+            ReferenceSpace.objects.all().delete()
+            Data.objects.all().delete()
+            messages.success(request, "Reference spaces were deleted.")
 
         messages.success(request, "Information was deleted.")
         messages.warning(request, "Remove the cron logs and sessions!")
         messages.warning(request, "Run this in adminer: delete from django_cron_cronjoblog;")
         messages.warning(request, "Run this in adminer: delete from django_session")
-        messages.warning(request, "Run this in adminer: UPDATE stafdb_referencespace SET geometry = NULL;")
+        messages.warning(request, "Run this in adminer: delete from django_migrations")
+        messages.warning(request, "Run this in adminer after you have created the first db dump: UPDATE stafdb_referencespace SET geometry = NULL;")
+        messages.warning(request, "Once that is done, take a second db dump, and then open this with ?remove_referenspace")
 
         return render(request, "template/blank.html", context)
 

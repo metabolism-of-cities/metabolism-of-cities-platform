@@ -2,7 +2,7 @@
 
 This repository contains the source code of [Metabolism of Cities](https://metabolismofcities.org/). The following technologies are used:
 
-- Django 3
+- Django 4
 - Python 3
 - PostgreSQL 
 - PostGIS
@@ -59,23 +59,23 @@ From the root directory of the project. This is a shortcut to migrate any unappl
 
 # Database
 
-A copy of our database is available for development purposes. These are copies of our live database, taken on December 17, 2020. However, user data, user posts, and other personal data has been removed. There are three versions available, depending on your interests:
+A copy of our database is available for development purposes. These are copies of our live database, taken on June 1, 2023. However, user data, user posts, and other personal data has been removed. There are three versions available, depending on your interests:
 
 ### [db.sql.gz](http://metabolismofcities.org/media/files/db.sql.gz)
 
-247 Mb (839 Mb uncompressed)
+518 Mb (1.4 Gb uncompressed)
 
 This file contains the entire Metabolism of Cities database, including all geometry and reference spaces. If you want to work with the data platform and you need mapping functionality, this is your file.
 
 ### [db-without-geometry.sql.gz](http://metabolismofcities.org/media/files/db-without-geometry.sql.gz)
 
-31 Mb (303 Mb uncompressed)
+35 Mb (203 Mb uncompressed)
 
 In this file we have removed ALL the geometry data. That means that none of the mapping functionality will work. However, other than that everything is left the same as the full database above. This database is useful if you would like to work with the data portal but don't need mapping functionality.
 
 ### [db-without-spaces.sql.gz](http://metabolismofcities.org/media/files/db-without-spaces.sql.gz)
 
-12 Mb (36 Mb uncompressed)
+30 Mb (177 Mb uncompressed)
 
 In this file we removed ALL reference spaces (and therefore also any geometry). This means that there is no infrastructure, boundaries, etc. but also no material stocks and flows data (which is linked to reference spaces). Use this file if you don't care about the data part of the website.
 
