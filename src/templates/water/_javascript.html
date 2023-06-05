@@ -151,6 +151,7 @@
       {% endfor %}
 
       $(".path title").remove(); // Remove all titles so we can create new ones below
+      $(".arrow title").remove(); // Some are .arrow classes
       $.each(response, function(key, val) {
         flow = $("[data-id=path-" + key + "]");
         if (val == null) {
@@ -181,7 +182,7 @@
           flow.attr("stroke-width", width + "px");
           flow.removeClass("unknown-flow");
           var title = document.createElementNS("http://www.w3.org/2000/svg", "title");
-          var titletext  = document.createTextNode({% if is_admin %}"FLOW #" + key + " - " + {% endif %}formatter.format(val) + " {{ category.unit.symbol }}" + additional_text);
+          var titletext  = document.createTextNode({% if is_admin and DEBUG %}"FLOW #" + key + " - " + {% endif %}formatter.format(val) + " {{ category.unit.symbol }}" + additional_text);
           title.appendChild(titletext);
           flow.append(title);
         }
