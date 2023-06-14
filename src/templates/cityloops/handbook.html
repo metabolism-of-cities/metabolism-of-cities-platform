@@ -1,0 +1,13 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <h1>Handbook</h1>
+
+  <ul class="list-group list-group-flush">
+    {% for handbook_page in handbook_pages %}
+      <a class="list-group-item{% if handbook_page.slug == page.slug %} font-weight-bold{% endif %}" href="{% url 'cityloops:handbook_page' handbook_page.slug %}">{{ handbook_page.title }}</a>
+    {% endfor %}
+  </ul>
+
+{% endblock %}

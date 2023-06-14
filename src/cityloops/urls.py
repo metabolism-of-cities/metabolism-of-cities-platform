@@ -50,6 +50,10 @@ urlpatterns = baseline_urlpatterns + baseline_education_urlpatterns + [
     # temporary plotly sankey testing
     path("sankey/", views.sankey, name="sankey"),
 
+    # handbook
+    path("handbook/", views.handbook, name="handbook"),
+    path("handbook/<slug:slug>/", views.handbook_page, name="handbook_page"),
+
     # these are loaded after the cityloops maps, so the first URL used is the cityloops one
 ] + baseline_staf_urlpatterns + [
     path("<slug:slug>/", core.article, name="article"),

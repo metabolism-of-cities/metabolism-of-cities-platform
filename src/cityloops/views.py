@@ -1103,3 +1103,23 @@ def sankey(request):
         "sankey": sankey,
     }
     return render(request, "cityloops/sankey.html", context)
+
+def handbook(request):
+    handbook_pages = CityLoopsHandbookPage.objects.all().order_by("order")
+
+    context = {
+        "handbook_pages": handbook_pages
+    }
+
+    return render(request, "cityloops/handbook.html", context)
+
+def handbook_page(request, slug):
+    handbook_pages = CityLoopsHandbookPage.objects.all().order_by("order")
+    page = CityLoopsHandbookPage.objects.get(slug=slug)
+
+    context = {
+        "page": page,
+        "handbook_pages": handbook_pages
+    }
+
+    return render(request, "cityloops/handbook.page.html", context)

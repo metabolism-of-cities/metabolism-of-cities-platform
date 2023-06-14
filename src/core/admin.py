@@ -327,6 +327,9 @@ class CronJobLogAdmin(admin.ModelAdmin):
 class CityLoopsIndicatorAdmin(admin.ModelAdmin):
     autocomplete_fields = ["city"]
 
+class CityLoopsHandbookPageAdmin(admin.ModelAdmin):
+    exclude = ["body_html"]
+
 admin_site.register(Tag, TagAdmin)
 admin_site.register(Record, RecordAdmin)
 admin_site.register(Message, MessageAdmin)
@@ -395,6 +398,7 @@ admin_site.register(CityLoopsIndicator, SearchAdmin)
 admin_site.register(CityLoopsIndicatorValue, CityLoopsIndicatorAdmin)
 
 admin_site.register(CityLoopsSCAReport, CityLoopsIndicatorAdmin)
+admin_site.register(CityLoopsHandbookPage, CityLoopsHandbookPageAdmin)
 
 class EurostatAdmin(admin.ModelAdmin):
     form = EurostatForm
