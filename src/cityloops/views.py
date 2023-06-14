@@ -1105,7 +1105,7 @@ def sankey(request):
     return render(request, "cityloops/sankey.html", context)
 
 def handbook(request):
-    handbook_pages = CityLoopsHandbookPage.objects.all().order_by("order")
+    handbook_pages = CityLoopsHandbookPage.objects.all().order_by("position")
 
     context = {
         "handbook_pages": handbook_pages
@@ -1114,7 +1114,7 @@ def handbook(request):
     return render(request, "cityloops/handbook.html", context)
 
 def handbook_page(request, slug):
-    handbook_pages = CityLoopsHandbookPage.objects.all().order_by("order")
+    handbook_pages = CityLoopsHandbookPage.objects.all().order_by("position")
     page = CityLoopsHandbookPage.objects.get(slug=slug)
 
     context = {
