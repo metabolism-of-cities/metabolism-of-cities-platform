@@ -2,20 +2,70 @@
 
 {% block head %}
 <style>
-  embed {
-    /*width: 100%;*/
+  iframe {
+    width: 100%;
+    height: 450px;
+  }
 
+  img {
+    max-width: 100%;
+  }
+
+  .list-group {
+    border-radius: 0;
+  }
+
+  .list-group-item {
+    border-radius: 0;
+    border: none;
+    border-left: 4px solid #004d76;
+  }
+
+  .list-group-item-action.selected {
+    background-color: #efefef;
+  }
+
+  .list-group-item.level-1 {
+    border-top: 1px solid #efefef;
+  }
+
+  .handbook-chapters a:first-of-type {
+    border-top: none;
+  }
+
+  .list-group-item.level-2 {
+    border-left-color: #358dbb;
+    margin-left: 4px;
+    width: calc(100% - 4px);
+    display: none;
+  }
+
+  .list-group-item.level-3 {
+    border-left-color: #00b6ed;
+    margin-left: 8px;
+    width: calc(100% - 8px);
+    display: none;
+
+  }
+
+  .list-group-item.level-4 {
+    border-left-color: #bdf0ff;
+    margin-left: 12px;
+    width: calc(100% - 12px);
+    display: none;
   }
 </style>
 {% endblock %}
+
+{% block title %}{{ page.title }}{% endblock %}
 
 {% block content %}
 
 <div class="row">
   <div class="col-md-4">
-    <ul class="list-group">
+    <ul class="list-group handbook-chapters">
       {% for handbook_page in handbook_pages %}
-        <a class="list-group-item list-group-item-action{% if handbook_page.slug == page.slug %} active{% endif %}" style="padding-left:calc(1rem + {% widthratio handbook_page.level 1 8 %}px)" href="{% url 'cityloops:handbook_page' handbook_page.slug %}">{{ handbook_page.title }}</a>
+        <a class="list-group-item list-group-item-action{% if handbook_page.slug == page.slug %} selected{% endif %} level-{{ handbook_page.level }}" href="{% url 'cityloops:handbook_page' handbook_page.slug %}">{{ handbook_page.title }}</a>
       {% endfor %}
     </ul>
   </div>
@@ -29,4 +79,15 @@
 
 {% endblock %}
 
+{% block footer %}
+<script>
+  if ( $(".handbook-chapters .list-group-item.selected").hasClass("level-1") ) {
+    $(".handbook-chapters .list-group-item.selected").nextUntil(".list-group-item.level-1").css("display", "block");
+  } else {
+    var parent = $(".handbook-chapters .list-group-item.selected").prevAll(".level-1").first();
+    parent.nextUntil(".list-group-item.level-1").css("display", "block");
+  }
+
+</script>
+{% endblock %}
 

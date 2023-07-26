@@ -3633,11 +3633,14 @@ class CityLoopsHandbookPage(models.Model):
     position = models.SmallIntegerField(null=True, blank=True, help_text="The position at which this page should appear in the menu")
     level = models.SmallIntegerField(null=True, blank=True, help_text="Where in the hierarchy this page should be. Leave blank for a main menu item")
 
+
     def save(self, *args, **kwargs):
         if not self.body:
             self.body_html = None
         else:
             self.body_html = markdown(self.body, extensions=['tables'])
+            p = re.compile("\[#(\d*)\]")
+            self.body_html = p.sub(r'<iframe class="libraryitem card" src="/library/preview/\1/" onload="resizeIframe(this)"></iframe>', self.body_html)
 
         super().save(*args, **kwargs)
 
