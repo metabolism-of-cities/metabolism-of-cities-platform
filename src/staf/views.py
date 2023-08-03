@@ -492,6 +492,9 @@ def map_item(request, id, space=None):
         spaces = spaces.filter(geometry__within=boundaries.geometry)
         restrict_to_within_boundaries = True
 
+    if "feature" in properties and "feature_value" in properties and properties["feature"] and properties["feature_value"]:
+        spaces = spaces.filter(meta_data__features__contains={properties["feature"]: properties["feature_value"]})
+
     # We don't show > 500 objects by default
     if spaces.count() > 500 and "show_all_spaces" not in request.GET:
         space_count = spaces.count()
@@ -3299,6 +3302,7 @@ def chart_editor(request, id):
         except:
             points = False
         context["points"] = points
+        context["space"] = spaces
 
         # For the points we use markers, which are only available in certain colors. For polygons, we can use
         # any HTML color name

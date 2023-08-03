@@ -114,6 +114,21 @@
                 </section>
               </div>
 
+              {% if space and space.meta_data.features %}
+              <div class="form-group enabled-chart-types">
+                <label class="category">Filter by feature</label>
+                <p>You can only show a subset of the data by filtering based on a certain feature. To do so, select the feature and enter the specific
+                value that it needs to have in order to be shown on the map.</p>
+                <select class="custom-select mb-3" name="feature">
+                  <option value=""></option>
+                  {% for key,value in space.meta_data.features.items %}
+                    <option {% if properties.feature == key %}selected{% endif %} value="{{ key }}">{{ key }}</option>
+                  {% endfor %}
+                </select>
+                <input type="text" name="feature_value" value="{{ properties.feature_value }}" class="form-control" placeholder="Enter required value" />
+              </div>
+              {% endif %}
+
               <div class="form-group enabled-chart-types">
                 <label class="category">Load boundaries</label>
                 <p>Enter the ID of a shapefile if you want to show boundaries around the map. </p>
