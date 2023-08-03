@@ -2834,7 +2834,7 @@ def hub_processing_geospreadsheet_classify(request, id, space=None):
         for i, row in df.iterrows():
             count += 1
             this_row = {}
-            for column_name, content in row.iteritems():
+            for column_name, content in row.items():
                 this_row[column_name] = content
             rows.append(this_row)
             if count == 5:

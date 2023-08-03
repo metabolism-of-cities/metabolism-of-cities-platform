@@ -1956,7 +1956,7 @@ class LibraryItem(Record):
                     meta_data = {}
                     # This CERTAINLY needs to be rewritten, I read everywhere that this looping is not ideal
                     # But I'm not sure how, so TODO
-                    for column_name, content in row.iteritems():
+                    for column_name, content in row.items():
                         this_field = field_match[column_name]
                         this_row[column_name] = content
                         if this_field == "Name":
