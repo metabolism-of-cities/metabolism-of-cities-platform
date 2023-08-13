@@ -70,14 +70,14 @@
 {% block content %}
 
 <div class="row">
-  <div class="col-md-4 bg-white border p-1">
+  <div class="col-md-4">
     <ul class="list-group handbook-chapters">
       {% for handbook_page in handbook_pages %}
         <a class="list-group-item list-group-item-action{% if handbook_page.slug == page.slug %} selected{% endif %} level-{{ handbook_page.level|default:'0' }}" href="{% url 'cityloops:handbook_page' handbook_page.slug %}">{{ handbook_page.title }}</a>
       {% endfor %}
     </ul>
   </div>
-  <div class="col-md-8">
+  <div class="col-md-8 px-0">
     <article class="bg-white border p-1 px-3">
       <h1>{{ page.title }}</h1>
 
