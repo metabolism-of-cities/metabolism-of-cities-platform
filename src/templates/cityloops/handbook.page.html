@@ -18,40 +18,48 @@
   .list-group-item {
     border-radius: 0;
     border: none;
-    border-left: 4px solid #004d76;
+    border-left: 4px solid #004D76;
   }
 
   .list-group-item-action.selected {
     background-color: #efefef;
   }
 
-  .list-group-item.level-1 {
+  .list-group-item.level-0 {
     border-top: 1px solid #efefef;
+    font-weight: bold;
   }
 
   .handbook-chapters a:first-of-type {
     border-top: none;
   }
 
-  .list-group-item.level-2 {
-    border-left-color: #358dbb;
+  .list-group-item.level-1 {
+    border-left-color: #006AA3;
     margin-left: 4px;
     width: calc(100% - 4px);
     display: none;
   }
 
-  .list-group-item.level-3 {
-    border-left-color: #00b6ed;
+  .list-group-item.level-2 {
+    border-left-color: #358dbb;
     margin-left: 8px;
     width: calc(100% - 8px);
+    display: none;
+  }
+
+  .list-group-item.level-3 {
+    border-left-color: #00b6ed;
+    margin-left: 12px;
+    width: calc(100% - 12px);
     display: none;
 
   }
 
   .list-group-item.level-4 {
     border-left-color: #bdf0ff;
-    margin-left: 12px;
-    width: calc(100% - 12px);
+    margin-left: 16px;
+    width: calc(100% - 16px);
     display: none;
   }
 </style>
@@ -62,18 +70,19 @@
 {% block content %}
 
 <div class="row">
-  <div class="col-md-4">
+  <div class="col-md-4 bg-white border p-1">
     <ul class="list-group handbook-chapters">
       {% for handbook_page in handbook_pages %}
-        <a class="list-group-item list-group-item-action{% if handbook_page.slug == page.slug %} selected{% endif %} level-{{ handbook_page.level }}" href="{% url 'cityloops:handbook_page' handbook_page.slug %}">{{ handbook_page.title }}</a>
+        <a class="list-group-item list-group-item-action{% if handbook_page.slug == page.slug %} selected{% endif %} level-{{ handbook_page.level|default:'0' }}" href="{% url 'cityloops:handbook_page' handbook_page.slug %}">{{ handbook_page.title }}</a>
       {% endfor %}
     </ul>
   </div>
   <div class="col-md-8">
-    <h1>{{ page.title }}</h1>
+    <article class="bg-white border p-1 px-3">
+      <h1>{{ page.title }}</h1>
 
-    {{ page.body_html|safe }}
-
+      {{ page.body_html|safe }}
+    </article>
   </div>
 </div>
 
@@ -81,11 +90,11 @@
 
 {% block footer %}
 <script>
-  if ( $(".handbook-chapters .list-group-item.selected").hasClass("level-1") ) {
-    $(".handbook-chapters .list-group-item.selected").nextUntil(".list-group-item.level-1").css("display", "block");
+  if ( $(".handbook-chapters .list-group-item.selected").hasClass("level-0") ) {
+    $(".handbook-chapters .list-group-item.selected").nextUntil(".list-group-item.level-0").css("display", "block");
   } else {
-    var parent = $(".handbook-chapters .list-group-item.selected").prevAll(".level-1").first();
-    parent.nextUntil(".list-group-item.level-1").css("display", "block");
+    var parent = $(".handbook-chapters .list-group-item.selected").prevAll(".level-0").first();
+    parent.nextUntil(".list-group-item.level-0").css("display", "block");
   }
 
 </script>
