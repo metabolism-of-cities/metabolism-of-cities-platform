@@ -393,8 +393,10 @@
     e.preventDefault();
     var region = $(this).data("region");
 
-    if (region == "1") {
+    if (region == "1" {% if category.slug == "water" %}|| true{% endif %}) {
       /* Eau d'azur button is pressed so we remove all regions and only activate this one */
+      /* CHANGE AUGUST 2023: it is now requested that when ANY region is activated that the 
+      rest is deactivated, so that is why the condition above was changed from (region == "1") */
       $(".region-bar a").removeClass("btn-dark");
       $(this).addClass("btn-dark");
     } else {
