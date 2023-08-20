@@ -838,27 +838,37 @@ def uca_report(request, slug):
         nuts3_id = 585874
         currency = "€"
         bounding_box = [[50.65, 3.28], [53.6, 7.21]]
+        uca_report_id = 1015328
+        uca_report_pdf_url = "https://cityloops.metabolismofcities.org/library/1015328/download/1015337/"
     elif slug == "bodo":
         country_id = 328727
         nuts2_id = 584307
         nuts3_id = 585880
         currency = "kr"
         bounding_box = [[57.94,4.83], [71.33,31.55]]
+        uca_report_id = 1015332
+        uca_report_pdf_url = "https://cityloops.metabolismofcities.org/library/1015332/download/1015336/"
     elif slug == "mikkeli":
         country_id = 328729
         nuts2_id = 584282
         nuts3_id = 983064
         currency = "€"
+        uca_report_id = 1017815
+        uca_report_pdf_url = "https://cityloops.metabolismofcities.org/library/1017815/download/1018335/"
     elif slug == "porto":
         country_id = 328813
         nuts2_id = 584336
         nuts3_id = 586124
         currency = "€"
+        uca_report_id = 1017616
+        uca_report_pdf_url = "https://cityloops.metabolismofcities.org/library/1017616/download/1017619/"
     elif slug == "sevilla":
         country_id = 328741
         nuts2_id = 584286
         nuts3_id = 585776
         currency = "€"
+        uca_report_id = 1017818
+        uca_report_pdf_url = "https://library.metabolismofcities.org/items/1017818/"
 
     country = ReferenceSpace.objects.get(id=country_id)
     nuts2 = ReferenceSpace.objects.get(id=nuts2_id)
@@ -872,6 +882,8 @@ def uca_report(request, slug):
         "nuts3": nuts3,
         "currency": currency,
         "bounding_box": bounding_box,
+        "uca_report_id": uca_report_id,
+        "uca_report_pdf_url": uca_report_pdf_url,
     }
 
     if "format" in request.GET:
