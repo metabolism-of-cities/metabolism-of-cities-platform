@@ -52,15 +52,22 @@
 
     .indicators .list-group-item {
       padding: .5rem .25rem;
-      cursor: grabbing;
+      /*cursor: grabbing;*/
     }
 
-    .indicators .list-group-item:hover {
+/*    .indicators .list-group-item:hover {
       background-color: #efefef;
     }
-
+*/
     .indicator-table tbody tr:first-of-type td {
       border-top: none;
+    }
+
+    iframe {
+      width: 100%;
+      height: 500px;
+      margin-bottom: 2rem;
+      border: none;
     }
   </style>
 {% endblock %}
@@ -101,47 +108,8 @@
 </section>
 
 <section id="evaluation-plan">
-  <h3>Evaluation plan</h3>
-
-  <table class="table indicator-table">
-    <tbody>
-      <tr>
-        <td class="number"><a href="{% url 'cityloops:indicators' %}" class="indicator-number">01</a></td>
-        <td class="indicator-text">{% lorem 7 w random %}</td>
-        <td class="has-button text-right">
-          <a href="{% url 'cityloops:city_indicator' info.slug 1 %}" class="btn btn-cityloops-primary btn-sm">
-            <i class="far fa-fw fa-chart-pie"></i> Sector <i class="fa fa-fw fa-check-circle mr-0 ml-2"></i>
-          </a>
-        </td>
-      </tr>
-      <tr>
-        <td class="number"><a href="{% url 'cityloops:indicators' %}" class="indicator-number">05</a></td>
-        <td class="indicator-text">{% lorem 7 w random %}</td>
-        <td class="has-button text-right">
-          <a href="{% url 'cityloops:city_indicator' info.slug 1 %}" class="btn btn-secondary btn-sm">
-            <i class="far fa-fw fa-city"></i> City
-          </a>
-          <a href="{% url 'cityloops:city_indicator' info.slug 1 %}" class="btn btn-cityloops-secondary btn-sm">
-            <i class="far fa-fw fa-random"></i> Demonstration action <i class="fa fa-fw fa-check-circle mr-0 ml-2"></i>
-          </a>
-        </td>
-      </tr>
-      <tr>
-        <td class="number"><a href="{% url 'cityloops:indicators' %}" class="indicator-number">15</a></td>
-        <td class="indicator-text">Circular Material Use Rate </td>
-        <td class="has-button text-right">
-          <a href="{% url 'cityloops:city_indicator' info.slug 1 %}" class="btn btn-cityloops-secondary btn-sm">
-            <i class="far fa-fw fa-random"></i> Demonstration action
-          </a>
-        </td>
-      </tr>
-
-    </tbody>
-  </table>
-
-  <a class="btn btn-primary" href="{% url 'cityloops:city_indicators' info.slug sector %}">
-    <i class="fa fa-ruler"></i> Explore evaluation plan
-  </a>
+  <h3>Material Stock map</h3>
+  <iframe class="rounded" src="https://gcp-europe-west1.app.carto.com/map/c087a313-2dcc-4327-983f-651f90f2cd5c" onload="resizeIframe(this)"></iframe>
 </section>
 
 
@@ -366,18 +334,18 @@
     }
 
     // hover over table to nodes
-    $(".list-group-item").hover(
-      function() {
-        $(this).addClass("hover")
-        let id = $(this).data("id");
+    // $(".list-group-item").hover(
+    //   function() {
+    //     $(this).addClass("hover")
+    //     let id = $(this).data("id");
 
-        hoverNode(sankeyNodes[id])
-      }, function() {
-        $(this).removeClass("hover")
-        d3.selectAll("rect").style("opacity", 0.5);
-        d3.selectAll(".sankey-link").style("opacity", 0.7);
-        d3.selectAll("text").style("opacity", 1);
-      }
-    );
+    //     hoverNode(sankeyNodes[id])
+    //   }, function() {
+    //     $(this).removeClass("hover")
+    //     d3.selectAll("rect").style("opacity", 0.5);
+    //     d3.selectAll(".sankey-link").style("opacity", 0.7);
+    //     d3.selectAll("text").style("opacity", 1);
+    //   }
+    // );
   </script>
 {% endblock %}
