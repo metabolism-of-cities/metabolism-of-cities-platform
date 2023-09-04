@@ -15,124 +15,208 @@ def index(request):
 def city(request, slug):
     info = get_space(request, slug)
 
-    biomass_sankey = False
-    construction_sankey = False
+    uca = False
+    oneliner = False
+    sankey_1_year = False
+    sankey_2_year = False
+    input_circularity_year_1 = False
+    output_circularity_year_1 = False
+    processed_materials_year_1 = False
+    end_of_life_waste_year_1 = False
+    secondary_materials_year_1 = False
+    input_circularity_year_2 = False
+    output_circularity_year_2 = False
+    processed_materials_year_2 = False
+    end_of_life_waste_year_2 = False
+    secondary_materials_year_2 = False
+    domestic_material_consumption = False
+    eol_recycling_rate = False
+    sector_waste_amount = False
 
+    construction = False
+
+    if slug == "apeldoorn":
+        uca = True
+        oneliner = "6% circular (2018)"
+        sankey_1_year = 2018
+        sankey_2_year = 2014
+        input_circularity_year_1 = 6
+        output_circularity_year_1 = 10
+        processed_materials_year_1 = 692850
+        end_of_life_waste_year_1 = 436862
+        secondary_materials_year_1 = 41683
+        input_circularity_year_2 = 7
+        output_circularity_year_2 = 27
+        processed_materials_year_2 = 359106
+        end_of_life_waste_year_2 = 93489
+        secondary_materials_year_2 = 24857
+
+        construction = True
+        biomass_domestic_material_consumption = 771610
+        biomass_eol_recycling_rate = 0
+        biomass_sector_waste_amount = 146288
+        construction_domestic_material_consumption = 853422
+        construction_eol_recycling_rate = 9.28
+        construction_sector_waste_amount = 44314
+
+        space_population = 164781
+        space_size = 341
+        nuts3_population = 700975
+        nuts3_size = 1860
+        nuts2_population = 2096603
+        nuts2_size = 5136
+        country_population = 17475415
+        country_size = 41543
+
+    elif slug == "bodo":
+        uca = False
+
+    elif slug == "hoje-taastrup":
+        uca = False
+
+    elif slug == "mikkeli":
+        uca = False
+
+    elif slug == "porto":
+        uca = False
+
+    elif slug == "roskilde":
+        uca = False
+
+    elif slug == "sevilla":
+        uca = False
+
+    bounding_box = False
     sankey_colour = "#efefef"
     sankey_source = []
     sankey_target = []
-
-    biomass_values = False
-    biomass_figure = False
-
-    construction_values = False
-    construction_figure = False
+    sankey_values = []
     sankey_labels = ["","","","","","","","","","","Redistribution","","","","Reuse","","Reuse","","","","","","","Remanufacturing","","","Recycling","","","","","","","","","","","","","","","","","",]
+    sca_report_id = None
+    sca_report_pdf_url = None
 
-    figure_node = dict(
-        thickness = 10,
-        line = dict(width = 0),
-        label = ["Extraction/Harvesting", "Manufacturing", "Retail", "Use", "Stock", "Waste collection", "Incineration", "Recycling", "Anaerobic digestion", "Composting", "Import", "Export", "Landfill", "Harvesting", "Composting or anaerobic digestion", "Separation afterwards", "Waste-to-energy", "Other disposal", "Other recovery", "Storage prior to disposal", "Storage prior to recovery", "Retail abroad"],
-        color = "#efefef",
-    )
+    bounding_box = False
+    sankey_colour = "#efefef"
+    sankey_source = []
+    sankey_target = []
+    sankey_values = []
+    sankey_labels = ["","","","","","","","","","","Redistribution","","","","Reuse","","Reuse","","","","","","","Remanufacturing","","","Recycling","","","","","","","","","","","","","","","","","",]
+    sca_report_id = None
+    sca_report_pdf_url = None
 
     if slug == "apeldoorn":
+        country_id = 328768
+        nuts2_id = 584317
+        nuts3_id = 585874
+        bounding_box = [[50.65, 3.28], [53.6, 7.21]]
+        currency = "€"
         sankey_source = [0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,4,4,5,5,5,5,5,5,5,6,7,8,9,9,10,10,10,10,10,10,10,10,10,11,11,11,11,11]
         sankey_target = [1,2,3,5,11,2,3,5,11,3,3,5,11,5,2,4,3,5,12,6,7,14,15,1,11,2,1,13,2,13,1,2,3,5,12,6,8,9,7,12,6,8,9,7]
         sankey_colour = ["rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 182, 237, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 182, 237, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 182, 237, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)"]
-        biomass_values = [48841,1546,0,2834,0,2058856,0,462340,0,0,0,0,0,117030,0,0,0,0,6308,10916,114451,8025,6569,0,0,0,0,0,0,0,627455,90935,0,0,0,0,0,0,0,0,0,0,0,0]
-        construction_values = [0,0,0,0,0,627229.98,0,104538.33,313614.99,0,0,0,0,67001.20,33500.60,234504.20,443.14,43871.31,5152.24,2111.61,34304.65,1326.36,1391.40,0,0,211.16,10291.40,0,0,0,533388.77,533388.77,0,0,0,0,0,0,0,0,0,0,0,0]
+        biomass_sankey_values = [48841,1546,0,2834,0,2058856,0,462340,0,0,0,0,0,117030,0,0,0,0,6308,10916,114451,8025,6569,0,0,0,0,0,0,0,627455,90935,0,0,0,0,0,0,0,0,0,0,0,0]
+        construction_sankey_values = [0,0,0,0,0,627229.98,0,104538.33,313614.99,0,0,0,0,67001.20,33500.60,234504.20,443.14,43871.31,5152.24,2111.61,34304.65,1326.36,1391.40,0,0,211.16,10291.40,0,0,0,533388.77,533388.77,0,0,0,0,0,0,0,0,0,0,0,0]
 
-    elif slug == "bodo":
-        sankey_source = [0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,4,4,5,5,5,5,5,5,5,6,7,8,9,9,10,10,10,10,10,10,10,10,10,11,11,11,11,11]
-        sankey_target = [1,2,3,5,11,2,3,5,11,3,3,5,11,5,2,4,3,5,12,6,7,8,9,1,11,2,1,13,2,13,1,2,3,5,12,6,8,9,7,12,6,8,9,7]
-        sankey_colour = ["rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)"]
-        sankey_labels = ["","","","","","","","","","","Redistribution","","","","Reuse","","Reuse","","","","","","","Remanufacturing","","","Recycling","","","","","","","","","","","","","","","","",""]
-        construction_values = [0,0,0 ,0,0,91577.01,13736.55,1526.28,45788.51,0,0,0,0,83914.2,0,0,5840,55942.8,114304,19710,3,0,0,0,127544,0,2.4,0,0,0,139647.84,325844.96,0,119497.6,0,0,0,0,0,0,0,0,0,0]
+    country = ReferenceSpace.objects.get(id=country_id)
+    nuts2 = ReferenceSpace.objects.get(id=nuts2_id)
+    nuts3 = ReferenceSpace.objects.get(id=nuts3_id)
 
-    elif slug == "hoje-taastrup":
-        sankey_source = [0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,4,4,5,5,5,5,5,5,5,5,6,7,8,9,9,10,10,10,10,10,10,10,10,10,11,11,11,11,11]
-        sankey_target = [1,2,3,5,11,2,3,5,11,3,3,5,11,5,2,4,3,5,12,6,7,17,18,19,20,11,2,1,13,2,13,1,2,3,5,12,6,8,9,7,12,6,21,9,7]
-        sankey_colour = ["rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)"]
-        sankey_labels = ["","","","","","","","","","","Redistribution","","","","Reuse","","Reuse","","","","","","","","","","Recycling","Recycling","","","","","","","","","","","","","","","","",""]
-        construction_values = [116639.75,174959.63,116639.75,0,174959.63,172781.83,0,15707.44,125659.52,0,0,0,0,103589.75,51794.88,362564.13,6339.82,627642.67,119202.85,4872.91,385208.04,1756.34,4511.36,659.78,117771.22,57540,487.29,115562.41,0,0,0,49200,98400,49200,44520,0,0,0,0,49200,15562.5,15562.5,249000,0,31125]
-
-    elif slug == "mikkeli":
-        sankey_source = [0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,4,4,5,5,5,5,5,5,5,6,7,8,9,9,10,10,10,10,10,10,10,10,10,11,11,11,11,11]
-        sankey_target = [1,2,3,5,11,2,3,5,11,3,3,5,11,5,2,4,3,5,12,6,7,8,9,1,11,2,1,13,2,13,1,2,3,5,12,6,8,9,7,12,6,8,9,7,4]
-        sankey_colour = ["rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 182, 237, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 182, 237, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 182, 237, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 182, 237, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)"]
-        biomass_values = [745097,23579,0,43228,0,546,0,123,0,0,146,0,0,18186,0,0,0,0,0,0,7540,0,7469,0,7724,0,0,0,3000,0,83044,12035,0,0,0,0,0,0,0,0,7724,0,0,0]
-        construction_values = [617130,246852,123426,123426,123426,403225,0,67204,201612,0,0,0,0,75313,37656,263595,356,35242,2293,0,27924,0,0,0,5381,0,28708,0,0,0,27708,27708,0,0,0,0,0,0,13854,0,4598,0,0,784]
-
-    elif slug == "porto":
-        sankey_source = [0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,3,4,4,5,5,5,5,5,5,5,16,7,8,9,9,10,10,10,10,10,10,10,10,10,11,11,11,11,11]
-        sankey_target = [1,2,3,5,11,2,3,5,11,3,3,5,11,5,2,4,3,3 ,3,5,12,16,7,8,9,1,11,2,1,13,2,13,1,2,3,5,12,16,8,9,7,12,16,8,9,7]
-        sankey_colour = ["rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)"]
-        sankey_labels = ["","","","","","","","","","","Redistribution","","","","Reuse","","Food donation","Local composting","Reuse","","","","","","","Remanufacturing","","","Recycling","","","","","","","","","","","","","","","","",""]
-        biomass_values = [0,0,247.51,13.85,0,19121.70,0,36074.97,141934.29,99693.51,100.48,1903.43,8157.55,39364.38,0,0,21.54,927,8.59,0,0,0,0,0,0,0,39364.38,0,0,0,0,0,197794.15,84768.92,0,0,0,0,0,0,0,0,26816,0,12548.38,0]
-
-    elif slug == "roskilde":
-        sankey_source = [0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,4,4,5,5,5,5,5,5,5,5,6,7,8,9,9,10,10,10,10,10,10,10,10,10,11,11,11,11,11]
-        sankey_target = [1,2,3,5,11,2,3,5,11,3,3,5,11,5,2,4,3,5,12,6,7,17,18,19,20,11,2,1,13,2,13,1,2,3,5,12,6,8,9,7,12,6,21,9,7]
-        sankey_colour = ["rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)"]
-        sankey_labels = ["","","","","","","","","","","Redistribution","","","","Reuse","","Reuse","","","","","","","","","","Recycling","Recycling","","","","","","","","","","","","","","","","",""]
-        construction_values = [316450,1898700,949350,0,3164500,252168.08,0,0,183394.97,0,0,0,0,948973.36,316324.45,5061191.25,6835.20,676685.21,173998.18,12157.43,347990.87,3687.15,8114.4,5334.17,132238.23,57951.20,1215.74,104397.26,0,0,0,70728.43,141456.85,70728.43,69678.4,0,0,0,0,70728.43,17807.65,17807.65,284922.45,0,35615.31]
-
-    elif slug == "sevilla":
-        sankey_source = [0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,4,4,5,5,5,5,5,5,5,6,7,8,9,9,10,10,10,10,10,10,10,10,10,11,11,11,11,11]
-        sankey_target = [1,2,3,5,11,2,3,5,11,3,3,5,11,5,2,4,3,5,12,6,7,8,9,1,11,2,1,0,2,13,1,2,3,5,12,6,8,9,7,12,6,8,9,7]
-        sankey_colour = ["rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)",]
-        sankey_labels = ["","","","","","","","","","","Redistribution","","","","Reuse","","Reuse","","","","","","","Remanufacturing","","","Recycling","Restoration","","","","","","","","","","","","","","","",""]
-        biomass_values = [12992746.38,411162.86,0,753798.58,0,2571687.46,0,577501.75,0,969877.09,0,18499.02,79281.51,16637601.18,0,0,0,0,85000,105,1916,75000,600,21980,0,0,1916,75000,0,0,4339922.77,628974.31,0,0,0,0,0,0,0,0,0,0,0,0]
-        construction_values = [881799.58,352719.83,176359.92,176359.92,176359.92,244299.22,0,40716.54,122149.61,1692002.70,0,112800.18,451200.72,203340.57,203340.57,1626724.58,4450.42,440591.34,431,0,600,0,0,18452,0,0,3396,0,0,0,167697.41,167697.41,0,0,0,0,0,0,0,0,0,0,0,0]
-
-    if biomass_values:
-        biomass_figure = go.Figure(data=[go.Sankey(
-            node = figure_node,
+    if biomass_sankey_values:
+        biomass_fig = go.Figure(data=[go.Sankey(
+            node = dict(
+              thickness = 10,
+              line = dict(width = 0),
+              label = ["Extraction/Harvesting", "Manufacturing", "Retail", "Use", "Stock", "Waste collection", "Incineration", "Recycling", "Anaerobic digestion", "Composting", "Import", "Export", "Landfill", "Harvesting", "Composting or anaerobic digestion", "Separation afterwards", "Waste-to-energy", "Other disposal", "Other recovery", "Storage prior to disposal", "Storage prior to recovery", "Retail abroad"],
+              color = "#efefef",
+            ),
             link = dict(
               source = sankey_source,
               target = sankey_target,
-              value = biomass_values,
+              value = biomass_sankey_values,
               label = sankey_labels,
               color = sankey_colour,
         ))])
 
-    if construction_values:
-        construction_figure = go.Figure(data=[go.Sankey(
-            node = figure_node,
+        biomass_fig.update_layout(
+            hovermode = "x",
+            font = dict(size = 14, color = "black", family = "Lato"),
+            plot_bgcolor = "rgba(255,255,255,0)",
+            paper_bgcolor = "rgba(255,255,255,0)",
+            height = 500,
+            width = 1020,
+            modebar_remove = ["lasso", "select"],
+        )
+
+        biomass_sankey = biomass_fig.to_html(full_html=True)
+    else:
+        biomass_sankey = False
+
+    if construction_sankey_values:
+        construction_fig = go.Figure(data=[go.Sankey(
+            node = dict(
+              thickness = 10,
+              line = dict(width = 0),
+              label = ["Extraction/Harvesting", "Manufacturing", "Retail", "Use", "Stock", "Waste collection", "Incineration", "Recycling", "Anaerobic digestion", "Composting", "Import", "Export", "Landfill", "Harvesting", "Composting or anaerobic digestion", "Separation afterwards", "Waste-to-energy", "Other disposal", "Other recovery", "Storage prior to disposal", "Storage prior to recovery", "Retail abroad"],
+              color = "#efefef",
+            ),
             link = dict(
               source = sankey_source,
               target = sankey_target,
-              value = construction_values,
+              value = construction_sankey_values,
               label = sankey_labels,
               color = sankey_colour,
         ))])
 
-    figures = [biomass_figure, construction_figure]
+        construction_fig.update_layout(
+            hovermode = "x",
+            font = dict(size = 14, color = "black", family = "Lato"),
+            plot_bgcolor = "rgba(255,255,255,0)",
+            paper_bgcolor = "rgba(255,255,255,0)",
+            height = 500,
+            width = 1020,
+            modebar_remove = ["lasso", "select"],
+        )
 
-    for each in figures:
-        if each:
-            each.update_layout(
-                hovermode = "x",
-                font = dict(size = 14, color = "black", family = "Lato"),
-                plot_bgcolor = "rgba(255,255,255,0)",
-                paper_bgcolor = "rgba(255,255,255,0)",
-                height = 600,
-                width = 1110,
-                modebar_remove = ["lasso", "select"],
-            )
-
-    if biomass_values:
-        biomass_sankey = biomass_figure.to_html(full_html=True)
-
-    if construction_values:
-        construction_sankey = construction_figure.to_html(full_html=True)
+        construction_sankey = construction_fig.to_html(full_html=True)
+    else:
+        construction_sankey = False
 
     context = {
-        "info": info,
+        "city": info,
         "title": info,
+        "uca": uca,
+        "oneliner": oneliner,
+        "slug": slug,
+        "sankey_1_year": sankey_1_year,
+        "sankey_2_year": sankey_2_year,
+        "input_circularity_year_1": input_circularity_year_1,
+        "output_circularity_year_1": output_circularity_year_1,
+        "processed_materials_year_1": processed_materials_year_1,
+        "end_of_life_waste_year_1": end_of_life_waste_year_1,
+        "secondary_materials_year_1": secondary_materials_year_1,
+        "input_circularity_year_2": input_circularity_year_2,
+        "output_circularity_year_2": output_circularity_year_2,
+        "processed_materials_year_2": processed_materials_year_2,
+        "end_of_life_waste_year_2": end_of_life_waste_year_2,
+        "secondary_materials_year_2": secondary_materials_year_2,
         "biomass_sankey": biomass_sankey,
         "construction_sankey": construction_sankey,
+        "biomass_domestic_material_consumption": biomass_domestic_material_consumption,
+        "biomass_eol_recycling_rate": biomass_eol_recycling_rate,
+        "biomass_sector_waste_amount": biomass_sector_waste_amount,
+        "construction_domestic_material_consumption": construction_domestic_material_consumption,
+        "construction_eol_recycling_rate": construction_eol_recycling_rate,
+        "construction_sector_waste_amount": construction_sector_waste_amount,
+        "country": country,
+        "nuts2": nuts2,
+        "nuts3": nuts3,
+        "space_population": space_population,
+        "space_size": space_size,
+        "nuts3_population": nuts3_population,
+        "nuts3_size": nuts3_size,
+        "nuts2_population": nuts2_population,
+        "nuts2_size": nuts2_size,
+        "country_population": country_population,
+        "country_size": country_size,
     }
 
     return render(request, "cityloops/city.html", context)

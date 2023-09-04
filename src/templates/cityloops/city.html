@@ -1,34 +1,461 @@
 {% extends "_base.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block css %}
+  <style>
+    td.number {
+      width: 48px;
+      padding-right: 0;
+    }
+
+    .indicator-number {
+      background-color: #144d58;
+      color: #fff !important;
+      padding: 0 .5rem;
+      border-radius: .25rem;
+      display: inline-block;
+      font-weight: bold;
+    }
+
+    .link {
+      fill: none;
+    }
+
+    .sankey-link.green {
+      stroke: green;
+    }
+
+    .sankey-link.gold {
+      stroke: gold;
+    }
+
+    .sankey-link.red {
+      stroke: red;
+    }
+
+    .sankey-link.blue {
+      stroke: blue;
+    }
+
+    #chart path.hover {
+      opacity: 1 !important;
+      stroke-opacity: 1 !important;
+    }
+
+    #chart text {
+      pointer-events: none;
+    }
+
+    .indicators {
+      font-size: .875rem;
+    }
+
+    .indicators .list-group-item {
+      padding: .5rem .25rem;
+      /*cursor: grabbing;*/
+    }
+
+/*    .indicators .list-group-item:hover {
+      background-color: #efefef;
+    }
+*/
+    .indicator-table tbody tr:first-of-type td {
+      border-top: none;
+    }
+
+    iframe {
+      width: 100%;
+      height: 500px;
+      margin-bottom: 2rem;
+      border: none;
+    }
+
+
+    /* new start */
+    #oneliner {
+    }
+
+    #uca-sankey-1 {
+      height: 100%;
+      width: 600px;
+    }
+
+    @media (min-width: 1500px) {
+      .container.main-content {
+          max-width: 1400px;
+      }
+    }
+
+    *[data-year="{{ sankey_2_year }}"] {
+      display: none;
+    }
+
+    .text-transparent {
+      color: transparent;
+    }
+
+    .context-map {
+      height: 285px;
+      width: 100%;
+    }
+  </style>
+
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+     integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+     crossorigin=""/>
+{% endblock %}
 
 {% block content %}
 
-  <h1>{{ info }}'s Circularity Dashboard</h1>
+{% if not uca %}<h1>{{ city }}</h1>{% endif %}
 
-  <div class="alert alert-dark text-center p-5 mb-4">
-    <h2 class="pt-5 pb-5">
-    <i class="fa fa-exclamation-triangle"></i><br>
-      Data dashboard is under construction.
-    </h2>
-    <div class="mt-4">
-      Together with people in {{ info }}, we are working hard to prepare this data dashboard.
-      <br>
-      You can already visit <a href="{% url 'cityloops:dashboard' info.slug %}">{{ info }}'s Data Hub</a>.
-      <br>
-      Go to the <a href="/dashboards/{{ info.slug }}/hub/harvesting/">Data Manager</a> section to upload information for {{ info }}.
+{% if uca %}
+  <section>
+    <div id="oneliner" class="d-inline-block border shadow-sm bg-white p-4 mb-4">
+      <h1 class="m-0">{{ city }} is {{ oneliner }}</h2>
+    </div>
+
+    <h2>UCA Sankey</h2>
+    <div class="row mb-4">
+      <div class="col-lg-9">
+        <div class="border bg-white">
+          <div data-year="{{ sankey_1_year }}" id="uca-sankey-1" class="plotly-graph-div" style="height:100%; width:100%; min-height: 450px;"></div>
+          <div data-year="{{ sankey_2_year }}" id="uca-sankey-2" class="plotly-graph-div" style="height:100%; width:100%; min-height: 450px;"></div>
+        </div>
+      </div>
+      <div class="col-lg-3">
+        <select id="sankey-toggle" class="custom-select mb-4">
+          <option value="{{ sankey_1_year }}" selected>{{ sankey_1_year }}</option>
+          <option value="{{ sankey_2_year }}">{{ sankey_2_year }}</option>
+        </select>
+        <ul class="list-group list-group-flush indicators">
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <span><i class="fa fa-fw fa-arrow-alt-to-right mr-2"></i> Input circularity</span>
+            <span data-year="{{ sankey_1_year }}">{{ input_circularity_year_1|intcomma }}%</span>
+            <span data-year="{{ sankey_2_year }}">{{ input_circularity_year_2|intcomma }}%</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <span><i class="fa fa-fw fa-arrow-alt-from-left mr-2"></i> Output circularity</span>
+            <span data-year="{{ sankey_1_year }}">{{ output_circularity_year_1|intcomma }}%</span>
+            <span data-year="{{ sankey_2_year }}">{{ output_circularity_year_2|intcomma }}%</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <span><i class="fa fa-fw fa-wrench mr-2"></i> Processed materials</span>
+            <span data-year="{{ sankey_1_year }}">{{ processed_materials_year_1|intcomma }} tonnes/year</span>
+            <span data-year="{{ sankey_2_year }}">{{ processed_materials_year_2|intcomma }} tonnes/year</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <span><i class="fa fa-fw fa-trash mr-2"></i> End of Life waste</span>
+            <span data-year="{{ sankey_1_year }}">{{ end_of_life_waste_year_1|intcomma }} tonnes/year</span>
+            <span data-year="{{ sankey_2_year }}">{{ end_of_life_waste_year_2|intcomma}} tonnes/year</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <span><i class="fa fa-fw fa-recycle mr-2"></i> Secondary materials</span>
+            <span data-year="{{ sankey_1_year }}">{{ secondary_materials_year_1|intcomma }} tonnes/year</span>
+            <span data-year="{{ sankey_2_year }}">{{ secondary_materials_year_2|intcomma }} tonnes/year</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="row mb-4">
+      <div class="col-lg-9">
+        {% if slug == "apeldoorn" %}
+          <p>"The Dutch municipality, located in the province of Gelderland has a population of 166,306 people that are spread over an area of 341.15 km2. Its local economy is mainly based on ""Health and Welfare care"" (17.8%), ""Trade"" (14.5%) and ""Public Administration, and Government services"" (12.7%) economic activities in terms of employees.</p>
+
+          <p>It was possible to illustrate that Apeldoorn is a linear and carbon-rich city (90-95% linear), processing yearly approximately 650 kt of materials, adding 13 kt in the building stock and reinjecting just 4 kt of secondary materials in their economy. From these numbers, the magnitude of the efforts becomes visible. In addition, the ""weight"" of Apeldoorn can be illustrated through its building stock which amounts to 15,000 kt (or 95 t per capita), which requires continuous flows for both its operation and construction.
+
+          <p>Given the land use of Apeldoorn (78% covered by vegetation), this provides a considerable opportunity to develop a circular bioeconomy. For instance, a significant share of biomass demands of Apeldoorn could be covered by local production of food. In addition, a part of this biomass could be used for energetic use, reducing the demand of imports and partly GHG emissions."</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <h3>UCA material stock map</h3>
+    <iframe class="border mb-4" src="https://gcp-europe-west1.app.carto.com/map/c087a313-2dcc-4327-983f-651f90f2cd5c" onload="resizeIframe(this)"></iframe>
+  </section>
+{% endif %}
+
+{% if construction_sankey %}
+  <section>
+    <h2>Construction</h2>
+    <div class="row">
+      <div class="col-lg-9">
+        <div class="border bg-white mb-4">
+          {{ construction_sankey|safe }}
+        </div>
+
+        {% if slug == "apeldoorn" %}
+          <p>
+            "The municipality of Apeldoorn has a binding contract with a single concrete processor/provider, located in Nijmegen. For demolishing, the realisation of pathways, roads, etc. or other infrastructural projects there is a multitude of contractors both situated inside and outside of Apeldoorn, any of which will be selected through procurement.
+          </p>
+
+          <p>
+            Apeldoorn has it's own land bank, providing contractors with soil/sand if necessary. Contractors will need to acquire concrete through Apeldoorn's concrete processor, other materials can be freely imported. Reuse/recycle requirements per project are defined by Apeldoorn's procurement officers, this is specified in e.g. tonnes of concrete/asphalt that needs to be made from recycles materials. Responsibility of further recycling/reuse of materials is put in the hands of the contractors themselves. While steps have already been taken to ensure a certain reuse/recycling minimum, there is a demand for upcycling methods of CDW materials into higher-value products, which could prove to be a more efficient reuse method."
+          </p>
+        {% endif %}
+      </div>
+      <div class="col-lg-3">
+        <ul class="list-group list-group-flush indicators">
+          <li class="list-group-item">
+            <div><i class="fa fa-fw fa-home-lg-alt mr-2"></i>Domestic material consumption</div>
+            <div><i class="fa fa-fw fa-home-lg-alt mr-2 text-transparent"></i>{{ construction_domestic_material_consumption|intcomma }} tonnes/year</div>
+          </li>
+          <li class="list-group-item">
+            <div><i class="fa fa-fw fa-recycle mr-2"></i>End of Life recycling rate</div>
+            <div><i class="fa fa-fw fa-recycle mr-2 text-transparent"></i>{{ construction_eol_recycling_rate|intcomma }}%</div>
+          </li>
+          <li class="list-group-item">
+            <div><i class="fa fa-fw fa-trash mr-2"></i>Amount of sector waste</div>
+            <div><i class="fa fa-fw fa-trash mr-2 text-transparent"></i>{{ construction_sector_waste_amount|intcomma }} tonnes/year</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+{% endif %}
+
+{% if biomass_sankey %}
+  <section>
+    <h2>Biomass</h2>
+    <div class="row">
+      <div class="col-lg-9">
+        <div class="border bg-white mb-4">
+          {{ biomass_sankey|safe }}
+        </div>
+
+        {% if slug == "apeldoorn" %}
+          <p>There is a large opportunity to make some flows more circular. These numbers indicate that there is willingness for circularity in the city. With the project CityLoops, Apeldoorn hopes to get more control of these bio-waste flows. Apeldoorn needs to invest more time into collecting the different flows of biomaterials in order to get better insights for reuse and recycling.</p>
+        {% endif %}
+
+      </div>
+      <div class="col-lg-3">
+        <ul class="list-group list-group-flush indicators">
+          <li class="list-group-item">
+            <div><i class="fa fa-fw fa-home-lg-alt mr-2"></i>Domestic material consumption</div>
+            <div><i class="fa fa-fw fa-home-lg-alt mr-2 text-transparent"></i>{{ biomass_domestic_material_consumption|intcomma }} tonnes/year</div>
+          </li>
+          <li class="list-group-item">
+            <div><i class="fa fa-fw fa-recycle mr-2"></i>End of Life recycling rate</div>
+            <div><i class="fa fa-fw fa-recycle mr-2 text-transparent"></i>{{ biomass_eol_recycling_rate|intcomma }}%</div>
+          </li>
+          <li class="list-group-item">
+            <div><i class="fa fa-fw fa-trash mr-2"></i>Amount of sector waste</div>
+            <div><i class="fa fa-fw fa-trash mr-2 text-transparent"></i>{{ biomass_sector_waste_amount|intcomma }} tonnes/year</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+{% endif %}
+
+<section>
+  <h3>Urban context</h3>
+  <div class="row mb-3">
+    <div class="col-3">
+      <div class="context-map border" id="space-map"></div>
+    </div>
+    <div class="col-3">
+      <div class="context-map border" id="nuts3-map"></div>
+    </div>
+    <div class="col-3">
+      <div class="context-map border" id="nuts2-map"></div>
+    </div>
+    <div class="col-3">
+      <div class="context-map border" id="country-map"></div>
     </div>
   </div>
-
-  {% if construction_sankey %}
-    <h2>Construction sector Sankey diagram</h2>
-    <div class="border rounded bg-white p-3 mb-4">
-      {{ construction_sankey|safe }}
+  <div class="row mb-4">
+    <div class="col-3">
+      <strong>{{ city }}</strong>
+      <div>
+        <i class="fal fa-users fa-fw mr-2"></i> {{ space_population|intcomma }}
+      </div>
+      <div>
+        <i class="fal fa-ruler-combined fa-fw mr-2"></i> {{ space_size|intcomma }} km<sup>2</sup>
+      </div>
     </div>
-  {% endif %}
-  {% if biomass_sankey %}
-    <h2>Biomass sector Sankey diagram</h2>
-    <div class="border rounded bg-white p-3 mb-4">
-      {{ biomass_sankey|safe }}
+
+    <div class="col-3">
+      <strong>{{ nuts3 }}</strong>
+      <div>
+        <i class="fal fa-users fa-fw mr-2"></i> {{ nuts3_population|intcomma }}
+      </div>
+      <div>
+        <i class="fal fa-ruler-combined fa-fw mr-2"></i> {{ nuts3_size|intcomma }} km<sup>2</sup>
+      </div>
     </div>
+
+    <div class="col-3">
+      <strong>{{ nuts2 }}</strong>
+      <div>
+        <i class="fal fa-users fa-fw mr-2"></i> {{ nuts2_population|intcomma }}
+      </div>
+      <div>
+        <i class="fal fa-ruler-combined fa-fw mr-2"></i> {{ nuts2_size|intcomma }} km<sup>2</sup>
+      </div>
+    </div>
+
+    <div class="col-3">
+      <strong>{{ country }}</strong>
+      <div>
+        <i class="fal fa-users fa-fw mr-2"></i> {{ country_population|intcomma }}
+      </div>
+      <div>
+        <i class="fal fa-ruler-combined fa-fw mr-2"></i> {{ country_size|intcomma }} km<sup>2</sup>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="border bg-white p-3">
+        <p>Do you want to learn more about the methods, reports or are keen to carry out an urban or sector-wide circularity assesssment for your or a different city and build your own Sankey diagram? Then check out the resources from Metabolism of Cities:</p>
+
+        <ul>
+          <li><a href="https://cityloops.metabolismofcities.org/library/1010979/">Urban Circularity Assessment - Method</a></li>
+          <li><a href="https://cityloops.metabolismofcities.org/handbook/UCA-Handbook/">Urban Circularity Assessment - Handbook</a></li>
+          <li><a href="https://cityloops.metabolismofcities.org/reports/">Exisiting urban circularity assessment reports</a> - bottom of the page</li>
+          <br>
+          <li><a href="https://cityloops.metabolismofcities.org/library/583948/">Sector-wide Circularity Assessment - Method</a></li>
+          <li><a href="https://cityloops.metabolismofcities.org/handbook/SCA-Handbook/">Sector-wide Circularity Assessment - Handbook</a></li>
+          <li><a href="https://cityloops.metabolismofcities.org/reports/">Exisiting sector-wide circularity assessment reports</a> - middle of the page</li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <a class="btn btn-primary btn-block" href="{% url 'cityloops:dashboard' slug %}">{{ city }} Data Hub</a>
+      <a class="btn btn-primary btn-block" href="{% url 'cityloops:uca_report' slug %}">Urban Circularity Assessment online report</a>
+      <a class="btn btn-primary btn-block" href="{% url 'cityloops:sca_report' 'construction' slug %}">SCA construction report</a>
+      <a class="btn btn-primary btn-block" href="{% url 'cityloops:sca_report' 'biomass' slug %}">SCA biomass report</a>
+
+      <p class="mt-3">Do you have any questions about the dashboard, data or want to get in touch with a contact person from the city? Please email Metabolism of Cities at <a href="mailto:info@metabolismofcities.org">info@metabolismofcities.org</a> for assistence.</p>
+    </div>
+  </div>
+</section>
+
+
+{% endblock %}
+
+{% block footer %}
+  <script src="{% static 'js/uca-js' %}"></script>
+  {% if uca %}
+    <script type="text/javascript">
+      $("#sankey-toggle").change(function(){
+        let selected_year = $("#sankey-toggle").val()
+        $("[data-year]").hide()
+        $("[data-year=" + selected_year + "]").show()
+        window.dispatchEvent(new Event('resize'));
+      })
+    </script>
   {% endif %}
 
+  {% if slug == "apeldoorn" %}
+    <script type="text/javascript">
+      window.PLOTLYENV=window.PLOTLYENV || {}; if (document.getElementById("uca-sankey-1")) { Plotly.newPlot("uca-sankey-1", [{"link":{"color":["rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)"],"source":[0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,2,2,2,2,2,2,2,2,3,3,3,3,4,4,4,4,3,3,3,3,5,5,5,5,5,5,5,5,6,6,6,6,7,7,7,7,7,7,7,7,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4],"target":[8,8,8,8,8,8,8,8,2,2,2,2,2,2,2,2,3,3,3,3,5,5,5,5,9,9,9,9,7,7,7,7,4,4,4,4,4,4,4,4,6,6,6,6,4,4,4,4,2,2,2,2,8,8,8,8,10,10,10,10,11,11,11,11,12,12,12,12,13,13,13,13],"value":["893.13","115.21","236.75","130.47","174.14","0.00","0.00","0.00","286.39","21.00","189.23","130.47","55.84","0.00","0.00","0.00","272.86","0.00","0.00","125.52","77.44","21.00","190.81","5.23","165.12","0.00","0.00","125.52","33.24","0.00","3.54","4.90","107.74","0.00","0.00","0.00","38.87","4.31","8.96","2.74","38.57","16.69","181.85","2.49","274.55","-2.28","-1.13","3.11","8.07","0.00","1.57","0.28","25.17","0.00","1.97","4.62","371.06","0.00","0.00","0.00","0.02","0.00","0.01","0.01","16.84","2.02","4.27","0.93","0.00","0.00","0.00","0.00"],"hoverlabel":{"bgcolor":"rgba(255,255,255,0)"}},"node":{"color":["rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)"],"label":["Imports","Domestic Extraction","Processed materials","Energetic use","EoL Waste","Material use","In-use stocks","Recovery","Exports","DPO emissions","Landfill","Incineration","Incineration with energy recovery","Backfilling"],"line":{"width":0},"thickness":10,"hoverlabel":{"bgcolor":"rgba(255,255,255,0)"},"pad":15,"x":[0,0.1,0.3,0.5,0.7,0.5,0.6,0.8,1,0.7,0.9,0.9,0.9,0.9],"y":[0,0.8,0.5,0.3,0.7,0.7,0.9,0.8,0.01,0.3,0.7,0.6,0.5,0.4]},"type":"sankey","arrangement":"freeform"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"font":{"size":10,"color":"black","family":"Lato"},"hovermode":"x","title":{"text":""}},                        {"responsive": true}                    )                };
+      window.PLOTLYENV=window.PLOTLYENV || {}; if (document.getElementById("uca-sankey-2")) { Plotly.newPlot("uca-sankey-2", [{"link":{"color":["rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)","rgba(56, 118, 30, 0.5)","rgba(241, 194, 51, 0.5)","rgba(224, 102, 102, 0.5)","rgba(142, 124, 195, 0.5)"],"source":[0,0,0,0,1,1,1,1,0,0,0,0,1,1,1,1,2,2,2,2,2,2,2,2,3,3,3,3,4,4,4,4,3,3,3,3,5,5,5,5,5,5,5,5,6,6,6,6,7,7,7,7,7,7,7,7,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4],"target":[8,8,8,8,8,8,8,8,2,2,2,2,2,2,2,2,3,3,3,3,5,5,5,5,9,9,9,9,7,7,7,7,4,4,4,4,4,4,4,4,6,6,6,6,4,4,4,4,2,2,2,2,8,8,8,8,10,10,10,10,11,11,11,11,12,12,12,12,13,13,13,13],"value":["1979.61","83.15","214.32","121.73","216.77","0.00","0.00","0.00","294.61","6.98","202.75","121.73","32.26","0.00","0.00","0.00","258.06","0.00","0.01","116.91","73.24","6.98","6.02","4.87","151.04","0.00","0.00","116.91","34.18","0.00","3.74","2.66","107.02","0.00","0.00","0.00","36.76","1.43","2.85","2.55","36.48","5.55","3.17","2.32","269.07","0.88","3.98","1.17","4.43","0.00","1.82","0.05","29.75","0.00","1.92","2.61","36.17","0.00","0.00","0.00","0.01","0.00","0.01","0.01","18.49","2.30","3.08","1.05","0.00","0.00","0.00","0.00"],"hoverlabel":{"bgcolor":"rgba(255,255,255,0)"}},"node":{"color":["rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)","rgba(239, 239, 239, 0.5)"],"label":["Imports","Domestic Extraction","Processed materials","Energetic use","EoL Waste","Material use","In-use stocks","Recovery","Exports","DPO emissions","Landfill","Incineration","Incineration with energy recovery","Backfilling"],"line":{"width":0},"thickness":10,"hoverlabel":{"bgcolor":"rgba(255,255,255,0)"},"pad":15,"x":[0,0.1,0.3,0.5,0.7,0.5,0.6,0.8,1,0.7,0.9,0.9,0.9,0.9],"y":[0,0.8,0.5,0.3,0.7,0.7,0.9,0.8,0.01,0.3,0.7,0.6,0.5,0.4]},"type":"sankey","arrangement":"freeform"}],                        {"template":{"data":{"histogram2dcontour":[{"type":"histogram2dcontour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"choropleth":[{"type":"choropleth","colorbar":{"outlinewidth":0,"ticks":""}}],"histogram2d":[{"type":"histogram2d","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmap":[{"type":"heatmap","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"heatmapgl":[{"type":"heatmapgl","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"contourcarpet":[{"type":"contourcarpet","colorbar":{"outlinewidth":0,"ticks":""}}],"contour":[{"type":"contour","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"surface":[{"type":"surface","colorbar":{"outlinewidth":0,"ticks":""},"colorscale":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]]}],"mesh3d":[{"type":"mesh3d","colorbar":{"outlinewidth":0,"ticks":""}}],"scatter":[{"fillpattern":{"fillmode":"overlay","size":10,"solidity":0.2},"type":"scatter"}],"parcoords":[{"type":"parcoords","line":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolargl":[{"type":"scatterpolargl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"bar":[{"error_x":{"color":"#2a3f5f"},"error_y":{"color":"#2a3f5f"},"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"bar"}],"scattergeo":[{"type":"scattergeo","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterpolar":[{"type":"scatterpolar","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"histogram":[{"marker":{"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"histogram"}],"scattergl":[{"type":"scattergl","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatter3d":[{"type":"scatter3d","line":{"colorbar":{"outlinewidth":0,"ticks":""}},"marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattermapbox":[{"type":"scattermapbox","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scatterternary":[{"type":"scatterternary","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"scattercarpet":[{"type":"scattercarpet","marker":{"colorbar":{"outlinewidth":0,"ticks":""}}}],"carpet":[{"aaxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"baxis":{"endlinecolor":"#2a3f5f","gridcolor":"white","linecolor":"white","minorgridcolor":"white","startlinecolor":"#2a3f5f"},"type":"carpet"}],"table":[{"cells":{"fill":{"color":"#EBF0F8"},"line":{"color":"white"}},"header":{"fill":{"color":"#C8D4E3"},"line":{"color":"white"}},"type":"table"}],"barpolar":[{"marker":{"line":{"color":"#E5ECF6","width":0.5},"pattern":{"fillmode":"overlay","size":10,"solidity":0.2}},"type":"barpolar"}],"pie":[{"automargin":true,"type":"pie"}]},"layout":{"autotypenumbers":"strict","colorway":["#636efa","#EF553B","#00cc96","#ab63fa","#FFA15A","#19d3f3","#FF6692","#B6E880","#FF97FF","#FECB52"],"font":{"color":"#2a3f5f"},"hovermode":"closest","hoverlabel":{"align":"left"},"paper_bgcolor":"white","plot_bgcolor":"#E5ECF6","polar":{"bgcolor":"#E5ECF6","angularaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"radialaxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"ternary":{"bgcolor":"#E5ECF6","aaxis":{"gridcolor":"white","linecolor":"white","ticks":""},"baxis":{"gridcolor":"white","linecolor":"white","ticks":""},"caxis":{"gridcolor":"white","linecolor":"white","ticks":""}},"coloraxis":{"colorbar":{"outlinewidth":0,"ticks":""}},"colorscale":{"sequential":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"sequentialminus":[[0.0,"#0d0887"],[0.1111111111111111,"#46039f"],[0.2222222222222222,"#7201a8"],[0.3333333333333333,"#9c179e"],[0.4444444444444444,"#bd3786"],[0.5555555555555556,"#d8576b"],[0.6666666666666666,"#ed7953"],[0.7777777777777778,"#fb9f3a"],[0.8888888888888888,"#fdca26"],[1.0,"#f0f921"]],"diverging":[[0,"#8e0152"],[0.1,"#c51b7d"],[0.2,"#de77ae"],[0.3,"#f1b6da"],[0.4,"#fde0ef"],[0.5,"#f7f7f7"],[0.6,"#e6f5d0"],[0.7,"#b8e186"],[0.8,"#7fbc41"],[0.9,"#4d9221"],[1,"#276419"]]},"xaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"yaxis":{"gridcolor":"white","linecolor":"white","ticks":"","title":{"standoff":15},"zerolinecolor":"white","automargin":true,"zerolinewidth":2},"scene":{"xaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"yaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2},"zaxis":{"backgroundcolor":"#E5ECF6","gridcolor":"white","linecolor":"white","showbackground":true,"ticks":"","zerolinecolor":"white","gridwidth":2}},"shapedefaults":{"line":{"color":"#2a3f5f"}},"annotationdefaults":{"arrowcolor":"#2a3f5f","arrowhead":0,"arrowwidth":1},"geo":{"bgcolor":"white","landcolor":"#E5ECF6","subunitcolor":"white","showland":true,"showlakes":true,"lakecolor":"white"},"title":{"x":0.05},"mapbox":{"style":"light"}}},"font":{"size":10,"color":"black","family":"Lato"},"hovermode":"x","title":{"text":""}},                        {"responsive": true}                    )                };
+    </script>
+  {% endif %}
+
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+     integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+     crossorigin=""></script>
+
+  <script>
+    // space
+    var space_map = L.map("space-map", {
+      attributionControl: false,
+      zoomControl: false,
+    });
+
+    var space_map_geojson = {{ city.geometry.geojson|safe }};
+    var space_map_geojsonlayer = L.geoJSON(space_map_geojson).addTo(space_map);
+
+    L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
+      attribution: "Map data &copy; <a href='http://openstreetmap.org'>OpenStreetMap</a> contributors, " +
+        "<a href='http://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>, " +
+        "Imagery © <a href='http://mapbox.com'>Mapbox</a>",
+      maxZoom: 18,
+      id: "mapbox/light-v10",
+      tileSize: 512,
+      zoomOffset: -1,
+      accessToken: "pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q"
+    }).addTo(space_map);
+
+    space_map.scrollWheelZoom.disable();
+    space_map.fitBounds(space_map_geojsonlayer.getBounds());
+
+    // NUTS3
+    var nuts_3_map = L.map("nuts3-map", {
+      attributionControl: false,
+      zoomControl: false,
+    });
+    var nuts_3_geojson = {{ nuts3.geometry.geojson|safe }};
+    var nuts_3_geojsonlayer = L.geoJSON(nuts_3_geojson).addTo(nuts_3_map);
+
+    L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
+      attribution: "Map data &copy; <a href='http://openstreetmap.org'>OpenStreetMap</a> contributors, " +
+        "<a href='http://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>, " +
+        "Imagery © <a href='http://mapbox.com'>Mapbox</a>",
+      id: "mapbox/light-v10",
+      maxZoom: 18,
+      tileSize: 512,
+      zoomOffset: -1,
+      accessToken: "pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q"
+    }).addTo(nuts_3_map);
+
+    nuts_3_map.scrollWheelZoom.disable();
+    nuts_3_map.fitBounds(nuts_3_geojsonlayer.getBounds());
+
+    // NUTS2
+    var nuts_2_map = L.map("nuts2-map", {
+      attributionControl: false,
+      zoomControl: false,
+    });
+    var nuts_2_geojson = {{ nuts2.geometry.geojson|safe }};
+    var nuts_2_geojsonlayer = L.geoJSON(nuts_2_geojson).addTo(nuts_2_map);
+
+    L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
+      attribution: "Map data &copy; <a href='http://openstreetmap.org'>OpenStreetMap</a> contributors, " +
+        "<a href='http://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>, " +
+        "Imagery © <a href='http://mapbox.com'>Mapbox</a>",
+      id: "mapbox/light-v10",
+      maxZoom: 18,
+      tileSize: 512,
+      zoomOffset: -1,
+      accessToken: "pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q"
+    }).addTo(nuts_2_map);
+
+    nuts_2_map.scrollWheelZoom.disable();
+    nuts_2_map.fitBounds(nuts_2_geojsonlayer.getBounds());
+
+    // COUNTRY
+    var country_map = L.map("country-map", {
+      attributionControl: false,
+      zoomControl: false,
+    });
+    var country_geojson = {{ country.geometry.geojson|safe }};
+    var country_geojsonlayer = L.geoJSON(country_geojson).addTo(country_map);
+
+    L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
+      attribution: "Map data &copy; <a href='http://openstreetmap.org'>OpenStreetMap</a> contributors, " +
+        "<a href='http://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>, " +
+        "Imagery © <a href='http://mapbox.com'>Mapbox</a>",
+      id: "mapbox/light-v10",
+      maxZoom: 18,
+      tileSize: 512,
+      zoomOffset: -1,
+      accessToken: "pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q"
+    }).addTo(country_map);
+
+    country_map.scrollWheelZoom.disable();
+
+    {% if bounding_box %}
+      country_map.fitBounds({{ bounding_box|safe }})
+    {% else %}
+      country_map.fitBounds(country_geojsonlayer.getBounds());
+    {% endif %}
+  </script>
 {% endblock %}
