@@ -16,6 +16,8 @@ def city(request, slug):
     info = get_space(request, slug)
 
     uca = False
+    construction = False
+    biomass = False
     oneliner = False
     sankey_1_year = False
     sankey_2_year = False
@@ -32,6 +34,12 @@ def city(request, slug):
     domestic_material_consumption = False
     eol_recycling_rate = False
     sector_waste_amount = False
+    biomass_domestic_material_consumption = False
+    biomass_eol_recycling_rate = False
+    biomass_sector_waste_amount = False
+    construction_domestic_material_consumption = False
+    construction_eol_recycling_rate = False
+    construction_sector_waste_amount = False
 
     construction = False
 
@@ -45,19 +53,21 @@ def city(request, slug):
         processed_materials_year_1 = 692850
         end_of_life_waste_year_1 = 436862
         secondary_materials_year_1 = 41683
-        input_circularity_year_2 = 7
-        output_circularity_year_2 = 27
-        processed_materials_year_2 = 359106
-        end_of_life_waste_year_2 = 93489
-        secondary_materials_year_2 = 24857
+        input_circularity_year_2 = 6
+        output_circularity_year_2 = 9
+        processed_materials_year_2 = 664635
+        end_of_life_waste_year_2 = 427502
+        secondary_materials_year_2 = 40588
 
         construction = True
-        biomass_domestic_material_consumption = 771610
-        biomass_eol_recycling_rate = 0
-        biomass_sector_waste_amount = 146288
         construction_domestic_material_consumption = 853422
         construction_eol_recycling_rate = 9.28
         construction_sector_waste_amount = 44314
+
+        biomass = True
+        biomass_domestic_material_consumption = 771610
+        biomass_eol_recycling_rate = 0
+        biomass_sector_waste_amount = 146288
 
         space_population = 164781
         space_size = 341
@@ -69,22 +79,166 @@ def city(request, slug):
         country_size = 41543
 
     elif slug == "bodo":
-        uca = False
+        uca = True
+        oneliner = "7% circular (2020)"
+        sankey_1_year = 2020
+        sankey_2_year = 2015
+        input_circularity_year_1 = 7
+        output_circularity_year_1 = 27
+        processed_materials_year_1 = 359106
+        end_of_life_waste_year_1 = 93489
+        secondary_materials_year_1 = 24857
+        input_circularity_year_2 = 5
+        output_circularity_year_2 = 27
+        processed_materials_year_2 = 323212
+        end_of_life_waste_year_2 = 54803
+        secondary_materials_year_2 = 14667
+
+        construction = True
+        construction_domestic_material_consumption = 15066
+        construction_eol_recycling_rate = 0.0009
+        construction_sector_waste_amount = 141182
+
+        biomass = False
+
+        space_population = 52560
+        space_size = 1395
+        nuts3_population = 240559
+        nuts3_size = 38155
+        nuts2_population = 482839
+        nuts2_size = 112975
+        country_population = 5398804
+        country_size = 385207
 
     elif slug == "hoje-taastrup":
-        uca = False
+        construction = True
+        construction_domestic_material_consumption = 338309
+        construction_eol_recycling_rate = 14.9
+        construction_sector_waste_amount = 633983
+
+        space_population = 50759
+        space_size = 78
+        nuts3_population = 548370
+        nuts3_size = 342
+        nuts2_population = 1846023
+        nuts2_size = 2568
+        country_population = 5822763
+        country_size = 42933
 
     elif slug == "mikkeli":
-        uca = False
+        uca = True
+        oneliner = "less than 1% circular (2019)"
+        sankey_1_year = 2019
+        sankey_2_year = 2015
+        input_circularity_year_1 = 0
+        output_circularity_year_1 = 3
+        processed_materials_year_1 = 1910299
+        end_of_life_waste_year_1 = 210971
+        secondary_materials_year_1 = 6533
+        input_circularity_year_2 = 1
+        output_circularity_year_2 = 7
+        processed_materials_year_2 = 1982860
+        end_of_life_waste_year_2 = 234929
+        secondary_materials_year_2 = 16624
+
+        construction = True
+        construction_domestic_material_consumption = 561715
+        construction_eol_recycling_rate = 25.26
+        construction_sector_waste_amount = 35598
+
+        biomass = True
+        biomass_domestic_material_consumption = 906983
+        biomass_eol_recycling_rate = 40.17
+        biomass_sector_waste_amount = 22733
+
+        space_population = 53134
+        space_size = 3229
+        nuts3_population = 144615
+        nuts3_size = 19130
+        nuts2_population = 1278237
+        nuts2_size = 236450
+        country_population = 5525292
+        country_size = 390908
 
     elif slug == "porto":
-        uca = False
+        uca = True
+        oneliner = "6% circular (2019)"
+        sankey_1_year = 2019
+        sankey_2_year = 2009
+        input_circularity_year_1 = 3
+        output_circularity_year_1 = 12
+        processed_materials_year_1 = 883247
+        end_of_life_waste_year_1 = 216819
+        secondary_materials_year_1 = 27086
+        input_circularity_year_2 = 2
+        output_circularity_year_2 = 9
+        processed_materials_year_2 = 1096706
+        end_of_life_waste_year_2 = 244132
+        secondary_materials_year_2 = 21387
+
+        biomass = True
+        biomass_domestic_material_consumption = 274667
+        biomass_eol_recycling_rate = 19.9
+        biomass_sector_waste_amount = 39364
+
+        space_population = 216606
+        space_size = 41
+        nuts3_population = 1728226
+        nuts3_size = 2041
+        nuts2_population = 3575338
+        nuts2_size = 21286
+        country_population = 10295909
+        country_size = 92226
 
     elif slug == "roskilde":
-        uca = False
+        construction = True
+        construction_domestic_material_consumption = 3160939
+        construction_eol_recycling_rate = 14
+        construction_sector_waste_amount = 683520
+
+        space_population = 88989
+        space_size = 212
+        nuts3_population =  253321
+        nuts3_size = 808
+        nuts2_population = 2659634
+        nuts2_size = 9789
+        country_population = 5850189
+        country_size = 42933
 
     elif slug == "sevilla":
-        uca = False
+        uca = True
+        oneliner = "10% circular (2020)"
+        sankey_1_year = 2020
+        sankey_2_year = 2016
+        input_circularity_year_1 = 10
+        output_circularity_year_1 = 47
+        processed_materials_year_1 = 1746864
+        end_of_life_waste_year_1 = 369600
+        secondary_materials_year_1 = 174176
+        input_circularity_year_2 = 4
+        output_circularity_year_2 = 29
+        processed_materials_year_2 = 2845296
+        end_of_life_waste_year_2 = 375991
+        secondary_materials_year_2 = 108645
+
+        construction = True
+        construction_domestic_material_consumption = 1554971
+        construction_eol_recycling_rate = 0.53
+        construction_sector_waste_amount = 445042
+
+        biomass = True
+        biomass_domestic_material_consumption = 19047323
+        biomass_eol_recycling_rate = 99.21
+        biomass_sector_waste_amount = 144110
+
+        space_population = 688592
+        space_size = 142
+        nuts3_population = 1942389
+        nuts3_size = 14036
+        nuts2_population = 8414240
+        nuts2_size = 87600
+        country_population = 47026208
+        country_size = 505990
 
     bounding_box = False
     sankey_colour = "#efefef"
@@ -115,12 +269,84 @@ def city(request, slug):
         sankey_colour = ["rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 182, 237, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 182, 237, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 182, 237, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)"]
         biomass_sankey_values = [48841,1546,0,2834,0,2058856,0,462340,0,0,0,0,0,117030,0,0,0,0,6308,10916,114451,8025,6569,0,0,0,0,0,0,0,627455,90935,0,0,0,0,0,0,0,0,0,0,0,0]
         construction_sankey_values = [0,0,0,0,0,627229.98,0,104538.33,313614.99,0,0,0,0,67001.20,33500.60,234504.20,443.14,43871.31,5152.24,2111.61,34304.65,1326.36,1391.40,0,0,211.16,10291.40,0,0,0,533388.77,533388.77,0,0,0,0,0,0,0,0,0,0,0,0]
+    elif slug == "bodo":
+        country_id = 328727
+        nuts2_id = 584307
+        nuts3_id = 585880
+        bounding_box = [[57.94,4.83], [71.33,31.55]]
+        currency = "kr"
+        sankey_source = [0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,4,4,5,5,5,5,5,5,5,6,7,8,9,9,10,10,10,10,10,10,10,10,10,11,11,11,11,11]
+        sankey_target = [1,2,3,5,11,2,3,5,11,3,3,5,11,5,2,4,3,5,12,6,7,8,9,1,11,2,1,13,2,13,1,2,3,5,12,6,8,9,7,12,6,8,9,7]
+        sankey_colour = ["rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)"]
+        construction_sankey_values = [0,0,0 ,0,0,91577.01,13736.55,1526.28,45788.51,0,0,0,0,83914.2,0,0,5840,55942.8,114304,19710,3,0,0,0,127544,0,2.4,0,0,0,139647.84,325844.96,0,119497.6,0,0,0,0,0,0,0,0,0,0]
+    elif slug == "hoje-taastrup":
+        country_id = 328745
+        nuts2_id = 584276
+        nuts3_id = 585721
+        currency = "kr."
+        sankey_source = [0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,4,4,5,5,5,5,5,5,5,5,6,7,8,9,9,10,10,10,10,10,10,10,10,10,11,11,11,11,11]
+        sankey_target = [1,2,3,5,11,2,3,5,11,3,3,5,11,5,2,4,3,5,12,6,7,17,18,19,20,11,2,1,13,2,13,1,2,3,5,12,6,8,9,7,12,6,21,9,7]
+        sankey_colour = ["rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)"]
+        sankey_labels = ["","","","","","","","","","","Redistribution","","","","Reuse","","Reuse","","","","","","","","","","Recycling","Recycling","","","","","","","","","","","","","","","","",""]
+        construction_sankey_values = [116639.75,174959.63,116639.75,0,174959.63,172781.83,0,15707.44,125659.52,0,0,0,0,103589.75,51794.88,362564.13,6339.82,627642.67,119202.85,4872.91,385208.04,1756.34,4511.36,659.78,117771.22,57540,487.29,115562.41,0,0,0,49200,98400,49200,44520,0,0,0,0,49200,15562.5,15562.5,249000,0,31125]
+    elif slug == "mikkeli":
+        country_id = 328729
+        nuts2_id = 584282
+        nuts3_id = 983064
+        currency = "€"
+        sankey_source = [0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,4,4,5,5,5,5,5,5,5,6,7,8,9,9,10,10,10,10,10,10,10,10,10,11,11,11,11,11]
+        sankey_target = [1,2,3,5,11,2,3,5,11,3,3,5,11,5,2,4,3,5,12,6,7,8,9,1,11,2,1,13,2,13,1,2,3,5,12,6,8,9,7,12,6,8,9,7,4]
+        sankey_colour = ["rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 182, 237, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 182, 237, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 182, 237, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 182, 237, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)", "rgba(0, 77, 118, 0.5)"]
+        biomass_sankey_values = [745097,23579,0,43228,0,546,0,123,0,0,146,0,0,18186,0,0,0,0,0,0,7540,0,7469,0,7724,0,0,0,3000,0,83044,12035,0,0,0,0,0,0,0,0,7724,0,0,0]
+        construction_sankey_values = [617130,246852,123426,123426,123426,403225,0,67204,201612,0,0,0,0,75313,37656,263595,356,35242,2293,0,27924,0,0,0,5381,0,28708,0,0,0,27708,27708,0,0,0,0,0,0,13854,0,4598,0,0,784]
+    elif slug == "porto":
+        country_id = 328813
+        nuts2_id = 584336
+        nuts3_id = 586124
+        currency = "€"
+        sankey_source = [0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,3,3,4,4,5,5,5,5,5,5,5,16,7,8,9,9,10,10,10,10,10,10,10,10,10,11,11,11,11,11]
+        sankey_target = [1,2,3,5,11,2,3,5,11,3,3,5,11,5,2,4,3,3 ,3,5,12,16,7,8,9,1,11,2,1,13,2,13,1,2,3,5,12,16,8,9,7,12,16,8,9,7]
+        biomass_sankey_values = [0,0,247.51,13.85,0,19121.70,0,36074.97,141934.29,99693.51,100.48,1903.43,8157.55,39364.38,0,0,21.54,927,8.59,0,0,0,0,0,0,0,39364.38,0,0,0,0,0,197794.15,84768.92,0,0,0,0,0,0,0,0,26816,0,12548.38,0]
+        sankey_colour = ["rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)"]
+        sankey_labels = ["","","","","","","","","","","Redistribution","","","","Reuse","","Food donation","Local composting","Reuse","","","","","","","Remanufacturing","","","Recycling","","","","","","","","","","","","","","","","",""]
+    elif slug == "roskilde":
+        country_id = 328745
+        nuts2_id = 584272
+        nuts3_id = 585630
+        currency = "kr."
+        sankey_source = [0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,4,4,5,5,5,5,5,5,5,5,6,7,8,9,9,10,10,10,10,10,10,10,10,10,11,11,11,11,11]
+        sankey_target = [1,2,3,5,11,2,3,5,11,3,3,5,11,5,2,4,3,5,12,6,7,17,18,19,20,11,2,1,13,2,13,1,2,3,5,12,6,8,9,7,12,6,21,9,7]
+        sankey_colour = ["rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)"]
+        sankey_labels = ["","","","","","","","","","","Redistribution","","","","Reuse","","Reuse","","","","","","","","","","Recycling","Recycling","","","","","","","","","","","","","","","","",""]
+        if sector == "construction":
+            sankey_values = [316450,1898700,949350,0,3164500,252168.08,0,0,183394.97,0,0,0,0,948973.36,316324.45,5061191.25,6835.20,676685.21,173998.18,12157.43,347990.87,3687.15,8114.4,5334.17,132238.23,57951.20,1215.74,104397.26,0,0,0,70728.43,141456.85,70728.43,69678.4,0,0,0,0,70728.43,17807.65,17807.65,284922.45,0,35615.31]
+            sca_report_id = 1010612
+            sca_report_pdf_url = "https://cityloops.metabolismofcities.org/media/uploads/libraryitem/report/Sector-wide_Circularity_Assessment_for_the_Construction_Sector_-_Roskilde.pdf"
+    elif slug == "sevilla":
+        sankey_source = [0,0,0,0,0,1,1,1,1,2,2,2,2,3,3,3,4,4,5,5,5,5,5,5,5,6,7,8,9,9,10,10,10,10,10,10,10,10,10,11,11,11,11,11]
+        sankey_target = [1,2,3,5,11,2,3,5,11,3,3,5,11,5,2,4,3,5,12,6,7,8,9,1,11,2,1,0,2,13,1,2,3,5,12,6,8,9,7,12,6,8,9,7]
+        country_id = 328741
+        nuts2_id = 584286
+        nuts3_id = 585776
+        currency = "€"
+        sankey_colour = ["rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 182, 237, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)","rgba(0, 77, 118, 0.5)",]
+        sankey_labels = ["","","","","","","","","","","Redistribution","","","","Reuse","","Reuse","","","","","","","Remanufacturing","","","Recycling","Restoration","","","","","","","","","","","","","","","",""]
+        if sector == "biomass":
+            sankey_values = [12992746.38,411162.86,0,753798.58,0,2571687.46,0,577501.75,0,969877.09,0,18499.02,79281.51,16637601.18,0,0,0,0,85000,105,1916,75000,600,21980,0,0,1916,75000,0,0,4339922.77,628974.31,0,0,0,0,0,0,0,0,0,0,0,0]
+            sca_report_id = 1009892
+            sca_report_pdf_url = "https://cityloops.metabolismofcities.org/media/uploads/libraryitem/report/Sector-wide_Circularity_Assessment_for_the_Biomass_Sector_-_Sevilla.pdf"
+        if sector == "construction":
+            sankey_values = [881799.58,352719.83,176359.92,176359.92,176359.92,244299.22,0,40716.54,122149.61,1692002.70,0,112800.18,451200.72,203340.57,203340.57,1626724.58,4450.42,440591.34,431,0,600,0,0,18452,0,0,3396,0,0,0,167697.41,167697.41,0,0,0,0,0,0,0,0,0,0,0,0]
+            sca_report_id = 1009959
+            sca_report_pdf_url = "https://cityloops.metabolismofcities.org/media/uploads/libraryitem/report/Sector-wide_Circularity_Assessment_for_the_Construction_Sector_-_Sevilla.pdf"
+
+
 
     country = ReferenceSpace.objects.get(id=country_id)
     nuts2 = ReferenceSpace.objects.get(id=nuts2_id)
     nuts3 = ReferenceSpace.objects.get(id=nuts3_id)
 
-    if biomass_sankey_values:
+    if biomass:
         biomass_fig = go.Figure(data=[go.Sankey(
             node = dict(
               thickness = 10,
@@ -150,7 +376,7 @@ def city(request, slug):
     else:
         biomass_sankey = False
 
-    if construction_sankey_values:
+    if construction:
         construction_fig = go.Figure(data=[go.Sankey(
             node = dict(
               thickness = 10,
@@ -198,6 +424,8 @@ def city(request, slug):
         "processed_materials_year_2": processed_materials_year_2,
         "end_of_life_waste_year_2": end_of_life_waste_year_2,
         "secondary_materials_year_2": secondary_materials_year_2,
+        "biomass": biomass,
+        "construction": construction,
         "biomass_sankey": biomass_sankey,
         "construction_sankey": construction_sankey,
         "biomass_domestic_material_consumption": biomass_domestic_material_consumption,
