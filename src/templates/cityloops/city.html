@@ -99,6 +99,18 @@
       height: 285px;
       width: 100%;
     }
+
+    .legend-item {
+      line-height: 24px;
+    }
+
+    .legend-block {
+      display: inline-block;
+      height: 24px;
+      width: 24px;
+      border-radius: 4px;
+      vertical-align: middle;
+    }
   </style>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
@@ -116,12 +128,18 @@
       <h1 class="m-0">{{ city }} is {{ oneliner }}</h2>
     </div>
 
-    <h2>UCA Sankey</h2>
     <div class="row mb-4">
       <div class="col-lg-9">
         <div class="border bg-white">
+          <small class="ml-1 mt-1">Hover over sankey flows to see more details. Values given in kilotonnes.</small>
           <div data-year="{{ sankey_1_year }}" id="uca-sankey-1" class="plotly-graph-div" style="height:100%; width:100%; min-height: 450px;"></div>
           <div data-year="{{ sankey_2_year }}" id="uca-sankey-2" class="plotly-graph-div" style="height:100%; width:100%; min-height: 450px;"></div>
+          <div class="text-center mb-2">
+            <span class="legend-item mr-3"><div class="legend-block" style="background-color: #9bba8e"></div> Biomass</span>
+            <span class="legend-item mr-3"><div class="legend-block" style="background-color: #f8e098"></div> Metal ores (gross ores)</span>
+            <span class="legend-item mr-3"><div class="legend-block" style="background-color: #efb2b2"></div> Non-metallic minerals</span>
+            <span class="legend-item"><div class="legend-block" style="background-color: #c6bde1"></div> Fossil energy materials/carriers</span>
+          </div>
         </div>
       </div>
       <div class="col-lg-3">
@@ -146,7 +164,7 @@
             <span data-year="{{ sankey_2_year }}">{{ processed_materials_year_2|intcomma }} tonnes/year</span>
           </li>
           <li class="list-group-item d-flex justify-content-between align-items-center">
-            <span><i class="fa fa-fw fa-trash mr-2"></i> End of Life waste</span>
+            <span><i class="fa fa-fw fa-trash mr-2"></i> End of Life (EoL) waste</span>
             <span data-year="{{ sankey_1_year }}">{{ end_of_life_waste_year_1|intcomma }} tonnes/year</span>
             <span data-year="{{ sankey_2_year }}">{{ end_of_life_waste_year_2|intcomma}} tonnes/year</span>
           </li>
@@ -162,23 +180,23 @@
     <div class="row mb-4">
       <div class="col-lg-9">
         {% if slug == "apeldoorn" %}
-          <p>The Dutch municipality, located in the province of Gelderland has a population of 166,306 people that are spread over an area of 341.15 km2. Its local economy is mainly based on ""Health and Welfare care"" (17.8%), ""Trade"" (14.5%) and ""Public Administration, and Government services"" (12.7%) economic activities in terms of employees.</p>
+          <p>The Dutch municipality, located in the province of Gelderland has a population of 166,306 people that are spread over an area of 341.15 km2. Its local economy is mainly based on "Health and Welfare care" (17.8%), "Trade" (14.5%) and "Public Administration, and Government services" (12.7%) economic activities in terms of employees.</p>
 
-          <p>It was possible to illustrate that Apeldoorn is a linear and carbon-rich city (90-95% linear), processing yearly approximately 650 kt of materials, adding 13 kt in the building stock and reinjecting just 4 kt of secondary materials in their economy. From these numbers, the magnitude of the efforts becomes visible. In addition, the ""weight"" of Apeldoorn can be illustrated through its building stock which amounts to 15,000 kt (or 95 t per capita), which requires continuous flows for both its operation and construction.
+          <p>It was possible to illustrate that Apeldoorn is a linear and carbon-rich city (90-95% linear), processing yearly approximately 650 kt of materials, adding 13 kt in the building stock and reinjecting just 4 kt of secondary materials in their economy. From these numbers, the magnitude of the efforts becomes visible. In addition, the "weight" of Apeldoorn can be illustrated through its building stock which amounts to 15,000 kt (or 95 t per capita), which requires continuous flows for both its operation and construction.
 
           <p>Given the land use of Apeldoorn (78% covered by vegetation), this provides a considerable opportunity to develop a circular bioeconomy. For instance, a significant share of biomass demands of Apeldoorn could be covered by local production of food. In addition, a part of this biomass could be used for energetic use, reducing the demand of imports and partly GHG emissions.</p>
         {% elif slug == "bodo" %}
-          <p>Bodø has a population of 52,803 people, which are spread over an area of 1,396 km2. Currently, its local economy is mainly based on ""Health & Social Work activities"" (26.2%), ""Wholesale and retail trade"" (12.8%), and ""Education"" (10.13%) in terms of employees.</p>
+          <p>Bodø has a population of 52,803 people, which are spread over an area of 1,396 km2. Currently, its local economy is mainly based on "Health & Social Work activities" (26.2%), "Wholesale and retail trade" (12.8%), and "Education" (10.13%) in terms of employees.</p>
 
-          <p>It was possible to illustrate that Bodø is a linear and carbon-rich city (90% linear), processing yearly approximately 360 kt of materials, adding 211 kt in the building stock and reinjecting just 20 kt of secondary materials in their economy. From these numbers, the magnitude of the efforts becomes visible. In addition, the ""weight"" of Bodø can be illustrated through its building stock which amounts to 4,500 kt (or 86 tonnes per capita), which requires continuous flows for both its operation and construction.</p>
+          <p>It was possible to illustrate that Bodø is a linear and carbon-rich city (90% linear), processing yearly approximately 360 kt of materials, adding 211 kt in the building stock and reinjecting just 20 kt of secondary materials in their economy. From these numbers, the magnitude of the efforts becomes visible. In addition, the "weight" of Bodø can be illustrated through its building stock which amounts to 4,500 kt (or 86 tonnes per capita), which requires continuous flows for both its operation and construction.</p>
 
           <p>Given the land use of Bodø and its local activities, this provides a considerable opportunity to develop a circular bioeconomy. For instance, a significant share of GHG emissions associated with food consumption of Bodø could be reduced by covering animal proteins with local production of food (especially proteins coming from fish). Fish waste could be used for fertilisers or for creating new products. In addition, a part of this biomass (wood) could be used for energetic use reducing the demand of imports and partly GHG emissions. In addition, given the demand for new construction materials needed for the future urban development, local hubs for storing materials for reuse from the construction sector could significantly reduce the use of virgin materials as well as reduce construction and demolition waste generation. Finally, local materials (rammed earth, biomass insulation, timber, etc.) could be used to drastically reduce the amount of concrete (which is carbon intensive) for future urban developments. In addition, the production of local and low carbon construction materials, could develop new jobs and attract the development of new production activities.</p>
         {% elif slug == "mikkeli" %}
           <p>The most significant employment sectors in Mikkeli are human health and social work activities (23%), manufacturing (12%) and wholesale and retail trade; repair of motor vehicles and motorcycles (10%). The construction sector employs 6% of employees in Mikkeli, which is at the same level as the corresponding percentage for the whole country (7%).</p>
 
-          <p>By applying the developed method, it is possible to illustrate that Mikkeli is a linear and carbon-rich city (90-95% linear), processing yearly approximately 1,300 kt of materials, adding 10-20 kt in the building stock and recycling just 4 kt of secondary materials in their economy. From these numbers, the magnitude of the efforts becomes visible. In addition, the ""weight"" of Mikkeli can be illustrated through its building stock which amounts to 15,000 kt (or 290 t per capita), which requires continuous flows for both its operation and construction. However most of its materials consumption is of its own extraction, so very little material is imported or exported. Most of the imported materials are of fossil energy carriers (84%) when exports are mainly of biomass materials (71%) such as timber, wood based materials and cereals. Domestic material consumption is high, which indicates city-self-sufficiency and therefore less GHG emissions through the need of material transportations.</p>
+          <p>By applying the developed method, it is possible to illustrate that Mikkeli is a linear and carbon-rich city (90-95% linear), processing yearly approximately 1,300 kt of materials, adding 10-20 kt in the building stock and recycling just 4 kt of secondary materials in their economy. From these numbers, the magnitude of the efforts becomes visible. In addition, the "weight" of Mikkeli can be illustrated through its building stock which amounts to 15,000 kt (or 290 t per capita), which requires continuous flows for both its operation and construction. However most of its materials consumption is of its own extraction, so very little material is imported or exported. Most of the imported materials are of fossil energy carriers (84%) when exports are mainly of biomass materials (71%) such as timber, wood based materials and cereals. Domestic material consumption is high, which indicates city-self-sufficiency and therefore less GHG emissions through the need of material transportations.</p>
         {% elif slug == "porto" %}
-          <p>Porto has a high urban density with 232,753 inhabitants spreading over 41 km2, it is the second most dense municipality in Portugal in terms of population as well as businesses. Its local economy is mainly based on ""wholesale and retail trade"" (17%), ""accommodation and food service activities"" (16%) and ""professional, scientific and technical activities"" (13%) in terms of number of employees, in 2019.</p>
+          <p>Porto has a high urban density with 232,753 inhabitants spreading over 41 km2, it is the second most dense municipality in Portugal in terms of population as well as businesses. Its local economy is mainly based on "wholesale and retail trade" (17%), "accommodation and food service activities" (16%) and "professional, scientific and technical activities" (13%) in terms of number of employees, in 2019.</p>
 
           <p>It was possible to illustrate that Porto is a linear and carbon-rich city, processing yearly around 856 kt of materials, adding 201 kt of additional stock (buildings, infrastructures, and durable goods) and reinjecting 54 kt in their economy. The results also shows that Porto has a high ecological cycling rates potentials (74%) that makes it an opportunity to move forward to achieve circular economy through circular bioeconomy strategies. In addition, the material stock assessment (MSA) illustrates the weight of Porto, whose building stock amounts to 28,000 kt (or around 130 t per capita).</p>
         {% elif slug == "sevilla" %}
@@ -188,7 +206,7 @@
     </div>
 
     {% if slug == "apeldoorn" or slug == "bodo" or slug == "porto" %}
-      <h3>UCA material stock map</h3>
+      <h3>Material stock map</h3>
     {% endif %}
     {% if slug == "apeldoorn" %}
       <iframe class="border mb-4" src="https://gcp-europe-west1.app.carto.com/map/c087a313-2dcc-4327-983f-651f90f2cd5c" onload="resizeIframe(this)"></iframe>
@@ -200,9 +218,19 @@
   </section>
 {% endif %}
 
+{% if city.slug == "roskilde" or city.slug == "hoje-taastrup" %}
+  <div class="row">
+    <div class="col-lg-9">
+      <p class="font-italic">
+        The City of {{ city }} presents information from their Sector-wide Circularity Assessment of the construction sector. Since it did not conduct an Urban Circularity Assessment, those elements are not given.
+      </p>
+    </div>
+  </div>
+{% endif %}
+
 {% if construction %}
   <section>
-    <h2>Construction</h2>
+    <h2>Construction sector</h2>
     <div class="row">
       <div class="col-lg-9">
         <div class="border bg-white mb-4">
@@ -238,7 +266,7 @@
             <li>However, other construction materials like aluminium, glass and insulation materials are imported to Seville.</li>
           </ul>
 
-          <p>According to the calculation illustrated in the Sankey diagram, all the data related to local CDW collection and treatment is not currently available. The municipal waste management company Lipasam only collects CDW from small producers and citizens throughout the ""Clean points"". Even almost the total amount of CDW collected by Lipasam is recycled, it shows a limited impact on the whole picture of the city. The greatest potential for developing the circular economy of the construction sector in the city is to utilise materials collected as waste in upcycled higher-value products, which could replace virgin materials in the construction sector.</p>
+          <p>According to the calculation illustrated in the Sankey diagram, all the data related to local CDW collection and treatment is not currently available. The municipal waste management company Lipasam only collects CDW from small producers and citizens throughout the "Clean points". Even almost the total amount of CDW collected by Lipasam is recycled, it shows a limited impact on the whole picture of the city. The greatest potential for developing the circular economy of the construction sector in the city is to utilise materials collected as waste in upcycled higher-value products, which could replace virgin materials in the construction sector.</p>
 
           <p>There are still many assumptions behind the distribution of material flows visualised in the Sankey diagram. In the future, the information may be updated based on possible new and more detailed data.</p>
         {% endif %}
@@ -265,7 +293,7 @@
 
 {% if biomass %}
   <section>
-    <h2>Biomass</h2>
+    <h2>Biomass sector</h2>
     <div class="row">
       <div class="col-lg-9">
         <div class="border bg-white mb-4">
@@ -279,7 +307,7 @@
         {% elif slug == "porto" %}
           <p>The Sankey diagram of the City of Porto shows us that almost all the materials of the biomass sector comes from import. This means that, to decrease the import of materials and to avoid bio-waste production, it should be implemented several measures to promote more circular flows in the city as well to upscale the ongoing circular projects. For instance, the ones related with separate collection of bio-waste (associated with the production and use of high-quality compost), local composting treatment (like home and community composting), food waste reduction initiatives (Embrulha), food donation networks, local/regional sustainable food production and sustainable food procurement.</p>
           <p>The current circular initiatives in the biomass sector have currently a small impact in the circularity in the City of Porto, despite all the efforts already done by public and private entities. But we need to be aware that some of these initiatives are very recent, like the new municipal separate collection of bio-waste or the promotion and implementation of local community composting schemes and even food waste prevention programs.</p>
-          <p>The food donation projects, linking sectors like retail and restaurant sectors with institutions from the social sector helping families with low-income or in a situation of social exclusion, as well some projects promoting food waste prevention coordinated by LIPOR (""the right portion"" and ""wrap it up"") or other entities (DariAcordar Association -- Zero Desperdício Program; or Refood4Good Association), needs to be upscaled to assure bigger impact than it happens today.</p>
+          <p>The food donation projects, linking sectors like retail and restaurant sectors with institutions from the social sector helping families with low-income or in a situation of social exclusion, as well some projects promoting food waste prevention coordinated by LIPOR ("the right portion" and "wrap it up") or other entities (DariAcordar Association -- Zero Desperdício Program; or Refood4Good Association), needs to be upscaled to assure bigger impact than it happens today.</p>
           <p>But, considering the current situation, it won't be easy to promote a full circular biomass sector in the City of Porto because most of the materials included will continue to be imported since it won't be possible to produce most of them locally, inside the city boundaries."</p>
         {% elif slug == "sevilla" %}
           <p>The Sankey diagram of the City of Porto shows us that almost all the materials of the biomass sector comes from import. This means that, to decrease the import of materials and to avoid bio-waste production, it should be implemented several measures to promote more circular flows in the city as well to upscale the ongoing circular projects. For instance, the ones related with separate collection of bio-waste (associated with the production and use of high-quality compost), local composting treatment (like home and community composting), food waste reduction initiatives (Embrulha), food donation networks, local/regional sustainable food production and sustainable food procurement.</p>
@@ -391,10 +419,10 @@
         <a class="btn btn-primary btn-block" href="{% url 'cityloops:uca_report' slug %}">Urban Circularity Assessment online report</a>
       {% endif %}
       {% if construction %}
-        <a class="btn btn-primary btn-block" href="{% url 'cityloops:sca_report' slug 'construction' %}">SCA construction report</a>
+        <a class="btn btn-primary btn-block" href="{% url 'cityloops:sca_report' slug 'construction' %}">Construction sector circularity report</a>
       {% endif %}
       {% if biomass %}
-        <a class="btn btn-primary btn-block" href="{% url 'cityloops:sca_report' slug 'biomass' %}">SCA biomass report</a>
+        <a class="btn btn-primary btn-block" href="{% url 'cityloops:sca_report' slug 'biomass' %}">Biomass sector circularity report</a>
       {% endif %}
 
       <p class="mt-3">Do you have any questions about the dashboard, data or want to get in touch with a contact person from the city? Please email Metabolism of Cities at <a href="mailto:info@metabolismofcities.org">info@metabolismofcities.org</a> for assistence.</p>

@@ -4,16 +4,16 @@
   </a>
   <div class="dropdown-menu" aria-labelledby="about-dropdown">
       <a class="dropdown-item" href="{% url 'cityloops:about' %}">Project</a>
+      <a class="dropdown-item" href="{% url 'cityloops:article' 'circular-city' %}">Circular city</a>
       <a class="dropdown-item" href="{% url 'cityloops:article' 'team' %}">Team</a>
       <a class="dropdown-item" href="{% url 'cityloops:article' 'partners' %}">Partners</a>
       <a class="dropdown-item" href="{% url 'cityloops:article' 'contact' %}">Contact Us</a>
-      <!-- <a class="dropdown-item" href="{% url 'cityloops:article' 'newsletter' %}">Stay informed</a> -->
   </div>
 </li>
 
 <li class="nav-item dropdown">
   <a class="nav-link dropdown-toggle" href="#" id="cities-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Cities
+    Dashboards
   </a>
   <div class="dropdown-menu" aria-labelledby="cities-dropdown">
     <a class="dropdown-item" href="{% url 'cityloops:city' 'apeldoorn' %}">Apeldoorn</a>
@@ -23,45 +23,34 @@
     <a class="dropdown-item" href="{% url 'cityloops:city' 'porto' %}">Porto</a>
     <a class="dropdown-item" href="{% url 'cityloops:city' 'roskilde' %}">Roskilde</a>
     <a class="dropdown-item" href="{% url 'cityloops:city' 'sevilla' %}">Sevilla</a>
-    <a class="dropdown-item font-weight-bold" href="{% url 'cityloops:article' 'city' %}">Overview</a>
   </div>
 </li>
 
 <li class="nav-item dropdown projects-dropdown">
   <a class="nav-link dropdown-toggle " href="#" id="projects-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Circularity
+    Resources
   </a>
   <div class="dropdown-menu projects-dropdown-menu p-0" aria-labelledby="projects-dropdown">
     <div class="row mx-0">
       <div class="col-md-6 col-lg-4 mb-4 mb-lg-0 p-2 rounded-left bg-light border-right">
-        <div class="projects-category px-2 pb-1"><i class="mr-2 fal fa-fw fa-info-circle"></i>Getting started</div>
-        <a class="px-2" href="{% url 'cityloops:article' 'instructions' %}">Instructions and courses</a>
-        <a class="px-2" href="{% url 'cityloops:volunteer_forum' %}">Forum</a>
-        <a class="px-2" href="{% url 'cityloops:layer_overview' 'urban-context' %}">Data inventory</a>
+        <div class="projects-category px-2 pb-1"><i class="mr-2 fal fa-fw fa-info-circle"></i>Instructions</div>
+        <a class="px-2" href="{% url 'cityloops:handbook_page' 'how-to' %}">How to...</a>
+        <a class="px-2" href="{% url 'cityloops:handbook_page' 'SCA-Handbook' %}">SCA Handbook</a>
+        <a class="px-2" href="{% url 'cityloops:handbook_page' 'UCA-Handbook' %}">UCA Handbook</a>
+        <a class="px-2" href="{% url 'cityloops:article' 'courses' %}">Courses</a>
+      </div>
+      <div class="col-md-6 col-lg-4 mb-4 mb-lg-0 p-2">
+        <div class="projects-category px-2 pb-1"><i class="mr-2 fal fa-fw fa-tools"></i>Data tools</div>
+        <a class="px-2" href="{% url 'cityloops:hub' %}">Data contribution hub</a>
+        <a class="px-2" href="{% url 'cityloops:article' 'flowdiagrams' %}">Flow diagram builder</a>
+        <a class="px-2" href="{% url 'cityloops:handbook_page' 'sankey-builder' %}">Sankey builder</a>
+        <a class="px-2" href="{% url 'cityloops:handbook_page' 'templates' %}">Templates</a>
+      </div>
+      <div class="col-md-6 col-lg-4 mb-4 mb-lg-0 p-2">
+        <div class="projects-category px-2 pb-1"><i class="mr-2 fal fa-fw fa-table"></i>Data</div>
+        <a class="px-2" href="{% url 'cityloops:article' 'urban-context' %}">Data inventory</a>
+        <a class="px-2" href="https://cityloops.metabolismofcities.org/library/eurostat/">Eurostat library</a>
         <a class="px-2" href="{% url 'cityloops:eurostat_grid' %}">Eurostat grid</a>
-        <a class="px-2" href="{% url 'cityloops:library_overview' 'eurostat' %}">Eurostat library</a>
-      </div>
-      <div class="col-md-6 col-lg-4 mb-4 mb-lg-0 p-2">
-        <div class="projects-category px-2 pb-1"><i class="mr-2 fal fa-fw fa-tools"></i>Tools</div>
-        <a class="px-2" href="{% url 'cityloops:flowdiagrams' %}">Flow diagram builder</a>
-        <a class="px-2" href="{% url 'cityloops:eurostat' %}">Eurostat manager</a>
-
-        <div class="projects-category mt-4 px-2 pb-1"><i class="mr-2 fal fa-fw fa-clipboard-list"></i>Evaluation</div>
-        <a class="px-2" href="{% url 'cityloops:circular_city' %}">Circular city</a>
-        <a class="px-2" href="{% url 'cityloops:indicators' %}">Indicators metadata</a>
-        <a class="px-2" href="{% url 'cityloops:cities_sectors' %}">Cities' indicator selection</a>
-
-      </div>
-      <div class="col-md-6 col-lg-4 mb-4 mb-lg-0 p-2">
-        <div class="projects-category px-2 pb-1"><i class="mr-2 fal fa-fw fa-upload"></i>Data uploading</div>
-        <a class="px-2" href="{% url URLS.DASHBOARD 'apeldoorn' %}hub/harvesting/">Apeldoorn</a>
-        <a class="px-2" href="{% url URLS.DASHBOARD 'bodo' %}hub/harvesting/">Bodø</a>
-        <a class="px-2" href="{% url URLS.DASHBOARD 'hoje-taastrup' %}hub/harvesting/">Høje-Taastrup</a>
-        <a class="px-2" href="{% url URLS.DASHBOARD 'mikkeli' %}hub/harvesting/">Mikkeli</a>
-        <a class="px-2" href="{% url URLS.DASHBOARD 'porto' %}hub/harvesting/">Porto</a>
-        <a class="px-2" href="{% url URLS.DASHBOARD 'roskilde' %}hub/harvesting/">Roskilde</a>
-        <a class="px-2" href="{% url URLS.DASHBOARD 'sevilla' %}hub/harvesting/">Sevilla</a>
-        <a class="px-2" href="{% url 'cityloops:hub' %}"><strong>Overview</strong></a>
       </div>
     </div>
   </div>
@@ -69,14 +58,12 @@
 
 <li class="nav-item dropdown">
   <a class="nav-link dropdown-toggle" href="#" id="deliverables-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Deliverables
+    Results
   </a>
   <div class="dropdown-menu" aria-labelledby="deliverables-dropdown">
       <a class="dropdown-item" href="{% url 'cityloops:article' 'reports' %}">Reports</a>
-      <a class="dropdown-item" href="{% url 'cityloops:article' 'videos' %}">Videos</a>
-      <a class="dropdown-item" href="{% url 'cityloops:article' 'methods' %}">Method analysis</a>
+      <a class="dropdown-item" href="{% url 'cityloops:article' 'methods' %}">MFA Methods analysis</a>
       <a class="dropdown-item" href="{% url 'cityloops:article' 'casestudies' %}">Case studies</a>
-      <a class="dropdown-item" href="{% url 'cityloops:article' 'projects' %}">Analysed projects</a>
   </div>
 </li>
 
