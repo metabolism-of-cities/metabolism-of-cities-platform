@@ -149,12 +149,12 @@
         </select>
         <ul class="list-group list-group-flush indicators">
           <li class="list-group-item d-flex justify-content-between align-items-center">
-            <span><i class="fa fa-fw fa-arrow-alt-to-right mr-2"></i> Input circularity</span>
+            <span><i class="fa fa-fw fa-arrow-alt-to-right mr-2"></i> Input circularity <i class="fa fa-info-circle ml-1" data-toggle="popover" data-trigger="hover" title="Input circularity" data-content="Calculated by dividing the secondary materials by the processed materials"></i></span>
             <span data-year="{{ sankey_1_year }}">{{ input_circularity_year_1|intcomma }}%</span>
             <span data-year="{{ sankey_2_year }}">{{ input_circularity_year_2|intcomma }}%</span>
           </li>
           <li class="list-group-item d-flex justify-content-between align-items-center">
-            <span><i class="fa fa-fw fa-arrow-alt-from-left mr-2"></i> Output circularity</span>
+            <span><i class="fa fa-fw fa-arrow-alt-from-left mr-2"></i> Output circularity <i class="fa fa-info-circle ml-1" data-toggle="popover" data-trigger="hover" title="Output circularity" data-content="Calculated by dividing the secondary materials by the End-of-Life waste"></i></span>
             <span data-year="{{ sankey_1_year }}">{{ output_circularity_year_1|intcomma }}%</span>
             <span data-year="{{ sankey_2_year }}">{{ output_circularity_year_2|intcomma }}%</span>
           </li>
@@ -169,7 +169,7 @@
             <span data-year="{{ sankey_2_year }}">{{ end_of_life_waste_year_2|intcomma}} tonnes/year</span>
           </li>
           <li class="list-group-item d-flex justify-content-between align-items-center">
-            <span><i class="fa fa-fw fa-recycle mr-2"></i> Secondary materials</span>
+            <span><i class="fa fa-fw fa-recycle mr-2"></i> Secondary materials <i class="fa fa-info-circle ml-1" data-toggle="popover" data-trigger="hover" title="Secondary materials" data-content="End-of-Life waste materials (from recycling and backfilling) that go back to processed materials or to export"></i></span>
             <span data-year="{{ sankey_1_year }}">{{ secondary_materials_year_1|intcomma }} tonnes/year</span>
             <span data-year="{{ sankey_2_year }}">{{ secondary_materials_year_2|intcomma }} tonnes/year</span>
           </li>
@@ -571,5 +571,7 @@
     {% else %}
       country_map.fitBounds(country_geojsonlayer.getBounds());
     {% endif %}
+
+    $('[data-toggle="popover"]').popover()
   </script>
 {% endblock %}
