@@ -45,7 +45,7 @@ Wait a few moments, and the containers should be up and running. Your main conta
 
     $ sudo docker container exec -i moc_db psql -U postgres moc < db.sql
 
-Replace "db.sql" for the name of your database file (which should be uncompressed before loading it). After the database is loaded, you will need to reload your container (CTRL+C followed by:
+Replace "db.sql" for the name of your database file (which should be uncompressed before loading it). After the database is loaded, you will need to reload your container (hit CTRL+C to stop) followed by:
 
     $ sudo docker-compose up
 
