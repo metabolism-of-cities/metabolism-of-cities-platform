@@ -1,0 +1,48 @@
+<li class="nav-item"><a class="nav-link" href="{% url "ascus2024:index" %}"><i class="fa fa-home fa-fw"></i></a></li>
+
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="program-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    About
+  </a>
+  <div class="dropdown-menu" aria-labelledby="program-dropdown">
+    <a class="dropdown-item" href="{% url "ascus2024:article" "about" %}">AScUS</a>
+    <a class="dropdown-item" href="{% url "ascus2024:article" "venue" %}">Venue</a>
+    <a class="dropdown-item" href="{% url "ascus2024:article" "contact" %}">Contact</a>
+  </div>
+</li>
+
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="program-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Program
+  </a>
+  <div class="dropdown-menu" aria-labelledby="program-dropdown">
+    <a class="dropdown-item" href="{% url "ascus2024:article" "schedule" %}">Schedule</a>
+    <a class="dropdown-item" href="{% url "ascus2024:article" "keynotes" %}">Keynotes</a>
+    <a class="dropdown-item" href="{% url "ascus2024:article" "discussions" %}">Discussion sessions</a>
+  </div>
+</li>
+
+<li class="nav-item"><a class="nav-link" href="{% url "ascus2024:article" "registration" %}">Registration</a></li>
+
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="program-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Submission
+  </a>
+  <div class="dropdown-menu" aria-labelledby="program-dropdown">
+    <a class="dropdown-item" href="{% url "ascus2024:article" "submit-abstracts" %}">Abstracts</a>
+    <a class="dropdown-item" href="{% url "ascus2024:article" "submit-discussions" %}">Discussion sessions</a>
+  </div>
+</li>
+
+<li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="program-dropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Outputs
+  </a>
+  <div class="dropdown-menu" aria-labelledby="program-dropdown">
+    <a class="dropdown-item" href="{% url "ascus2024:article" "outputs-documents" %}">Path-to-Action documents</a>
+    <a class="dropdown-item" href="{% url "ascus2024:article" "outputs-awards" %}">Awards</a>
+  </div>
+</li>
+{% if not request.user.is_authenticated %}
+  <li class="nav-item"><a class="nav-link" href="{% url "ascus2024:login" %}">Login</a></li>
+{% endif %}
