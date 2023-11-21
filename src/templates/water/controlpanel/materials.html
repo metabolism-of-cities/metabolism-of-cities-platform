@@ -1,0 +1,55 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+  <a href="{% url "water:controlpanel_index" %}" class="btn btn-primary-basic float-right mt-3">
+    <i class="fal fa-angle-left"></i>
+    {{ _("Back to Control Panel") }}
+  </a>
+
+  <h2>{% block title %}Manage materials{% endblock %}</h2>
+
+  {% if not info %}
+    <ul>
+      {% for each in materials %}
+        <li><a href="?id={{ each.id }}">{{ each }}</a> ({{ each.category }})</li>
+      {% endfor %}
+    </ul>
+
+  <h2 class="mt-5">{{ _("Add a new material") }}</h2>
+  {% endif %}
+
+  <form method="post" enctype="multipart/form-data">
+    
+    <div class="mb-3">
+      <label class="form-label">Name (French)</label>
+      <input class="form-control" name="name_french" required value="{{ info.name_french }}">
+    </div>
+    
+    <div class="mb-3">
+      <label class="form-label">Name (English)</label>
+      <input class="form-control" name="name_english" required value="{{ info.name_english }}">
+    </div>
+    
+    <div class="mb-3">
+      <label class="form-label">{{ _("Colors") }}</label>
+      <input class="form-control" name="color1" required value="{{ info.color1 }}" type="color">
+      <input class="form-control" name="color2" required value="{{ info.color2 }}" type="color">
+      <input class="form-control" name="color3" required value="{{ info.color3 }}" type="color">
+      <input class="form-control" name="color4" required value="{{ info.color4 }}" type="color">
+      <input class="form-control" name="color5" required value="{{ info.color5 }}" type="color">
+    </div>
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> {{ _("Save") }}</button>
+    </div>
+    {% csrf_token %}
+  </form>
+
+  <a href="{% url "water:controlpanel_index" %}" class="btn btn-primary-basic mt-4">
+    <i class="fal fa-angle-left"></i>
+    {{ _("Back to Control Panel") }}
+  </a>
+
+
+{% endblock %}

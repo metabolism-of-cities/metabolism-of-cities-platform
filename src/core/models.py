@@ -3705,6 +3705,32 @@ class WaterSystemSpace(models.Model):
         self.slug = slugify(unidecode(self.name))
         super().save(*args, **kwargs)
 
+class WaterMaterialCategory(models.Model):
+    name_french = models.CharField(max_length=255)
+    name_english = models.CharField(max_length=255)
+    def __str__(self):
+        return self.name_french
+
+    class Meta:
+        ordering = ["id"]
+
+class WaterMaterial(models.Model):
+    name_french = models.CharField(max_length=255)
+    name_english = models.CharField(max_length=255)
+    color1 = models.CharField(max_length=30)
+    color2 = models.CharField(max_length=30)
+    color3 = models.CharField(max_length=30)
+    color4 = models.CharField(max_length=30)
+    color5 = models.CharField(max_length=30)
+    category = models.ForeignKey(WaterMaterialCategory, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name_french
+
+    class Meta:
+        ordering = ["id"]
+
+
 class WaterSystemCategory(models.Model):
     name = models.CharField(max_length=255)
     unit = models.ForeignKey(Unit, on_delete=models.CASCADE, null=True, blank=True)
@@ -3790,6 +3816,7 @@ class WaterSystemData(models.Model):
     flow = models.ForeignKey(WaterSystemFlow, on_delete=models.CASCADE, related_name="data")
     category = models.ForeignKey(WaterSystemCategory, on_delete=models.CASCADE)
     space = models.ForeignKey(WaterSystemSpace, on_delete=models.CASCADE)
+    material = models.ForeignKey(WaterMaterial, on_delete=models.CASCADE, null=True, blank=True)
     quantity = models.FloatField(null=True, blank=True)
     date = models.DateField()
     TIMEFRAME = [

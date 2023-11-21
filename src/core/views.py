@@ -1356,7 +1356,7 @@ def controlpanel_content_form(request, id=None):
     else:
         form = ModelForm(request.POST or None)
 
-    if project.slug == "islands" or project.slug == "water" or "tinymce" in request.GET:
+    if project.slug == "islands" or project.slug == "water" or project.slug == "ascus2024" or "tinymce" in request.GET:
         class RichTextForm(forms.Form):
             description = forms.CharField(widget=TinyMCE(mce_attrs={"width": "100%" }))
         if info:
