@@ -13,10 +13,10 @@
         <a class="nav-link btn {% if section == "emissions" %}btn-dark d-inline-block{% endif %}" href="{% url "water:emissions" %}" data-link="{% url "water:emissions" %}"> {{ _("GHG Emissions") }}</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link disabled" href="#"> {{ _("Materials") }}</a>
+        <a class="nav-link btn {% if section == "materials" %}btn-dark d-inline-block{% endif %}" href="{% url "water:materials" %}" data-link="{% url "water:materials" %}"> {{ _("Materials") }}</a>
       </li>
       <li class="nav-item">
-        <a class="nav-link disabled" href="#"> {{ _("Material stock") }}</a>
+        <a class="nav-link btn {% if section == "stock" %}btn-dark d-inline-block{% endif %}" href="{% url "water:stock" %}" data-link="{% url "water:stock" %}"> {{ _("Material stock") }}</a>
       </li>
     </ul>
   </div>

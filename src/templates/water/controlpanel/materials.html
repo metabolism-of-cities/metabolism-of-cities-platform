@@ -30,6 +30,16 @@
       <label class="form-label">Name (English)</label>
       <input class="form-control" name="name_english" required value="{{ info.name_english }}">
     </div>
+
+    <div class="mb-3">
+      <label class="form-label">{{ _("Category") }}</label>
+      <select class="form-control" name="category">
+        <option value=""></option>
+        {% for each in categories %}
+          <option value="{{ each.id }}" {% if each == info.category %}selected{% endif %}>{{ each }}</option>
+        {% endfor %}
+      </select>
+    </div>
     
     <div class="mb-3">
       <label class="form-label">{{ _("Colors") }}</label>

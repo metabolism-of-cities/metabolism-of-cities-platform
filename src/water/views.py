@@ -365,206 +365,53 @@ def controlpanel_materials(request):
     if "id" in request.GET:
         info = WaterMaterial.objects.get(pk=request.GET["id"])
 
-    if "name" in request.POST:
+    if "name_english" in request.POST:
         if not info:
             info = WaterMaterial()
+        info.name_english = request.POST["name_english"]
+        info.name_french = request.POST["name_french"]
+        info.category_id = request.POST["category"]
+        info.color1 = request.POST["color1"]
+        info.color2 = request.POST["color2"]
+        info.color3 = request.POST["color3"]
+        info.color4 = request.POST["color4"]
+        info.color5 = request.POST["color5"]
+        info.save()
+        messages.success(request, _("Information was saved"))
+        return redirect(request.path)
+
+    context = {
+        "materials": WaterMaterial.objects.all(),
+        "categories": WaterMaterialCategory.objects.all(),
+        "info": info,
+        "section": "controlpanel",
+    }
+    return render(request, "water/controlpanel/materials.html", context)
+
+@login_required
+def controlpanel_materialcategories(request):
+    if not has_permission(request, request.project, ["curator", "admin"]):
+        unauthorized_access(request)
+
+    info = None
+    if "id" in request.GET:
+        info = WaterMaterialCategory.objects.get(pk=request.GET["id"])
+
+    if "name_english" in request.POST:
+        if not info:
+            info = WaterMaterialCategory()
         info.name_english = request.POST["name_english"]
         info.name_french = request.POST["name_french"]
         info.save()
         messages.success(request, _("Information was saved"))
         return redirect(request.path)
 
-
-    if "load" in request.GET:
-        french = [
-            "Réactifs",
-            "Produits d'entretien et de maintenance",
-            "Terre/ Sable/ Caillou",
-            "Béton",
-            "Enrobé",
-            "Verre",
-            "Matières plastiques",
-            "Fonte",
-            "Acier",
-            "Autres alliages",
-            "Métaux rares",
-            "Métaux précieux",
-            "Métaux industriels",
-            "Bois",
-            "Végétaux",
-            "Etanchéité",
-            "Alimentation",
-            "Carburants",
-            "Textile",
-            "Papiers et cartons",
-            "Azote",
-            "Phosphore",
-            "BioCH4",
-            "BioCO2",
-            "Boues MV",
-            "Boues MM",
-            "Boues H2O",
-            "Déchets macro ouvrages",
-            "Auters ordures ménagères",
-            "Déchets dangereux",
-        ]
-        english = [
-            "Reagents",
-            "Care and maintenance products",
-            "Earth/Sand/Rock",
-            "Concrete",
-            "Coated",
-            "Glass",
-            "Plastic materials",
-            "Melting",
-            "Steel",
-            "Other alloys",
-            "Rare metals",
-            "Precious metals",
-            "Industrial metals",
-            "Drink",
-            "Plants",
-            "Waterproofing",
-            "Food",
-            "Fuels",
-            "Textile",
-            "Paper and cardboard",
-            "Nitrogen",
-            "Phosphorus",
-            "BioCH4",
-            "BioCO2",
-            "MV Sludge",
-            "MM sludge",
-            "H2O sludge",
-            "Macro-structure waste",
-            "Other household waste",
-            "Dangerous waste",
-        ]
-        categories_fr = [
-            "Réactifs et produits chimiques",
-            "Réactifs et produits chimiques",
-            "Inerte",
-            "Inerte",
-            "Inerte",
-            "Inerte",
-            "Plastique",
-            "Métaux",
-            "Métaux",
-            "Métaux",
-            "Métaux",
-            "Métaux",
-            "Métaux",
-            "Bois",
-            "Végétaux",
-            "Etanchéité",
-            "Alimentation",
-            "Carburants",
-            "Textile",
-            "Papiers/ cartons",
-            "Azote",
-            "Phosphore",
-            "BioCH4",
-            "BioCO2",
-            "Boues",
-            "Boues",
-            "Boues",
-            "Boues",
-            "Autres OM",
-            "DD",
-        ]
-        categories_en = [
-            "Reagents and chemicals",
-            "Reagents and chemicals",
-            "Inert",
-            "Inert",
-            "Inert",
-            "Inert",
-            "Plastic",
-            "Metals",
-            "Metals",
-            "Metals",
-            "Metals",
-            "Metals",
-            "Metals",
-            "Drink",
-            "Plants",
-            "Waterproofing",
-            "Food",
-            "Fuels",
-            "Textile",
-            "Papers/cardboards",
-            "Nitrogen",
-            "Phosphorus",
-            "BioCH4",
-            "BioCO2",
-            "Sludge",
-            "Sludge",
-            "Sludge",
-            "Sludge",
-            "Other OM",
-            "DD",
-        ]
-
-        colors = [
-            ["#fc8d59", "#ef6548", "#d7301f", "#b30000", "#7f0000"],
-            ["#fc8d59", "#ef6548", "#d7301f", "#b30000", "#7f0000"],
-            ["#d9d9d11", "#bdbdbd", "#969696", "#737373", "#525252"],
-            ["#d9d9d12", "#bdbdbd", "#969696", "#737373", "#525252"],
-            ["#d9d9d13", "#bdbdbd", "#969696", "#737373", "#525252"],
-            ["#d9d9d14", "#bdbdbd", "#969696", "#737373", "#525252"],
-            ["#deebf7", "#c6dbef", "#9ecae1", "#6baed6", "#4292c6"],
-            ["#d9d9d9", "#bdbdbd", "#969696", "#737373", "#525252"],
-            ["#d9d9d10", "#bdbdbd", "#969696", "#737373", "#525252"],
-            ["#d9d9d11", "#bdbdbd", "#969696", "#737373", "#525252"],
-            ["#d9d9d12", "#bdbdbd", "#969696", "#737373", "#525252"],
-            ["#d9d9d13", "#bdbdbd", "#969696", "#737373", "#525252"],
-            ["#d9d9d14", "#bdbdbd", "#969696", "#737373", "#525252"],
-            ["#a1d99b", "#74c476", "#41ab5d", "#238b45", "#005a32"],
-            ["#a1d99b", "#74c477", "#41ab5d", "#238b46", "#005a33"],
-            ["#ffffb3", "#fec44f", "#ffff33", "#fed976", "#feb24c"],
-            ["#dadaeb", "#bcbddc", "#9e9ac8", "#756bb1", "#54278f"],
-            ["#969696", "#737373", "#525252", "#252525", "#000000"],
-            ["#9ecae1", "#6baed6", "#4292c6", "#2171b5", "#084594"],
-            ["#fff7bc", "#fee391", "#fec44f", "#fe9929", "#ec7014"],
-            ["#e5f5e0", "#c7e9c0", "#a1d99b", "#74c476", "#41ab5d"],
-            ["#e5f5e1", "#c7e9c1", "#a1d99b", "#74c477", "#41ab5d"],
-            ["#e5f5e2", "#c7e9c2", "#a1d99b", "#74c478", "#41ab5d"],
-            ["#e5f5e3", "#c7e9c3", "#a1d99b", "#74c479", "#41ab5d"],
-            ["#fdd0a2", "#fdae6b", "#fd8d3c", "#e6550d", "#a63603"],
-            ["#fdd0a3", "#fdae6b", "#fd8d3c", "#e6550d", "#a63604"],
-            ["#fdd0a4", "#fdae6b", "#fd8d3c", "#e6550d", "#a63605"],
-            ["#fdd0a5", "#fdae6b", "#fd8d3c", "#e6550d", "#a63606"],
-            ["#d9d9d11", "#bdbdbd", "#969696", "#737373", "#525252"],
-            ["#fcbba1", "#fc9272", "#fb6a4a", "#de2d26", "#a50f15"],
-        ]
-
-        count = 0
-        fr = {}
-        en = {}
-        for each in french:
-            cat_fr = categories_fr[count]
-            cat_en = categories_en[count]
-            if cat_fr not in fr:
-                m = WaterMaterialCategory.objects.create(name_french=cat_fr, name_english=cat_en)
-                fr[cat_fr] = m
-            WaterMaterial.objects.create(
-                name_english=english[count], 
-                name_french=each, 
-                category=fr[cat_fr],
-                color1 = colors[count][0],
-                color2 = colors[count][1],
-                color3 = colors[count][2],
-                color4 = colors[count][3],
-                color5 = colors[count][4],
-            )
-            count = count+1
-
     context = {
-        "materials": WaterMaterial.objects.all(),
+        "categories": WaterMaterialCategory.objects.all(),
         "info": info,
         "section": "controlpanel",
     }
-    return render(request, "water/controlpanel/materials.html", context)
+    return render(request, "water/controlpanel/materialcategories.html", context)
 
 @login_required
 def controlpanel_categories(request):
