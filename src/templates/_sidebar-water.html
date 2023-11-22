@@ -22,20 +22,45 @@
   </div>
 
   <div id="sidebar-territory" class="text-center pt-3 pb-3" {% if category.slug == "emissions" %}hidden{% endif %}>
-    <h3>{{ _("Territory") }}</h3>
-    <ul class="nav flex-column mt-4 region-bar">
-    {% for key,value in REGIONS.items %}
-      <li class="nav-item">
-        <a class="btn
-          {% if key|slugify in selected_regions %}
-            btn-dark
-          {% endif %}"
-        href="{% url 'water:water' %}?region={{ key }}" data-region="{{ key }}">
-          {{ value }}
-        </a>
-      </li>
-      {% endfor %}
-    </ul>
+
+    <div>
+      <h3>{{ _("Territory") }}</h3>
+      <ul class="nav flex-column mt-4 region-bar">
+      {% for key,value in REGIONS.items %}
+        {% if key < 8 %}
+          <li class="nav-item">
+            <a class="btn
+              {% if key|slugify in selected_regions %}
+                btn-dark
+              {% endif %}"
+            href="{% url 'water:water' %}?region={{ key }}" data-region="{{ key }}">
+              {{ value }}
+            </a>
+          </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div>
+      <h3>{{ _("Combined territories") }}</h3>
+      <ul class="nav flex-column mt-4 region-bar">
+      {% for key,value in REGIONS.items %}
+        {% if key > 7 %}
+          <li class="nav-item">
+            <a class="btn
+              {% if key|slugify in selected_regions %}
+                btn-dark
+              {% endif %}"
+            href="{% url 'water:water' %}?region={{ key }}" data-region="{{ key }}">
+              {{ value }}
+            </a>
+          </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+    </div>
+
   </div>
 
   <div id="sidebar-period" class="text-center pt-3 pb-3">

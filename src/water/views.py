@@ -71,6 +71,7 @@ def sankey(request, category):
         "is_admin": is_admin,
         "level": int(level),
         "selected_regions": selected_regions,
+        "combinations": NICE_REGIONS_COMBINATIONS,
     }
 
     if int(level) == 3:
@@ -118,7 +119,6 @@ def contact(request):
             msg.send()
             message_sent = True
         except Exception as e:
-            p(str(e))
             messages.error(request, "Sorry, there was a technical problem delivering your message. Please try again.")
 
     context = {
@@ -1200,8 +1200,6 @@ def temp_script_archived(request):
             x, y = geo.coords.xy
             x = x[0]
             y = y[0]
-            p(x)
-            p(y)
 
         maps[each] = folium.Map(
             location=[y,x],

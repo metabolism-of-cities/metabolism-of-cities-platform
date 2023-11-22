@@ -222,6 +222,20 @@ NICE_REGIONS = {
     5: "Moyen Pays Rive Gauche",
     6: "Tinée",
     7: "Vésubie",
+
+    8: "Tinée + Vésubie",
+    9: "MPRG + Tinée + Vésubie",
+    10: "Nice + EL",
+    11: "Nice + EL + MPRG",
+    12: "Nice + EL + MPRG + RD",
+}
+
+NICE_REGIONS_COMBINATIONS = {
+    8: [6, 7],
+    9: [5, 6, 7],
+    10: [2, 4],
+    11: [2, 4, 5],
+    12: [2, 4, 5, 3],
 }
 
 # For some of the websites users might have access to documents that are not 

@@ -252,65 +252,6 @@
         get_node.removeClass("show-this-node");
       }
 
-    {% if category.slug == "water" and level == 2 %}
-      /* 
-        ALTERNATIVE DESIGNS
-        In water level 2, when certain conditions are met (i.e. specific territories are activated),
-        then an alternative design needs to be shown. This means that specific flows or boxes are hidden, 
-        and others are shown. 
-      */
-      includes_nice = false;
-      includes_moyenpays = false;
-      includes_vesubie = false;
-      $(".region-bar a.btn-dark").each(function(){
-        var region = $(this).data("region");
-        if (region == 2) {
-          includes_nice = true;
-        } else if (region == 5) {
-          includes_moyenpays = true;
-        } else if (region == 7) {
-          includes_vesubie = true;
-        }
-      });
-      alternative = false;
-      /* NOTE: alternative E existed in the past, but it was a duplicate alternative so it was discarded */
-      if (!includes_nice && includes_moyenpays && includes_vesubie) {
-        alternative = "F";
-      } else if (includes_nice && includes_vesubie) {
-        alternative = "D";
-      } else if (includes_nice && !includes_vesubie) {
-        alternative = "C";
-      } else if (!includes_nice && !includes_moyenpays && includes_vesubie) {
-        alternative = "B";
-      } else if (!includes_nice && includes_moyenpays && !includes_vesubie) {
-        alternative = "A";
-      }
-      $(".alternative-element").hide();
-      if (alternative) {
-        {% if is_admin %}
-          $("#alternative_design").html("Alternative design: " + alternative);
-        {% endif %}
-        $(".hide-in-alternative-" + alternative).removeClass("show-this-node");
-        $(".hide-in-alternative-" + alternative).hide();
-        $(".show-in-alternative-" + alternative).show();
-        console.log("The following alternative design was loaded: " + alternative);
-      } else {
-        $("#alternative_design").html("");
-        console.log("The default design was loaded");
-      }
-
-      if (alternative == "F") {
-        if (value_flow_19) {
-          $("#node-11 .qty").text(formatter.format(value_flow_19) + " {{ category.unit.symbol }}");
-        } else {
-          $("#node-11 .qty").text("");
-        }
-      }
-
-      /* END OF ALTERNATIVE DESIGN IMPLEMENTATION */
-
-      {% endif %}
-
       $(".show-this-node").show("fast");
 
     })
@@ -381,6 +322,23 @@
       $(".map-region").addClass("active-space");
     } else {
       $(".map-region").removeClass("active-space");
+
+      /* If the selected area is a 'combinational area' then we need to activate all
+      related areas. If not, we just mark the area that was clicked */
+
+        is_combined_territory = false;
+
+        var combinations_dict = [];
+        a = $(".region-bar a.btn-dark").data("region");
+        {% for key,value in combinations.items %}
+          if (a == {{ key }}) {
+            {% for each in value %}
+              $("#space-{{ each }}").addClass("active-space");
+            {% endfor %}
+          }
+        {% endfor %}
+
+
       $(".region-bar a.btn-dark").each(function(){
         var region = $(this).data("region");
         $("#space-"+region).addClass("active-space");
@@ -393,10 +351,13 @@
     e.preventDefault();
     var region = $(this).data("region");
 
-    if (region == "1" {% if category.slug == "water" %}|| true{% endif %}) {
+    if (region == "1" {% if True %}|| true{% endif %}) {
       /* Eau d'azur button is pressed so we remove all regions and only activate this one */
       /* CHANGE AUGUST 2023: it is now requested that when ANY region is activated that the 
       rest is deactivated, so that is why the condition above was changed from (region == "1") */
+      /* CHANGE NOV 2023: we now change the system so that combinational territories are chosen separately
+      which is why this condition is now always true. We can change it to exclude specific pages in the future
+      by adapting the condition below, to allow for multi-region selection */
       $(".region-bar a").removeClass("btn-dark");
       $(this).addClass("btn-dark");
     } else {
