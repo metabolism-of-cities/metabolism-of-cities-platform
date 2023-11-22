@@ -88,6 +88,34 @@ footer{display:none}
               </label>
             </span>
 
+            {% if category.slug == "materials" %}
+              <span class="d-print-none" style="position:relative;top:60px;left:23px">
+                <label class="font-weight-bold d-block">
+                  <input type="radio" name="material" value="0" checked>
+                  {{ _("All materials") }}
+                </label>
+                {% for each in materials %}
+                  <label class="font-weight-bold d-block">
+                    <input type="radio" name="material" value="{{ each.id }}">
+                    {{ each }}
+                  </label>
+                {% endfor %}
+              </span>
+            {% elif category.slug == "stock" %}
+              <span class="d-print-none" style="position:relative;top:60px;left:23px">
+                <label class="font-weight-bold d-block">
+                  <input type="radio" name="materialcategory" value="0" checked>
+                  {{ _("All materials") }}
+                </label>
+                {% for each in materialcategories %}
+                  <label class="font-weight-bold d-block">
+                    <input type="radio" name="materialcategory" value="{{ each.id }}">
+                    {{ each }}
+                  </label>
+                {% endfor %}
+              </span>
+            {% endif %}
+
             {% include svg %}
             {% include "water/_modal.html" %}
 

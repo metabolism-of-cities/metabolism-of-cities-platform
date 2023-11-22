@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-22 11:36+0000\n"
-"PO-Revision-Date: 2023-11-22 13:36+0200\n"
+"POT-Creation-Date: 2023-11-22 11:56+0000\n"
+"PO-Revision-Date: 2023-11-22 13:56+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_FR\n"
@@ -703,11 +703,15 @@ msgstr "Métabolisme"
 msgid "Animation"
 msgstr "Activer le mode animation"
 
-#: templates/water/sankey.html:112
+#: templates/water/sankey.html:94
+msgid "All materials"
+msgstr "Matières et Matériaux"
+
+#: templates/water/sankey.html:125
 msgid "Authentication required"
 msgstr "Authentification requise"
 
-#: templates/water/sankey.html:115
+#: templates/water/sankey.html:128
 msgid "Please log in to see level 3 data."
 msgstr "Veuillez vous connecter pour voir les données de niveau 3."
 
@@ -715,20 +719,20 @@ msgstr "Veuillez vous connecter pour voir les données de niveau 3."
 msgid "Homepage"
 msgstr "Accueil"
 
-#: water/views.py:316
+#: water/views.py:318
 msgid "You are logged in."
 msgstr "Vous êtes connecté."
 
-#: water/views.py:319
+#: water/views.py:321
 msgid "We could not authenticate you, please try again."
 msgstr "Nous n'avons pas pu vous authentifier, veuillez réessayer."
 
-#: water/views.py:351 water/views.py:380 water/views.py:406 water/views.py:432
-#: water/views.py:487 water/views.py:512 water/views.py:555
+#: water/views.py:353 water/views.py:382 water/views.py:408 water/views.py:434
+#: water/views.py:489 water/views.py:514 water/views.py:557
 msgid "Information was saved"
 msgstr "Les informations ont été enregistrées"
 
-#: water/views.py:552
+#: water/views.py:554
 msgid ""
 "We could not find the level-1 flow that you entered so we left this field "
 "blank."
@@ -736,29 +740,29 @@ msgstr ""
 "Nous n'avons pas pu trouver le flux de niveau 1 que vous avez entré, nous "
 "avons donc laissé ce champ vide."
 
-#: water/views.py:561
+#: water/views.py:563
 msgid "All flows updated"
 msgstr "Tous les flux mis à jour"
 
-#: water/views.py:581
+#: water/views.py:583
 msgid "The file was deleted successfully."
 msgstr "Le fichier a été supprimé avec succès."
 
-#: water/views.py:592
+#: water/views.py:594
 msgid "The file was uploaded successfully."
 msgstr "Le fichier a été téléchargé avec succès."
 
-#: water/views.py:612
+#: water/views.py:614
 msgid "The file was uploaded successfully. Please review the data below."
 msgstr ""
 "Le fichier a été téléchargé avec succès. Veuillez consulter les données ci-"
 "dessous."
 
-#: water/views.py:631
+#: water/views.py:633
 msgid "The file was deleted successfully"
 msgstr "Le fichier a été supprimé avec succès"
 
-#: water/views.py:638
+#: water/views.py:640
 msgid ""
 "The data was deleted successfully from the database. You can reload it "
 "below, or delete the original file."
@@ -766,15 +770,15 @@ msgstr ""
 "Les données ont été supprimées avec succès de la base de données. Vous "
 "pouvez le recharger ci-dessous ou supprimer le fichier d'origine."
 
-#: water/views.py:774
+#: water/views.py:776
 msgid "Year/month information is not valid."
 msgstr "Les informations année/mois ne sont pas valides."
 
-#: water/views.py:800
+#: water/views.py:802
 msgid "The data has been saved in the database"
 msgstr "Les données ont été enregistrées dans la base de données"
 
-#: water/views.py:802
+#: water/views.py:804
 msgid ""
 "Sorry, we could not save your data. Are all the quantities filled in "
 "correctly? The error is printed below: "

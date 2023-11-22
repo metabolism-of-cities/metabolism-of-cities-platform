@@ -72,6 +72,8 @@ def sankey(request, category):
         "level": int(level),
         "selected_regions": selected_regions,
         "combinations": NICE_REGIONS_COMBINATIONS,
+        "materials": WaterMaterial.objects.all(),
+        "materialcategories": WaterMaterialCategory.objects.all(),
     }
 
     if int(level) == 3:
