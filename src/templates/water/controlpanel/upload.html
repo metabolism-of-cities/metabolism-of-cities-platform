@@ -19,7 +19,7 @@
       {{ _("Delete all rows that are not relevant for your dataset. Enter 'Unknown' if you have no data for a particular cell but you want the flow to appear on the sankey diagram.") }}
     </li>
     <li>
-      {{ _("You can add rows for as many months or years as you want to upload. You can also duplicate the sheet if you want to separate data of different years into multiple sheets.") }}
+      {{ _("You can add rows for as many months or years as you want to upload.") }}
     </li>
     <li>
       {{ _("Please fill out data using the following units:") }}
@@ -27,6 +27,8 @@
         <li>{{ _("Water") }}: km3</li>
         <li>{{ _("Energy") }}: MWh</li>
         <li>{{ _("Emissions") }}: TCO2EQ</li>
+        <li>{{ _("Materials") }}: kt</li>
+        <li>{{ _("Stock") }}: kt</li>
       </ul>
     </li>
   </ul>
@@ -48,6 +50,10 @@
     <a href="/media/water/templates/emissions.xlsx" class="btn btn-secondary" target="_blank">
       <i class="fa fa-download"></i>
       {{ _("Emissions data template") }}
+    </a>
+    <a href="/media/water/templates/materials.xlsx" class="btn btn-secondary" target="_blank">
+      <i class="fa fa-download"></i>
+      {{ _("Materials data template") }}
     </a>
   </section>
 
