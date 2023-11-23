@@ -45,6 +45,9 @@
             <td>{{ each.level }}</td>
             <td>{{ each.identifier }}</td>
             <td><a href="?id={{ each.id }}">{{ each.name }}</a>
+              {% if not each.normal_width_calculation %}
+               *
+              {% endif %}
               {% if each.part_of_flow %}
                 <br>
                 <small>
@@ -106,7 +109,7 @@
       </small>
     </div>
     <div class="mb-3">
-      <input type="checkbox" name="normal_width_calculation" value="true" {% if info.normal_width_calculation %}checked{% endif %} >
+      <input type="checkbox" name="normal_width_calculation" value="true" {% if info.normal_width_calculation or not info %}checked{% endif %} >
       <label class="form-label">{{ _("Include when calculating line width") }}</label>
       <br>
       <small>

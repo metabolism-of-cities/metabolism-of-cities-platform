@@ -93,7 +93,23 @@
       var level = $(this).data("level");
       $(this).attr("href", link + level);
     });
-    history.replaceState(undefined, undefined, link + $("input[name=level]").val());
+    link += $("input[name=level]").val()
+
+    {% if category.slug == "materials" %}
+      link += "&material=";
+      var material = $("input[name='material']:checked").val();
+      $(this).attr("href", link + material);
+      link += material
+    {% endif %}
+
+    {% if category.slug == "stock" %}
+      link += "&materialcategory=";
+      var materialcategory = $("input[name='materialcategory']:checked").val();
+      $(this).attr("href", link + materialcategory);
+      link += materialcategory
+    {% endif %}
+
+    history.replaceState(undefined, undefined, link);
   }
 
   function getData() {
@@ -103,7 +119,7 @@
 
     /* Let's build the URL */
     category = {{ category.id }};
-    var jsonURL = "{% url "water:ajax" %}?category=" + category + "&level=" + $("input[name=level]").val();
+    var jsonURL = "{% url "water:ajax" %}?category=" + category + "&level=" + $("input[name=level]").val() + "&material=" + $("input[name='material']:checked").val();
 
     $(".region-bar a.btn-dark").each(function(){
       var region = $(this).data("region");
@@ -388,6 +404,18 @@
 
   });
 
+  function setDynamicLogos() {
+    category = $("input[name='material']:checked").data("category");
+    logo = "/static/img/water/logos/" + category + ".png";
+    $(".swapimage").attr("xlink:href", logo);
+  }
+
+  $("input[name='material']").change(function(){
+    getData();
+    updateLevelLinks();
+    setDynamicLogos();
+  });
+
   $("#animate").click(function(){
     if ($(this).is(":checked")) {
       // The @keyframes are very CPU intense so we don't have them in the CSS by default and only
@@ -469,6 +497,7 @@
 
       jsonURL = "{% url "water:ajax_chart_data" %}?flow=" + get_id_number + "&category={{ category.id }}&level=" + $("input[name=level]").val();
       jsonURL += "&date_start=" + $("select[name='date_start']").val() + "&date_end=" + $("select[name='date_end']").val();
+      jsonURL += "&material=" + $("input[name='material']:checked").val();
 
       $(".region-bar a.btn-dark").each(function(){
         jsonURL += "&space=" + $(this).data("region");
@@ -624,6 +653,10 @@
   setRegionLabels();
   getData();
   updateLevelLinks();
+  
+  {% if category.slug == "materials" %}
+    setDynamicLogos();
+  {% endif %}
 
   {% if not DEBUG %}
     $("#animate").click();

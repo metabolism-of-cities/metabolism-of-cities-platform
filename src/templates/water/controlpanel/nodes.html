@@ -36,13 +36,13 @@
           <li class="mb-3">
             <a href="?id={{ each.id }}">{{ each.identifier }} - {{ each }}</a>
             <br>
-            {% if each.exit_flows.count %}
-            Exit flows: 
-            {% for flow in each.exit_flows.all %}<span class="badge badge-info">{{ flow.identifier }}</span> {% endfor %}
-            {% endif %}
             {% if each.entry_flows.count %}
-            Entry flows: 
+            Entry/summing up: 
             {% for flow in each.entry_flows.all %}<span class="badge badge-info">{{ flow.identifier }}</span> {% endfor %}
+            {% endif %}
+            {% if each.exit_flows.count %}
+            Other associated flows
+            {% for flow in each.exit_flows.all %}<span class="badge badge-info">{{ flow.identifier }}</span> {% endfor %}
             {% endif %}
           </li>
         {% endfor %}
@@ -72,12 +72,14 @@
       </select>
     </div>
     <div class="mb-3">
-      <label class="form-label">{{ _("Entry flows") }}</label>
+      <label class="form-label">{{ _("Entry/summing up flows") }}</label>
       <input class="form-control" name="entry_flows" value="{% for each in info.entry_flows.all %}{{ each.identifier }}{% if not forloop.last %}, {% endif %}{% endfor %}">
+      <small>{{ _("These flows will be added up to show the total quantity") }}</small>
     </div>
     <div class="mb-3">
-      <label class="form-label">{{ _("Exit flows") }}</label>
+      <label class="form-label">{{ _("Other associated flows") }}</label>
       <input class="form-control" name="exit_flows" value="{% for each in info.exit_flows.all %}{{ each.identifier }}{% if not forloop.last %}, {% endif %}{% endfor %}">
+      <small>{{ _("Other flows linked to this node but not just for summing up (e.g. exit flows)") }}</small>
     </div>
     <div class="mb-3">
       <label class="form-label">{{ _("Level") }}</label>

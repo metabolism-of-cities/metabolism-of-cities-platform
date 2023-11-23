@@ -27,6 +27,8 @@ from django.utils import translation
 # For downloading files
 from django.http import FileResponse
 
+import math
+
 DIAGRAM_ID = 1013292
 
 def index(request):
@@ -137,6 +139,9 @@ def ajax(request):
     if regions:
         data = data.filter(space__in=regions)
 
+    if request.GET.get("material") and request.GET.get("material") != "undefined":
+        data = data.filter(material_id=request.GET.get("material"))
+
     date_start = request.GET["date_start"]
     if len(date_start) == 4:
         date_start = parse(date_start + "-01-01")
@@ -153,7 +158,7 @@ def ajax(request):
 
     results = {}
     for each in data:
-        if request.GET["level"] == "2":
+        if request.GET["level"] == "2" or request.GET["category"] == "4":
             results[each["flow__identifier"]] = each["total"]
         else:
             # Okay so here is how it works... level 1 is not a REAL data level
@@ -172,40 +177,11 @@ def ajax(request):
                 else:
                     results[part_of] = each["total"]
 
-    # SPECIAL CONDITIONS
-    # These are certain conditions under which we need to adjust the values that are returned, in
-    # order to avoid a certain double / under-counting. The reason is that import and export flows
-    # can not just be added up if they involve multiple areas, and they are imported or exported
-    # from and to these same areas. This structure is not optimal but implemented as such 
-    # due to time constraints. 
-
-    spaces = request.GET.getlist("region")
-    if len(spaces) == 3:
-        if "5" in spaces and "6" in spaces and "7" in spaces:
-            # If these three spaces are selected, then we modify the numbers
-            # For the export flow (flow #5), we only get the total for MPRG (space 5)
-
-            baseline = WaterSystemData.objects.filter(category_id=request.GET["category"], date__gte=date_start, date__lte=date_end)
-            try:
-                results[5] = baseline.filter(space=5, flow__part_of_flow__identifier=5).values("flow__part_of_flow__identifier").annotate(total=Sum("quantity"))[0]["total"]
-            except:
-                results[5] = ""
-
-            # For the import flow, we take the Nice total (space 2) and subtract the Est Littoral total (space 4)
-            try:
-                nice_total = baseline.filter(space=2, flow__part_of_flow__identifier=5).values("flow__part_of_flow__identifier").annotate(total=Sum("quantity"))[0]["total"]
-                est_littoral_total = baseline.filter(space=4, flow__part_of_flow__identifier=4).values("flow__part_of_flow__identifier").annotate(total=Sum("quantity"))[0]["total"]
-                results[4] = nice_total-est_littoral_total
-            except:
-                results[4] = ""
-
-    # END OF SPECIAL CONDITIONS
-
     return JsonResponse(results)
 
 def ajax_chart_data(request):
     results = []
-    if request.GET.get("level") == "1":
+    if request.GET.get("level") == "1" and request.GET.get("category") != "4":
         data = WaterSystemData.objects.filter(
             category_id=request.GET["category"], 
             flow__part_of_flow__identifier=request.GET["flow"], 
@@ -232,19 +208,8 @@ def ajax_chart_data(request):
 
     data = data.filter(date__gte=date_start, date__lte=date_end)
 
-    # SPECIAL CONDITIONS
-    # These are certain conditions under which we need to adjust the values that are returned, in
-    # order to avoid a certain double / under-counting. The reason is that import and export flows
-    # can not just be added up if they involve multiple areas, and they are imported or exported
-    # from and to these same areas. This structure is not optimal but implemented as such 
-    # due to time constraints. DRY is nowhere to be found.
-    
-    # SPECIAL CONDITION 1: MPRG totals (space 5) are used even though two other specific areas are selected
-    spaces = request.GET.getlist("space")
-    if request.GET.get("level") == "1" and len(spaces) == 3:
-        if "5" in spaces and "6" in spaces and "7" in spaces and request.GET["flow"] == "5":
-            data = data.filter(space=5)
-    # END OF SPECIAL CONDITIONS
+    if request.GET.get("material") and request.GET.get("material") != "undefined":
+        data = data.filter(material_id=request.GET.get("material"))
 
     for each in data:
         date = each["date"]
@@ -642,14 +607,22 @@ def controlpanel_file(request, id):
     # We merge all the sheets, and remove the first row which only contains the unit (eg km3)
     all_sheets = pd.read_excel(info.file, header=3, sheet_name=None)
     all_data = pd.DataFrame()
-    cdf = pd.concat(all_sheets.values())
-    df = all_data.append(cdf, ignore_index=True)
-    # The 7th column is an empty separator column, let's drop it
-    df.drop(df.columns[[7]], axis=1, inplace=True)
+    df = pd.concat(all_sheets.values())
+    #df = pd.concat(all_data, cdf)
+
+    # The 7th or 8th column is an empty separator column, let's drop it
+    # We check the TOTAL number of columns because sometimes there is a MATERIAL column
+    # which means it's the 8th column; otherwise the 7th
+    if (len(df.columns) == 21):
+        drop_column = 8
+    else:
+        drop_column = 7
+    df.drop(df.columns[[drop_column]], axis=1, inplace=True)
 
     try:
         category_name = (df["FLUX"].loc[df.index[0]])
         conversion = {
+            "MATIERES & MATERIAUX": 4,
             "GAZ A EFFETS DE SERRE": 3,
             "ENERGIE": 2,
             "EAUX": 1,
@@ -667,6 +640,7 @@ def controlpanel_file(request, id):
         "N°FLUX", 
         "NIVEAUX", 
         "MOIS", 
+        "MATERIAL",
         "ANNEE", 
         "Eau d'Azur", 
         "Nice", 
@@ -675,7 +649,12 @@ def controlpanel_file(request, id):
         "Moyen Pays\nRive Gauche", 
         "Tinée", 
         "Vésubie", 
-        "Tinée"
+        "Tinée",
+        "Tinée + Vésubie",
+        "MPRG + Tinée + Vésubie",
+        "Nice + EL",
+        "Nice + EL + MPRG",
+        "Nice + EL + MPRG + RD",
     ]
     try:
         df = df[columns_to_keep]
@@ -694,6 +673,7 @@ def controlpanel_file(request, id):
             "Moyen Pays\nRive Gauche": "Moyen Pays Rive Gauche",
             "Est Littoral": "Est-Littoral",
             "NIVEAUX": "level",
+            "MATERIAL": "material",
         }
 
         # Rename to English
@@ -724,7 +704,9 @@ def controlpanel_file(request, id):
 
         # We delete all records that are not level 2 records
         try:
-            df = df[df.level == 2]
+            # But only if this is NOT the materials flow, because there we use the level 1 data
+            if category.id != 4:
+                df = df[df.level == 2]
         except:
             error = "We could not locate the LEVEL (niveau) column, please review."
             messages.error(request, error)
@@ -749,14 +731,31 @@ def controlpanel_file(request, id):
         errors = []
         items = []
         flows = {}
+        materials = {}
+        for each in WaterMaterial.objects.all():
+            materials[each.name_french] = each            
+
         for index, row in df.iterrows():
             row = row.to_dict()
             flow = row["flow"]
+            level = row["level"]
+            try:
+                material = row["material"]
+                material = material.strip()
+            except:
+                material = None
+
+            if material:
+                if not material in materials:
+                    error = f"The material named {material} was not found in the list of materials. Please check spelling."
+                else:
+                    material = materials[material]
+                    
             category = category
             error = None
             if flow not in flows:
                 try:
-                    get_flow = WaterSystemFlow.objects.get(identifier=flow, category=category, level=2)
+                    get_flow = WaterSystemFlow.objects.get(identifier=flow, category=category, level=level)
                     flows[flow] = get_flow
                     flow = get_flow
                 except:
@@ -768,7 +767,7 @@ def controlpanel_file(request, id):
                 year = row["year"]
                 month = row["month"]
                 timeframe = "month"
-                if not month or month == "":
+                if not month or month == "" or math.isnan(month):
                     month = 1
                     timeframe = "year"
                 date = parse(f"{year}-{month}-01")
@@ -785,6 +784,7 @@ def controlpanel_file(request, id):
                     items.append(WaterSystemData(
                         file = info,
                         flow = flow,
+                        material = material,
                         category = category,
                         timeframe = timeframe,
                         space = space,

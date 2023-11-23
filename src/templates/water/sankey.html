@@ -89,24 +89,18 @@ footer{display:none}
             </span>
 
             {% if category.slug == "materials" %}
-              <span class="d-print-none" style="position:relative;top:60px;left:23px">
-                <label class="font-weight-bold d-block">
-                  <input type="radio" name="material" value="0" checked>
-                  {{ _("All materials") }}
-                </label>
-                {% for each in materials %}
-                  <label class="font-weight-bold d-block">
-                    <input type="radio" name="material" value="{{ each.id }}">
-                    {{ each }}
-                  </label>
-                {% endfor %}
-              </span>
+              <div style="position:absolute;top:20px;height:700px;overflow: scroll" class="materialselection">
+                <span class="d-print-none" style="position:relative;top:60px;left:23px">
+                  {% for each in materials %}
+                    <label class="font-weight-bold d-block">
+                      <input type="radio" name="material" value="{{ each.id }}" {% if each.id == 0 %}checked{% endif %} data-category="{{ each.category.id }}">
+                      {{ each }}
+                    </label>
+                  {% endfor %}
+                </span>
+              </div>
             {% elif category.slug == "stock" %}
               <span class="d-print-none" style="position:relative;top:60px;left:23px">
-                <label class="font-weight-bold d-block">
-                  <input type="radio" name="materialcategory" value="0" checked>
-                  {{ _("All materials") }}
-                </label>
                 {% for each in materialcategories %}
                   <label class="font-weight-bold d-block">
                     <input type="radio" name="materialcategory" value="{{ each.id }}">
