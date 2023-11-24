@@ -626,7 +626,7 @@ def controlpanel_file(request, id):
     df.drop(df.columns[[drop_column]], axis=1, inplace=True)
 
     try:
-        category_name = (df["FLUX"].loc[df.index[0]])
+        category_name = df["FLUX"].iloc[0]
         conversion = {
             "MATIERES & MATERIAUX": 4,
             "GAZ A EFFETS DE SERRE": 3,
@@ -664,8 +664,13 @@ def controlpanel_file(request, id):
     ]
     try:
         df = df[columns_to_keep]
-    except Exception as e:
-        messages.error(request, "One or more of the required columns were not found. Below is the error message: " + str(e))
+    except:
+        try:
+            # Some flows do NOT have the material column, so let's try without that
+            columns_to_keep.remove("MATERIAL")
+            df = df[columns_to_keep]
+        except Exception as e:
+            messages.error(request, "One or more of the required columns were not found. Below is the error message: " + str(e))
 
     number_of_cols = len(df.columns)
     if number_of_cols != len(columns_to_keep):
@@ -773,7 +778,8 @@ def controlpanel_file(request, id):
                 year = row["year"]
                 month = row["month"]
                 timeframe = "month"
-                if not month or month == "" or math.isnan(month):
+                months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+                if month not in months:
                     month = 1
                     timeframe = "year"
                 date = parse(f"{year}-{month}-01")
