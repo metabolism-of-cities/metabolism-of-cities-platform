@@ -97,7 +97,7 @@
 
     {% if category.slug == "materials" %}
       link += "&material=";
-      var material = $("input[name='material']:checked").val();
+      var material = $("[name='material']").val();
       $(this).attr("href", link + material);
       link += material
     {% endif %}
@@ -119,7 +119,7 @@
 
     /* Let's build the URL */
     category = {{ category.id }};
-    var jsonURL = "{% url "water:ajax" %}?category=" + category + "&level=" + $("input[name=level]").val() + "&material=" + $("input[name='material']:checked").val();
+    var jsonURL = "{% url "water:ajax" %}?category=" + category + "&level=" + $("input[name=level]").val() + "&material=" + $("[name='material']:checked").val();
 
     $(".region-bar a.btn-dark").each(function(){
       var region = $(this).data("region");
@@ -405,12 +405,12 @@
   });
 
   function setDynamicLogos() {
-    category = $("input[name='material']:checked").data("category");
+    category = $("[name='material']").find(":selected").data("category");
     logo = "/static/img/water/logos/" + category + ".png";
     $(".swapimage").attr("xlink:href", logo);
   }
 
-  $("input[name='material']").change(function(){
+  $("[name='material']").change(function(){
     getData();
     updateLevelLinks();
     setDynamicLogos();
@@ -497,7 +497,7 @@
 
       jsonURL = "{% url "water:ajax_chart_data" %}?flow=" + get_id_number + "&category={{ category.id }}&level=" + $("input[name=level]").val();
       jsonURL += "&date_start=" + $("select[name='date_start']").val() + "&date_end=" + $("select[name='date_end']").val();
-      jsonURL += "&material=" + $("input[name='material']:checked").val();
+      jsonURL += "&material=" + $("[name='material']").val();
 
       $(".region-bar a.btn-dark").each(function(){
         jsonURL += "&space=" + $(this).data("region");

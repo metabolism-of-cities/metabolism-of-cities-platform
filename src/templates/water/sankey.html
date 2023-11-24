@@ -86,29 +86,31 @@ footer{display:none}
                 <input type="checkbox" id="animate" value="true">
                 {{ _("Animation") }}
               </label>
-            </span>
 
-            {% if category.slug == "materials" %}
-              <div style="position:absolute;top:20px;height:700px;overflow: scroll" class="materialselection">
+              {% if category.slug == "materials" %}
+                <div style="" class="materialselection">
+                  <div class="d-print-none" style="width:300px">
+                    <select class="form-control" name="material">
+                    {% for each in materials %}
+                      <option value="{{ each.id }}" {% if each.id == 0 %}selected{% endif %} data-category="{{ each.category.id }}">
+                        {{ each }}
+                      </option>
+                    {% endfor %}
+                  </select>
+                  </div>
+                </div>
+              {% elif category.slug == "stock" %}
                 <span class="d-print-none" style="position:relative;top:60px;left:23px">
-                  {% for each in materials %}
+                  {% for each in materialcategories %}
                     <label class="font-weight-bold d-block">
-                      <input type="radio" name="material" value="{{ each.id }}" {% if each.id == 0 %}checked{% endif %} data-category="{{ each.category.id }}">
+                      <input type="radio" name="materialcategory" value="{{ each.id }}">
                       {{ each }}
                     </label>
                   {% endfor %}
                 </span>
-              </div>
-            {% elif category.slug == "stock" %}
-              <span class="d-print-none" style="position:relative;top:60px;left:23px">
-                {% for each in materialcategories %}
-                  <label class="font-weight-bold d-block">
-                    <input type="radio" name="materialcategory" value="{{ each.id }}">
-                    {{ each }}
-                  </label>
-                {% endfor %}
-              </span>
-            {% endif %}
+              {% endif %}
+
+            </span>
 
             {% include svg %}
             {% include "water/_modal.html" %}
