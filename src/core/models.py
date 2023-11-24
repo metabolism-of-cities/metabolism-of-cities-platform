@@ -3789,6 +3789,7 @@ class WaterSystemFile(models.Model):
     is_processed = models.BooleanField(default=False, db_index=True)
     level = models.PositiveSmallIntegerField(default=2)
     name = models.CharField(max_length=255, null=True, blank=True) # Only used for level-3 files
+    date_range = models.CharField(max_length=255, null=True, blank=True)
 
     def get_absolute_url(self):
         return reverse("water:controlpanel_file", args=[self.id])
@@ -3807,6 +3808,25 @@ class WaterSystemFile(models.Model):
         data = self.data.all().order_by("-date")
         if data:
             return data[0]
+
+    def set_date_range(self):
+        start = self.data_start
+        if not start:
+            self.date_range = None
+        else:
+            if self.data_start.timeframe == "month":
+                s = self.data_start.date.strftime("%b %Y")
+            else:
+                s = self.data_start.date.strftime("%Y")
+            if self.data_end.timeframe == "month":
+                e = self.data_end.date.strftime("%b %Y")
+            else:
+                e = self.data_end.date.strftime("%Y")
+            if s == e:
+                self.date_range = s
+            else:
+                self.date_range = f"{s} - {e}"
+        self.save()
 
     class Meta:
         ordering = ["id"]

@@ -89,21 +89,10 @@
           <td>{{ each.date_created|date:"M d, Y" }}</td>
           <td>{{ each.uploader }}</td>
           <td>
-            {% if not each.data_start %}
+            {% if not each.date_range %}
               <span class="badge badge-secondary">{{ _("No data stored") }}</span>
             {% else %}
-              {% if each.data_start.timeframe == "month" %}
-                {{ each.data_start.date|date:"M Y" }}
-              {% else %}
-                {{ each.data_start.date|date:"Y" }}
-              {% endif %}
-              {% if each.data_start.date != each.data_end.date %}
-                {% if each.data_end.timeframe == "month" %}
-                  -{{ each.data_end.date|date:"M Y" }}
-                {% else %}
-                  -{{ each.data_end.date|date:"Y" }}
-                {% endif %}
-              {% endif %}
+              {{ each.date_range }}
             {% endif %}
           </td>
         </tr>

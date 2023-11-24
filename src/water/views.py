@@ -579,6 +579,12 @@ def controlpanel_upload(request):
         messages.success(request, _("The file was uploaded successfully. Please review the data below."))
         return redirect(reverse("water:controlpanel_file", args=[info.id]))
 
+    # TEMP CODE
+    if "load" in request.GET:
+        for each in WaterSystemFile.objects.all():
+            each.set_date_range()
+    # END TEMP CODE
+
     context = {
         "types": WaterSystemCategory.objects.all(),
         "files": WaterSystemFile.objects.all(),
@@ -799,6 +805,7 @@ def controlpanel_file(request, id):
                 WaterSystemData.objects.bulk_create(items)
                 info.is_processed = True
                 info.save()
+                info.set_date_range()
                 messages.success(request, _("The data has been saved in the database"))
             except Exception as e:
                 errors.append(_("Sorry, we could not save your data. Are all the quantities filled in correctly? The error is printed below: ") + str(e))
