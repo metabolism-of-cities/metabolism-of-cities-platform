@@ -268,6 +268,64 @@
         get_node.removeClass("show-this-node");
       }
 
+      /* 
+        ALTERNATIVE DESIGNS
+        In water level 2, when certain conditions are met (i.e. specific territories are activated),
+        then an alternative design needs to be shown. This means that specific flows or boxes are hidden, 
+        and others are shown. 
+      */
+      {% if category.slug == "water" and level == 2 %}
+        includes_nice = false;
+        includes_moyenpays = false;
+        includes_vesubie = false;
+        $(".region-bar a.btn-dark").each(function(){
+          var region = $(this).data("region");
+          if (region == 2) {
+            includes_nice = true;
+          } else if (region == 5) {
+            includes_moyenpays = true;
+          } else if (region == 7) {
+            includes_vesubie = true;
+          }
+        });
+        alternative = false;
+        /* NOTE: alternative E existed in the past, but it was a duplicate alternative so it was discarded */
+        if (!includes_nice && includes_moyenpays && includes_vesubie) {
+          alternative = "F";
+        } else if (includes_nice && includes_vesubie) {
+          alternative = "D";
+        } else if (includes_nice && !includes_vesubie) {
+          alternative = "C";
+        } else if (!includes_nice && !includes_moyenpays && includes_vesubie) {
+          alternative = "B";
+        } else if (!includes_nice && includes_moyenpays && !includes_vesubie) {
+          alternative = "A";
+        }
+        $(".alternative-element").hide();
+        if (alternative) {
+          {% if is_admin %}
+            $("#alternative_design").html("Alternative design: " + alternative);
+          {% endif %}
+          $(".hide-in-alternative-" + alternative).removeClass("show-this-node");
+          $(".hide-in-alternative-" + alternative).hide();
+          $(".show-in-alternative-" + alternative).show();
+          console.log("The following alternative design was loaded: " + alternative);
+        } else {
+          $("#alternative_design").html("");
+          console.log("The default design was loaded");
+        }
+
+        if (alternative == "F") {
+          if (value_flow_19) {
+            $("#node-11 .qty").text(formatter.format(value_flow_19) + " {{ category.unit.symbol }}");
+          } else {
+            $("#node-11 .qty").text("");
+          }
+        }
+
+        {% endif %}
+      /* END OF ALTERNATIVE DESIGN IMPLEMENTATION */
+
       $(".show-this-node").show("fast");
 
     })
