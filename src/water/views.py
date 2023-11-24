@@ -136,6 +136,10 @@ def ajax(request):
     regions = request.GET.getlist("region")
     data = WaterSystemData.objects.filter(category_id=request.GET["category"]).values("flow__identifier", "flow__part_of_flow__identifier").annotate(total=Sum("quantity"))
 
+    # For materials we split up level 1 and 2 data, so we must filter exclusively for the chosen level
+    if request.GET["category"] == "4":
+        data = data.filter(flow__level=request.GET["level"])
+
     if regions:
         data = data.filter(space__in=regions)
 
@@ -579,12 +583,6 @@ def controlpanel_upload(request):
         messages.success(request, _("The file was uploaded successfully. Please review the data below."))
         return redirect(reverse("water:controlpanel_file", args=[info.id]))
 
-    # TEMP CODE
-    if "load" in request.GET:
-        for each in WaterSystemFile.objects.all():
-            each.set_date_range()
-    # END TEMP CODE
-
     context = {
         "types": WaterSystemCategory.objects.all(),
         "files": WaterSystemFile.objects.all(),
@@ -607,136 +605,145 @@ def controlpanel_file(request, id):
     if "delete_data" in request.POST:
         info.data.all().delete()
         info.is_processed = False
+        info.date_range = None
         info.save()
         messages.success(request, _("The data was deleted successfully from the database. You can reload it below, or delete the original file."))
 
-    # We merge all the sheets, and remove the first row which only contains the unit (eg km3)
-    all_sheets = pd.read_excel(info.file, header=3, sheet_name=None)
-    all_data = pd.DataFrame()
-    df = pd.concat(all_sheets.values())
-    #df = pd.concat(all_data, cdf)
-
-    # The 7th or 8th column is an empty separator column, let's drop it
-    # We check the TOTAL number of columns because sometimes there is a MATERIAL column
-    # which means it's the 8th column; otherwise the 7th
-    if (len(df.columns) == 21):
-        drop_column = 8
-    else:
-        drop_column = 7
-    df.drop(df.columns[[drop_column]], axis=1, inplace=True)
-
     try:
-        category_name = df["FLUX"].iloc[0]
-        conversion = {
-            "MATIERES & MATERIAUX": 4,
-            "GAZ A EFFETS DE SERRE": 3,
-            "ENERGIE": 2,
-            "EAUX": 1,
-        }
-        category = WaterSystemCategory.objects.get(pk=conversion[category_name])
-        if not info.category:
-            info.category = category
-            info.save()
+        # We merge all the sheets, and remove the first row which only contains the unit (eg km3)
+        all_sheets = pd.read_excel(info.file, header=3, sheet_name=None)
+        all_data = pd.DataFrame()
+        df = pd.concat(all_sheets.values())
+        #df = pd.concat(all_data, cdf)
+
+        # The 7th or 8th column is an empty separator column, let's drop it
+        # We check the TOTAL number of columns because sometimes there is a MATERIAL column
+        # which means it's the 8th column; otherwise the 7th
+        if (len(df.columns) == 21):
+            drop_column = 8
+        else:
+            drop_column = 7
+        df.drop(df.columns[[drop_column]], axis=1, inplace=True)
+
+        try:
+            category_name = df["FLUX"].iloc[0]
+            conversion = {
+                "MATIERES & MATERIAUX": 4,
+                "GAZ A EFFETS DE SERRE": 3,
+                "ENERGIE": 2,
+                "EAUX": 1,
+            }
+            category = WaterSystemCategory.objects.get(pk=conversion[category_name])
+            if not info.category:
+                info.category = category
+                info.save()
+
+        except Exception as e:
+            category = None
+            messages.error(request, "We tried looking up the first value in the FLUX column to check the type of flow, but this did not work. Error: " + str(e))
+
+        columns_to_keep = [
+            "N°FLUX", 
+            "NIVEAUX", 
+            "MOIS", 
+            "MATERIAL",
+            "ANNEE", 
+            "Eau d'Azur", 
+            "Nice", 
+            "Rive Droite", 
+            "Est Littoral", 
+            "Moyen Pays\nRive Gauche", 
+            "Tinée", 
+            "Vésubie", 
+            "Tinée",
+            "Tinée + Vésubie",
+            "MPRG + Tinée + Vésubie",
+            "Nice + EL",
+            "Nice + EL + MPRG",
+            "Nice + EL + MPRG + RD",
+        ]
+        try:
+            df = df[columns_to_keep]
+        except:
+            try:
+                # Some flows do NOT have the material column, so let's try without that
+                columns_to_keep.remove("MATERIAL")
+                df = df[columns_to_keep]
+            except Exception as e:
+                messages.error(request, "One or more of the required columns were not found. Below is the error message: " + str(e))
+
+        number_of_cols = len(df.columns)
+        if number_of_cols != len(columns_to_keep):
+            error = True
+            messages.error(request, f"There are {len(columns_to_keep)} specific columns that need to be present in the spreadsheet. We only found {number_of_cols} of these columns in your spreadsheet. Please make sure all columns exist and have the right name! The required columns are: {columns_to_keep}")
+        else:
+            col_names = {
+                "N°FLUX": "flow",
+                "MOIS": "month",
+                "ANNEE": "year",
+                "Moyen Pays\nRive Gauche": "Moyen Pays Rive Gauche",
+                "Est Littoral": "Est-Littoral",
+                "NIVEAUX": "level",
+                "MATERIAL": "material",
+            }
+
+            # Rename to English
+            df.rename(columns = col_names, inplace = True)
+
+            # Sometimes pandas reads rows that are empty and includes them; let's delete those empty rows from the dataframe
+            df.dropna(how="all", inplace=True) 
+
+            months = {
+                "janvier": "Jan",
+                "février": "Feb",
+                "mars": "Mar",
+                "avril": "Apr",
+                "mai": "May",
+                "juin": "Jun",
+                "juillet": "Jul",
+                "août": "Aug",
+                "septembre": "Sep",
+                "octobre": "Oct",
+                "novembre": "Nov",
+                "décembre": "Dec",
+            }
+            try:
+                df["month"] = df["month"].replace(months)
+            except:
+                error = "Month names were not valid, please review."
+                messages.error(request, error)
+
+            # We delete all records that are not level 2 records
+            try:
+                # But only if this is NOT the materials flow, because there we use the level 1 data
+                if category.id != 4:
+                    df = df[df.level == 2]
+            except:
+                error = "We could not locate the LEVEL (niveau) column, please review."
+                messages.error(request, error)
+
+            try:
+                if df["year"].isnull().sum() > 0:
+                    error = f"There are {df['year'].isnull().sum()} rows that do not have a value in the YEAR column. Please check and correct or remove these rows."
+                    messages.error(request, error)
+            except:
+                error = "The YEAR column was not found, please review"
+                messages.error(request, error)
+
+            try:
+                if df["flow"].isnull().sum() > 0:
+                    error = f"There are {df['flow'].isnull().sum()} rows that do not have a value in the FLOW column. Please check and correct or remove these rows."
+                    messages.error(request, error)
+            except:
+                error = "The FLOW column was not found, please review"
+                messages.error(request, error)
+
+        table = mark_safe(df.to_html())
 
     except Exception as e:
+        table = None
         category = None
-        messages.error(request, "We tried looking up the first value in the FLUX column to check the type of flow, but this did not work. Error: " + str(e))
-
-    columns_to_keep = [
-        "N°FLUX", 
-        "NIVEAUX", 
-        "MOIS", 
-        "MATERIAL",
-        "ANNEE", 
-        "Eau d'Azur", 
-        "Nice", 
-        "Rive Droite", 
-        "Est Littoral", 
-        "Moyen Pays\nRive Gauche", 
-        "Tinée", 
-        "Vésubie", 
-        "Tinée",
-        "Tinée + Vésubie",
-        "MPRG + Tinée + Vésubie",
-        "Nice + EL",
-        "Nice + EL + MPRG",
-        "Nice + EL + MPRG + RD",
-    ]
-    try:
-        df = df[columns_to_keep]
-    except:
-        try:
-            # Some flows do NOT have the material column, so let's try without that
-            columns_to_keep.remove("MATERIAL")
-            df = df[columns_to_keep]
-        except Exception as e:
-            messages.error(request, "One or more of the required columns were not found. Below is the error message: " + str(e))
-
-    number_of_cols = len(df.columns)
-    if number_of_cols != len(columns_to_keep):
-        error = True
-        messages.error(request, f"There are {len(columns_to_keep)} specific columns that need to be present in the spreadsheet. We only found {number_of_cols} of these columns in your spreadsheet. Please make sure all columns exist and have the right name! The required columns are: {columns_to_keep}")
-    else:
-        col_names = {
-            "N°FLUX": "flow",
-            "MOIS": "month",
-            "ANNEE": "year",
-            "Moyen Pays\nRive Gauche": "Moyen Pays Rive Gauche",
-            "Est Littoral": "Est-Littoral",
-            "NIVEAUX": "level",
-            "MATERIAL": "material",
-        }
-
-        # Rename to English
-        df.rename(columns = col_names, inplace = True)
-
-        # Sometimes pandas reads rows that are empty and includes them; let's delete those empty rows from the dataframe
-        df.dropna(how="all", inplace=True) 
-
-        months = {
-            "janvier": "Jan",
-            "février": "Feb",
-            "mars": "Mar",
-            "avril": "Apr",
-            "mai": "May",
-            "juin": "Jun",
-            "juillet": "Jul",
-            "août": "Aug",
-            "septembre": "Sep",
-            "octobre": "Oct",
-            "novembre": "Nov",
-            "décembre": "Dec",
-        }
-        try:
-            df["month"] = df["month"].replace(months)
-        except:
-            error = "Month names were not valid, please review."
-            messages.error(request, error)
-
-        # We delete all records that are not level 2 records
-        try:
-            # But only if this is NOT the materials flow, because there we use the level 1 data
-            if category.id != 4:
-                df = df[df.level == 2]
-        except:
-            error = "We could not locate the LEVEL (niveau) column, please review."
-            messages.error(request, error)
-
-        try:
-            if df["year"].isnull().sum() > 0:
-                error = f"There are {df['year'].isnull().sum()} rows that do not have a value in the YEAR column. Please check and correct or remove these rows."
-                messages.error(request, error)
-        except:
-            error = "The YEAR column was not found, please review"
-            messages.error(request, error)
-
-        try:
-            if df["flow"].isnull().sum() > 0:
-                error = f"There are {df['flow'].isnull().sum()} rows that do not have a value in the FLOW column. Please check and correct or remove these rows."
-                messages.error(request, error)
-        except:
-            error = "The FLOW column was not found, please review"
-            messages.error(request, error)
+        messages.error(request, "We could not load the spreadsheet. Is this a correctly formatted file? Error: " + str(e))
 
     if "save" in request.POST:
         errors = []
@@ -821,7 +828,7 @@ def controlpanel_file(request, id):
 
     context = {
         "info": info,
-        "table": mark_safe(df.to_html()),
+        "table": table,
         "df": df,
         "section": "controlpanel",
         "category": category,
