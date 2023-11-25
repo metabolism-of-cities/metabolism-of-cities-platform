@@ -462,16 +462,29 @@
 
   });
 
-  function setDynamicLogos() {
+  function setLogosAndColors() {
     category = $("[name='material']").find(":selected").data("category");
     logo = "/static/img/water/logos/" + category + ".png";
     $(".swapimage").attr("xlink:href", logo);
+
+    colors = {}
+    {% for each in materials %}
+      colors[{{ each.id }}] = ["{{ each.color1 }}", "{{ each.color2 }}", "{{ each.color3 }}", "{{ each.color4 }}", "{{ each.color5 }}"];
+    {% endfor %}
+
+    color = colors[$("[name='material']").val()];
+    $(".path.color1").attr("style", "fill:none;stroke:" + color[0]);
+    $(".path.color2").attr("style", "fill:none;stroke:" + color[1]);
+    $(".path.color3").attr("style", "fill:none;stroke:" + color[2]);
+    $(".path.color4").attr("style", "fill:none;stroke:" + color[3]);
+    $(".path.color5").attr("style", "fill:none;stroke:" + color[4]);
+
   }
 
   $("[name='material']").change(function(){
     getData();
     updateLevelLinks();
-    setDynamicLogos();
+    setLogosAndColors();
   });
 
   $("#animate").click(function(){
@@ -713,7 +726,7 @@
   updateLevelLinks();
   
   {% if category.slug == "materials" %}
-    setDynamicLogos();
+    setLogosAndColors();
   {% endif %}
 
   {% if not DEBUG %}

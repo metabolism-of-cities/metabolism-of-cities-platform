@@ -78,6 +78,16 @@ def sankey(request, category):
         "materialcategories": WaterMaterialCategory.objects.all(),
     }
 
+    # temp code
+    if "load" in request.GET:
+        for each in WaterMaterial.objects.all():
+            each.color1 = each.color1[:7]
+            each.color2 = each.color2[:7]
+            each.color3 = each.color3[:7]
+            each.color4 = each.color4[:7]
+            each.color5 = each.color5[:7]
+            each.save()
+
     if int(level) == 3:
         # Level 3 is only available to people that are part of the team.
         if has_permission(request, request.project, ["curator", "admin", "team_member"]):
