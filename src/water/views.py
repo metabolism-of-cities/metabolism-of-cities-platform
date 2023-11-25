@@ -419,50 +419,6 @@ def controlpanel_nodes(request):
     info = None
     nodes = None
 
-    # TEMP CODE
-    if "load" in request.GET:
-        nodes = [
-            [1, "Activites Economiques", [32], []],
-            [2, "Activites Economiques", [31], []],
-            [3, "Retraitement", [29], [30,31,32]],
-            [4, "Matieres & Materiaux", [33,34,35,36,37,38,39], [30]],
-            [5, "Matieres & Materiaux", [22,23,24,25,26,27,28], [29]],
-            [6, "Ouvrages", [33], [40,41,42]],
-            [7, "Reseaux", [34], [43,44,45]],
-            [8, "Equipements Hydrauliques", [35], [46,47,48]],
-            [9, "Bâtiments", [36], [49,50,51]],
-            [10, "Equipements Electriques", [37], [52,53,54]],
-            [11, "Vehicules", [38], [55,56,57]],
-            [12, "Fournitures", [39], [58,59,60]],
-            [13, "Activité Eau Potable", [40,43,46,49,52,56,58], []],
-            [14, "Activité Assainissement", [41,44,47,50,53,55,59], []],
-            [15, "Activité Support", [42,45,48,51,54,57,60], []],
-            [16, "Activité Eau Potable", [1,4,7,10,13,17,19], []],
-            [17, "Activité Assainissement", [2,5,8,11,14,16,20], []],
-            [18, "Activité Support", [3,6,9,12,15,18,21], []],
-            [19, "Ouvrages", [1,2,3], [22]],
-            [20, "Reseaux", [4,5,6], [23]],
-            [21, "Equipements Hydrauliques", [7,8,9], [24]],
-            [22, "Bâtiments", [10,11,12], [25]],
-            [23, "Equipements Electriques", [13,14,15], [26]],
-            [24, "Vehicules", [16,17,18], [27]],
-            [25, "Fournitures", [19,20,21], [28]],
-        ]
-        for each in nodes:
-            n = WaterSystemNode.objects.create(
-                category_id = 4,
-                level = 3,
-                identifier = each[0],
-                name = each[1]
-            )
-            for s in each[2]:
-                flow = WaterSystemFlow.objects.get(category_id=4, identifier=s, level=3)
-                n.entry_flows.add(flow)
-            for s in each[3]:
-                flow = WaterSystemFlow.objects.get(category_id=4, identifier=s, level=3)
-                n.exit_flows.add(flow)
-    # END TEMP SCRIPT
-
     if "category" in request.GET and "level" in request.GET:
         nodes = WaterSystemNode.objects.filter(category_id=request.GET["category"], level=request.GET["level"])
 
