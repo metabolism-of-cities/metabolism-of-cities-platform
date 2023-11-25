@@ -105,66 +105,66 @@
 
  <!-- paths -->
  <g>
-  <path data-id="path-1" class="path backward green" d="m315.65 85.848c0.71586 4.1973-11.638 2.9824-16.343 5.5165-17.548 9.4507-25.31 39.033-43.973 50.696-9.3572 5.8476-14.043 7.7449-31.29 10.803"/>
-  <path data-id="path-2" class="path backward jade" d="m317.14 89.353c-30.636-4.7855-52.828 88.346-93.315 94.879"/>
-  <path data-id="path-3" class="path backward moss" d="m322.74 89.202c-47.04 9.6783-68.022 147.8-94.472 139.23"/>
-  <path data-id="path-4" class="path backward green" d="m305.85 117.2c-25.983 23.984-52.114 37.225-80.497 38.888"/>
-  <path data-id="path-5" class="path backward jade" d="m316.33 117.32c-44.836 22.586-62.806 72.444-88.243 70.536"/>
-  <path data-id="path-6" class="path backward moss" d="m314.63 120.44c-47.867 30.533-29.793 91.556-83.619 112.03"/>
-  <path data-id="path-7" class="path backward green" d="m312.31 143.16c-23.077 7.5677-57.298 14.508-83.842 13.856"/>
-  <path data-id="path-8" class="path backward jade" d="m314.89 144.59c-59.137 16.941-56.141 47.923-86.002 43.967"/>
-  <path data-id="path-9" class="path backward moss" d="m317.18 146.46c-34.68 2.8883-42.61 88.777-89.433 87.051"/>
-  <path data-id="path-10" class="path forward green" d="m228.31 156.6c32.438 3.6972 58.829 17.516 88.623 13.557"/>
-  <path data-id="path-11" class="path backward jade" d="m314.42 174.32c-5.9081 0.56438-9.3336-0.42954-15.369 1.3159-25.729 7.4414-50.577 20.387-72.935 14.158"/>
-  <path data-id="path-12" class="path forward moss" d="m225.11 235.31c48.15 7.1368 65.418-64.396 90.012-58.24"/>
-  <path data-id="path-13" class="path forward green" d="m228.03 159.74c43.499 6.5696 25.85 36.92 86.993 41.103"/>
-  <path data-id="path-14" class="path forward jade" d="m226.21 186.25c3.4691 0.65797-1.399 3.125 1.5067 4.4703 29.593 13.701 53.79 23.867 84.316 11.313"/>
-  <path data-id="path-15" class="path forward moss" d="m227.65 233.91c12.156 15.538 55.976-18.448 81.605-28.044"/>
-  <path data-id="path-16" class="path forward jade" d="m219.49 187.84c35.066 18.521 35.441 32.709 96.644 39.52"/>
-  <path data-id="path-17" class="path backward green" d="m313.27 229.37c-61.421 6.267-46.375-49.354-87.643-70.656"/>
-  <path data-id="path-18" class="path backward moss" d="m313.82 232.55c-31.982 7.3017-79.499 19.497-89.345 1.4149"/>
-  <path data-id="path-19" class="path forward green" d="m224.46 158.28c29.092 29.289 41.252 94.129 91.092 97.509"/>
-  <path data-id="path-20" class="path forward jade" d="m221.73 189.6c46.905 34.192-1.5081 42.314 90.778 71.765"/>
-  <path data-id="path-21" class="path forward moss" d="m220.74 234.54c12.19 18.697 32.551 14.132 92.508 29.855"/>
-  <path data-id="path-22" class="path backward viridian" d="m373.07 132.78c-43.363 1.0883-24.111-51.766-63.517-44.322"/>
-  <path data-id="path-23" class="path forward viridian" d="m311.31 113.32c25.822-13.046 27.787 25.529 58.376 21.449"/>
-  <path data-id="path-24" class="path forward viridian" d="m305.67 142c37.066-2.5895 38.781-1.9133 63.629-2.3147"/>
-  <path data-id="path-25" class="path backward viridian" d="m370.1 136.61c-33.852 8.6354-36.389 36.739-57.359 35.196"/>
-  <path data-id="path-26" class="path forward viridian" d="m313.33 199.21c29.565-12.519 24.699-48.833 59.163-63.574"/>
-  <path data-id="path-27" class="path backward viridian" d="m370.28 135.14c-38.017 39.9-24.541 86.158-58.232 99.206"/>
-  <path data-id="path-28" class="path backward viridian" d="m373.8 136.71c-16.483 9.3674-38.73 135.63-60.646 121.22"/>
+  <path data-id="path-1" class="path backward color1" d="m315.65 85.848c0.71586 4.1973-11.638 2.9824-16.343 5.5165-17.548 9.4507-25.31 39.033-43.973 50.696-9.3572 5.8476-14.043 7.7449-31.29 10.803"/>
+  <path data-id="path-2" class="path backward color2" d="m317.14 89.353c-30.636-4.7855-52.828 88.346-93.315 94.879"/>
+  <path data-id="path-3" class="path backward color3" d="m322.74 89.202c-47.04 9.6783-68.022 147.8-94.472 139.23"/>
+  <path data-id="path-4" class="path backward color1" d="m305.85 117.2c-25.983 23.984-52.114 37.225-80.497 38.888"/>
+  <path data-id="path-5" class="path backward color2" d="m316.33 117.32c-44.836 22.586-62.806 72.444-88.243 70.536"/>
+  <path data-id="path-6" class="path backward color3" d="m314.63 120.44c-47.867 30.533-29.793 91.556-83.619 112.03"/>
+  <path data-id="path-7" class="path backward color1" d="m312.31 143.16c-23.077 7.5677-57.298 14.508-83.842 13.856"/>
+  <path data-id="path-8" class="path backward color2" d="m314.89 144.59c-59.137 16.941-56.141 47.923-86.002 43.967"/>
+  <path data-id="path-9" class="path backward color3" d="m317.18 146.46c-34.68 2.8883-42.61 88.777-89.433 87.051"/>
+  <path data-id="path-10" class="path forward color1" d="m228.31 156.6c32.438 3.6972 58.829 17.516 88.623 13.557"/>
+  <path data-id="path-11" class="path backward color2" d="m314.42 174.32c-5.9081 0.56438-9.3336-0.42954-15.369 1.3159-25.729 7.4414-50.577 20.387-72.935 14.158"/>
+  <path data-id="path-12" class="path forward color3" d="m225.11 235.31c48.15 7.1368 65.418-64.396 90.012-58.24"/>
+  <path data-id="path-13" class="path forward color1" d="m228.03 159.74c43.499 6.5696 25.85 36.92 86.993 41.103"/>
+  <path data-id="path-14" class="path forward color2" d="m226.21 186.25c3.4691 0.65797-1.399 3.125 1.5067 4.4703 29.593 13.701 53.79 23.867 84.316 11.313"/>
+  <path data-id="path-15" class="path forward color3" d="m227.65 233.91c12.156 15.538 55.976-18.448 81.605-28.044"/>
+  <path data-id="path-16" class="path forward color2" d="m219.49 187.84c35.066 18.521 35.441 32.709 96.644 39.52"/>
+  <path data-id="path-17" class="path backward color1" d="m313.27 229.37c-61.421 6.267-46.375-49.354-87.643-70.656"/>
+  <path data-id="path-18" class="path backward color3" d="m313.82 232.55c-31.982 7.3017-79.499 19.497-89.345 1.4149"/>
+  <path data-id="path-19" class="path forward color1" d="m224.46 158.28c29.092 29.289 41.252 94.129 91.092 97.509"/>
+  <path data-id="path-20" class="path forward color2" d="m221.73 189.6c46.905 34.192-1.5081 42.314 90.778 71.765"/>
+  <path data-id="path-21" class="path forward color3" d="m220.74 234.54c12.19 18.697 32.551 14.132 92.508 29.855"/>
+  <path data-id="path-22" class="path backward color4" d="m373.07 132.78c-43.363 1.0883-24.111-51.766-63.517-44.322"/>
+  <path data-id="path-23" class="path forward color4" d="m311.31 113.32c25.822-13.046 27.787 25.529 58.376 21.449"/>
+  <path data-id="path-24" class="path forward color4" d="m305.67 142c37.066-2.5895 38.781-1.9133 63.629-2.3147"/>
+  <path data-id="path-25" class="path backward color4" d="m370.1 136.61c-33.852 8.6354-36.389 36.739-57.359 35.196"/>
+  <path data-id="path-26" class="path forward color4" d="m313.33 199.21c29.565-12.519 24.699-48.833 59.163-63.574"/>
+  <path data-id="path-27" class="path backward color4" d="m370.28 135.14c-38.017 39.9-24.541 86.158-58.232 99.206"/>
+  <path data-id="path-28" class="path backward color4" d="m373.8 136.71c-16.483 9.3674-38.73 135.63-60.646 121.22"/>
   <path data-id="path-29" class="path backward green" d="m202.57 58.352c122.42-13.822 168.57 16.243 165.09 74.869"/>
   <path data-id="path-30" class="path forward green" d="m202.32 59.672c-145.96-16.773-158.96 27.063-161.16 38.523-2.0071 10.446-2.2064 14.344-3.318 21.499" marker-end="url(#TriangleOutL)"/>
   <path data-id="path-31" class="path forward green" d="m202.64 55.069c-38.855-3.7862-42.389-5.8143-77.509-5.3352-12.98 0.17706-36.648 0.62604-48.916 1.8079" marker-end="url(#TriangleOutL)"/>
   <path data-id="path-32" class="path forward green" d="m206.21 52.608c-37.362-3.0191-58.647-24.509-93.368-32.489 0 0-14.411-3.9946-31.012-3.82" marker-end="url(#TriangleOutL)"/>
-  <path data-id="path-33" class="path forward viridian" d="m28.37 137.4c8.7145-1.7623 17.674-10.871 22.684-19.002 9.9441-16.138 14.107-35.017 38.349-31.099"/>
-  <path data-id="path-34" class="path forward viridian" d="m34.198 138.48c30.976-4.7719 28.689-32.326 53.596-24.073"/>
-  <path data-id="path-35" class="path forward viridian" d="m31.5 136.56c21.125 1.5481 52.516 7.2614 62.068 6.9351"/>
-  <path data-id="path-36" class="path forward viridian" d="m32.818 137.6c36.467 3.7691 21.906 34.35 57.847 38.242"/>
-  <path data-id="path-37" class="path forward viridian" d="m33.227 137.51c15.982-3.2599 7.2462 78.473 59.137 67.868"/>
-  <path data-id="path-38" class="path forward viridian" d="m31.019 135.88c16.004 15.114 20.58 98.083 51.143 100.23"/>
-  <path data-id="path-39" class="path forward viridian" d="m28.688 138.36c19.076 47.644 41.6 142.27 62.392 122.19"/>
-  <path data-id="path-40" class="path forward green" d="m89.804 84.059c22.294 2.3579 31.521 22.945 43.808 35.565 20.32 20.871 37.938 36.741 55.323 36.005"/>
-  <path data-id="path-41" class="path forward jade" d="m90.521 87.807c19.769 0.93217 34.449 45.175 55.77 72.493 11.499 14.734 29.075 21.072 42.676 24.954"/>
-  <path data-id="path-42" class="path forward moss" d="m91.433 89.828c31.586 27.885 39.337 83.795 67.425 119.25 7.7643 9.8015 21.905 13.044 33.412 19.786"/>
-  <path data-id="path-43" class="path forward green" d="m92.185 112.7c2.1579 1.3974 5.4511 2.2661 7.9892 3.4932 45.517 22.006 37.193 36.338 86.37 42.363"/>
-  <path data-id="path-44" class="path forward jade" d="m87.863 117.33c38.109 10.274 46.349 38.859 62.616 54.621 9.3795 9.0887 23.156 11.742 34.673 15.252"/>
-  <path data-id="path-45" class="path forward moss" d="m87.212 118.58c26.08 9.5765 37.973 41.077 51.34 69.312 11.866 25.063 30.77 40.835 50.948 40.765"/>
-  <path data-id="path-46" class="path forward green" d="m90.192 144.58c32.555 6.3604 65.108 12.975 97.706 12.679"/>
-  <path data-id="path-47" class="path forward jade" d="m88.325 146.37c33.223 6.752 53.113 27.957 73.245 37.682 8.0799 3.9028 16.453 4.1908 25.381 4.1843"/>
-  <path data-id="path-48" class="path forward moss" d="m84.513 148.17c25.021 5.0142 38.485 30.705 53.125 51.513 13.059 18.562 31.317 33.239 49.78 32.408"/>
-  <path data-id="path-49" class="path forward green" d="m88.589 171.22c16.493-5.1518 33.023-6.8992 49.722-8.0062 16.296-1.0802 32.752-1.5504 49.491-3.9791"/>
-  <path data-id="path-50" class="path forward jade" d="m90.3 172.6c26.754-1.1279 47.643 11.156 68.446 16.336 8.9033 2.2171 18.339 1.8085 27.313 0.66353"/>
-  <path data-id="path-51" class="path forward moss" d="m90.447 174.3c6.8345 1.1195 19.029 1.7763 25.168 7.1672 19.729 17.324 32.608 52.821 68.011 53.79"/>
-  <path data-id="path-52" class="path forward green" d="m90.028 204s1.0795 3.9191 8.7237 0.22924c15.62-7.5399 27.94-27.882 64.466-37.114 8.9423-2.26 27.02-3.1673 26.778-9.8677"/>
-  <path data-id="path-53" class="path forward jade" d="m87.569 204.43c34.801-6.2136 74.004 0.5879 99.824-17.097"/>
-  <path data-id="path-54" class="path forward moss" d="m88.861 200.66c24.321 2.6846 47.399 22.839 67.106 32.444 10.513 5.1236 19.241 3.2956 28.519 2.9805"/>
-  <path data-id="path-55" class="path forward jade" d="m91.934 230.45c9.7281 4.6215 26.519-6.0682 38.565-10.883 19.041-7.4396 35.688-17.285 54.065-30.005"/>
-  <path data-id="path-56" class="path forward green" d="m87.509 231.03c51.657 14.739 37.027-28.588 94.792-65.722 2.8039-1.8025 4.6568-7.4855 7.7544-9.2101"/>
-  <path data-id="path-57" class="path forward moss" d="m87.544 234.59c22.181 6.5752 50.165 5.1162 74.877 6.0431 7.0473 0.26433 15.497-0.15706 19.682-5.234 4.8558-5.8907 4.8457-2.8187 8.2261-6.5174"/>
-  <path data-id="path-58" class="path forward green" d="m90.037 260.89c51.513-11.677 64.565-80.225 105.02-101.26"/>
-  <path data-id="path-59" class="path forward jade" d="m86.879 261.74c42.038 7.321 74.53-58.865 101.7-73.174"/>
-  <path data-id="path-60" class="path forward moss" d="m87.769 264.68c14.576 9.1278 36.997-8.8658 53.959-13.859 10.687-3.1459 32.547-1.6084 44.506-13.862 3.5939-3.6824-6e-3 -7.5501 3.2617-8.8063"/>
+  <path data-id="path-33" class="path forward color4" d="m28.37 137.4c8.7145-1.7623 17.674-10.871 22.684-19.002 9.9441-16.138 14.107-35.017 38.349-31.099"/>
+  <path data-id="path-34" class="path forward color4" d="m34.198 138.48c30.976-4.7719 28.689-32.326 53.596-24.073"/>
+  <path data-id="path-35" class="path forward color4" d="m31.5 136.56c21.125 1.5481 52.516 7.2614 62.068 6.9351"/>
+  <path data-id="path-36" class="path forward color4" d="m32.818 137.6c36.467 3.7691 21.906 34.35 57.847 38.242"/>
+  <path data-id="path-37" class="path forward color4" d="m33.227 137.51c15.982-3.2599 7.2462 78.473 59.137 67.868"/>
+  <path data-id="path-38" class="path forward color4" d="m31.019 135.88c16.004 15.114 20.58 98.083 51.143 100.23"/>
+  <path data-id="path-39" class="path forward color4" d="m28.688 138.36c19.076 47.644 41.6 142.27 62.392 122.19"/>
+  <path data-id="path-40" class="path forward color1" d="m89.804 84.059c22.294 2.3579 31.521 22.945 43.808 35.565 20.32 20.871 37.938 36.741 55.323 36.005"/>
+  <path data-id="path-41" class="path forward color2" d="m90.521 87.807c19.769 0.93217 34.449 45.175 55.77 72.493 11.499 14.734 29.075 21.072 42.676 24.954"/>
+  <path data-id="path-42" class="path forward color3" d="m91.433 89.828c31.586 27.885 39.337 83.795 67.425 119.25 7.7643 9.8015 21.905 13.044 33.412 19.786"/>
+  <path data-id="path-43" class="path forward color1" d="m92.185 112.7c2.1579 1.3974 5.4511 2.2661 7.9892 3.4932 45.517 22.006 37.193 36.338 86.37 42.363"/>
+  <path data-id="path-44" class="path forward color2" d="m87.863 117.33c38.109 10.274 46.349 38.859 62.616 54.621 9.3795 9.0887 23.156 11.742 34.673 15.252"/>
+  <path data-id="path-45" class="path forward color3" d="m87.212 118.58c26.08 9.5765 37.973 41.077 51.34 69.312 11.866 25.063 30.77 40.835 50.948 40.765"/>
+  <path data-id="path-46" class="path forward color1" d="m90.192 144.58c32.555 6.3604 65.108 12.975 97.706 12.679"/>
+  <path data-id="path-47" class="path forward color2" d="m88.325 146.37c33.223 6.752 53.113 27.957 73.245 37.682 8.0799 3.9028 16.453 4.1908 25.381 4.1843"/>
+  <path data-id="path-48" class="path forward color3" d="m84.513 148.17c25.021 5.0142 38.485 30.705 53.125 51.513 13.059 18.562 31.317 33.239 49.78 32.408"/>
+  <path data-id="path-49" class="path forward color1" d="m88.589 171.22c16.493-5.1518 33.023-6.8992 49.722-8.0062 16.296-1.0802 32.752-1.5504 49.491-3.9791"/>
+  <path data-id="path-50" class="path forward color2" d="m90.3 172.6c26.754-1.1279 47.643 11.156 68.446 16.336 8.9033 2.2171 18.339 1.8085 27.313 0.66353"/>
+  <path data-id="path-51" class="path forward color3" d="m90.447 174.3c6.8345 1.1195 19.029 1.7763 25.168 7.1672 19.729 17.324 32.608 52.821 68.011 53.79"/>
+  <path data-id="path-52" class="path forward color1" d="m90.028 204s1.0795 3.9191 8.7237 0.22924c15.62-7.5399 27.94-27.882 64.466-37.114 8.9423-2.26 27.02-3.1673 26.778-9.8677"/>
+  <path data-id="path-53" class="path forward color2" d="m87.569 204.43c34.801-6.2136 74.004 0.5879 99.824-17.097"/>
+  <path data-id="path-54" class="path forward color3" d="m88.861 200.66c24.321 2.6846 47.399 22.839 67.106 32.444 10.513 5.1236 19.241 3.2956 28.519 2.9805"/>
+  <path data-id="path-55" class="path forward color2" d="m91.934 230.45c9.7281 4.6215 26.519-6.0682 38.565-10.883 19.041-7.4396 35.688-17.285 54.065-30.005"/>
+  <path data-id="path-56" class="path forward color1" d="m87.509 231.03c51.657 14.739 37.027-28.588 94.792-65.722 2.8039-1.8025 4.6568-7.4855 7.7544-9.2101"/>
+  <path data-id="path-57" class="path forward color3" d="m87.544 234.59c22.181 6.5752 50.165 5.1162 74.877 6.0431 7.0473 0.26433 15.497-0.15706 19.682-5.234 4.8558-5.8907 4.8457-2.8187 8.2261-6.5174"/>
+  <path data-id="path-58" class="path forward color1" d="m90.037 260.89c51.513-11.677 64.565-80.225 105.02-101.26"/>
+  <path data-id="path-59" class="path forward color2" d="m86.879 261.74c42.038 7.321 74.53-58.865 101.7-73.174"/>
+  <path data-id="path-60" class="path forward color3" d="m87.769 264.68c14.576 9.1278 36.997-8.8658 53.959-13.859 10.687-3.1459 32.547-1.6084 44.506-13.862 3.5939-3.6824-6e-3 -7.5501 3.2617-8.8063"/>
  </g>
 
  <!-- nodes -->

@@ -757,6 +757,8 @@ def controlpanel_file(request, id):
             row = row.to_dict()
             flow = row["flow"]
             level = row["level"]
+            if level == "2C":
+                level = 3
             try:
                 material = row["material"]
                 material = material.strip()

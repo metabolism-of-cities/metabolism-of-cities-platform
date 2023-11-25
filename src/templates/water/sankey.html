@@ -36,7 +36,7 @@ footer{display:none}
         </li>
         {% if category.slug == "materials" %}
           <li class="nav-item">
-            <a data-level="3" class="btn {% if level == 3 %}btn-dark{% endif %}" href="?region={{ request.GET.region }}&amp;level=3">{{ _("Level") }} 2 Circulaire</a>
+            <a data-level="3" class="btn {% if level == 3 %}btn-dark{% endif %}" href="?region={{ request.GET.region }}&amp;level=3">{{ _("Level") }} 2 {{ _("Circular") }}</a>
           </li>
         {% endif %}
         {% if category.slug == "water" %}
@@ -65,13 +65,41 @@ footer{display:none}
 
         <div class="watergraphs">
 
-          {% if level < 3 or category.slug == "materials" %}
+          {% if level == 3 and category.slug == "water" %}
+            <div class="pt-4">
 
+              {% if not is_team_member %}
+              <div class="alert alert-warning">
+                <i class="fa fa-fw fa-exclamation-triangle"></i>
+                <strong>
+                {{ _("Authentication required") }}
+                </strong>
+                <br>
+                {{ _("Please log in to see level 3 data.") }}
+              </div>
+              {% else %}
+                <section class="row btn-cards">
+                {% for each in files %}
+                  <div class="col-md-3 mb-3">
+                    <a class="card icon-card btn-card" href="{% url "water:download" each.id %}">
+                      <div class="icon">
+                        <i class="fal fa-fw fa-file-spreadsheet"></i>
+                      </div>
+                      <div class="card-header">{{ each.name }}</div>
+                    </a>
+                  </div>
+                {% endfor %}
+                </section>
+              {% endif %}
+            
+            </div>
+
+          {% else %}
             <p class="text-center mt-2 mb-1">
               «
                 {{ _("Metabolism") }} <strong id="title_region"></strong> -
                 {{ _("Flow") }} : <strong>{{ category }}</strong> -
-                {{ _("Level") }} : <strong id="title_level">{{ level }}</strong> -
+                {{ _("Level") }} : <strong id="title_level">{% if level == 3 %}2C{% else %} {{ level }}{% endif %}</strong> -
                 {{ _("Period") }} : <strong class="title_date"></strong>
               »
             </p>
@@ -131,34 +159,6 @@ footer{display:none}
               </div>
             {% endif %}
 
-          {% else %}
-            <div class="pt-4">
-
-              {% if not is_team_member %}
-              <div class="alert alert-warning">
-                <i class="fa fa-fw fa-exclamation-triangle"></i>
-                <strong>
-                {{ _("Authentication required") }}
-                </strong>
-                <br>
-                {{ _("Please log in to see level 3 data.") }}
-              </div>
-              {% else %}
-                <section class="row btn-cards">
-                {% for each in files %}
-                  <div class="col-md-3 mb-3">
-                    <a class="card icon-card btn-card" href="{% url "water:download" each.id %}">
-                      <div class="icon">
-                        <i class="fal fa-fw fa-file-spreadsheet"></i>
-                      </div>
-                      <div class="card-header">{{ each.name }}</div>
-                    </a>
-                  </div>
-                {% endfor %}
-                </section>
-              {% endif %}
-            
-            </div>
           {% endif %}
 
         </div>

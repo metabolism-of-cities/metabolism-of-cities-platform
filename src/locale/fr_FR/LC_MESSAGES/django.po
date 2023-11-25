@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-11-23 12:14+0000\n"
-"PO-Revision-Date: 2023-11-23 14:16+0200\n"
+"POT-Creation-Date: 2023-11-25 08:06+0000\n"
+"PO-Revision-Date: 2023-11-25 10:07+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_FR\n"
@@ -17,18 +17,18 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.4.1\n"
 
-#: core/models.py:3797 templates/water/controlpanel/upload.html:65
-#: templates/water/controlpanel/upload.html:77
+#: core/models.py:3798 templates/water/controlpanel/upload.html:73
+#: templates/water/controlpanel/upload.html:85
 #: templates/water/controlpanel/upload.level3.html:16
 #: templates/water/controlpanel/upload.level3.html:35
 msgid "File"
 msgstr "Fichier"
 
-#: core/models.py:3823
+#: core/models.py:3843
 msgid "Month"
 msgstr "Mois"
 
-#: core/models.py:3824 templates/water/controlpanel/upload.level3.html:21
+#: core/models.py:3844 templates/water/controlpanel/upload.level3.html:21
 #: templates/water/controlpanel/upload.level3.html:36
 msgid "Year"
 msgstr "Année"
@@ -37,8 +37,8 @@ msgstr "Année"
 msgid "You are now logged out"
 msgstr "Vous êtes maintenant déconnecté(e)"
 
-#: core/views.py:1129 templates/water/controlpanel/flows.html:97
-#: templates/water/controlpanel/nodes.html:58
+#: core/views.py:1129 templates/water/controlpanel/flows.html:102
+#: templates/water/controlpanel/nodes.html:63
 msgid "Name"
 msgstr "Nom"
 
@@ -90,8 +90,8 @@ msgstr "Se connecter"
 msgid "Control panel"
 msgstr "Panneau de configuration"
 
-#: templates/_sidebar-water.html:4 templates/water/controlpanel/flows.html:38
-#: templates/water/sankey.html:68
+#: templates/_sidebar-water.html:4 templates/water/controlpanel/flows.html:43
+#: templates/water/sankey.html:73
 msgid "Flow"
 msgstr "Flux"
 
@@ -124,7 +124,7 @@ msgstr "Territoire"
 msgid "Combined territories"
 msgstr "Territoires combinés"
 
-#: templates/_sidebar-water.html:67 templates/water/sankey.html:70
+#: templates/_sidebar-water.html:67 templates/water/sankey.html:75
 msgid "Period"
 msgstr "Période"
 
@@ -168,29 +168,29 @@ msgstr "Réinitialiser le mot de passe"
 #: templates/water/controlpanel/categories.html:7
 #: templates/water/controlpanel/categories.html:49
 #: templates/water/controlpanel/flows.html:7
-#: templates/water/controlpanel/flows.html:127
+#: templates/water/controlpanel/flows.html:132
 #: templates/water/controlpanel/materialcategories.html:7
 #: templates/water/controlpanel/materialcategories.html:42
 #: templates/water/controlpanel/materials.html:7
 #: templates/water/controlpanel/materials.html:61
 #: templates/water/controlpanel/nodes.html:7
-#: templates/water/controlpanel/nodes.html:96
+#: templates/water/controlpanel/nodes.html:101
 #: templates/water/controlpanel/spaces.html:7
 #: templates/water/controlpanel/spaces.html:37
 #: templates/water/controlpanel/timeframes.html:7
 #: templates/water/controlpanel/timeframes.html:54
 #: templates/water/controlpanel/upload.html:7
-#: templates/water/controlpanel/upload.html:118
+#: templates/water/controlpanel/upload.html:115
 #: templates/water/controlpanel/upload.level3.html:7
 #: templates/water/controlpanel/upload.level3.html:59
 msgid "Back to Control Panel"
 msgstr "Retour au panneau de configuration"
 
 #: templates/controlpanel/people.form.html:61
-#: templates/water/controlpanel/flows.html:121
+#: templates/water/controlpanel/flows.html:126
 #: templates/water/controlpanel/materialcategories.html:35
 #: templates/water/controlpanel/materials.html:54
-#: templates/water/controlpanel/nodes.html:89
+#: templates/water/controlpanel/nodes.html:94
 #: templates/water/controlpanel/spaces.html:30
 #: templates/water/controlpanel/timeframes.html:48
 #: templates/water/controlpanel/upload.level3.html:26
@@ -214,9 +214,9 @@ msgid "User"
 msgstr "Utilisateur"
 
 #: templates/controlpanel/users.html:16
-#: templates/water/controlpanel/file.html:35
-#: templates/water/controlpanel/flows.html:74
-#: templates/water/controlpanel/upload.html:78
+#: templates/water/controlpanel/file.html:34
+#: templates/water/controlpanel/flows.html:79
+#: templates/water/controlpanel/upload.html:86
 msgid "Type"
 msgstr "Type"
 
@@ -251,16 +251,16 @@ msgstr "Vous ajoutez une capture d'écran ou une image à un document existant."
 msgid "NOTE: flow width is not to scale"
 msgstr "REMARQUE : la largeur du débit n'est pas à l'échelle"
 
-#: templates/water/_javascript.html:509
-#: templates/water/controlpanel/upload.html:79
+#: templates/water/_javascript.html:580
+#: templates/water/controlpanel/upload.html:87
 msgid "Date"
 msgstr "Date"
 
-#: templates/water/_javascript.html:509 templates/water/_javascript.html:557
+#: templates/water/_javascript.html:580 templates/water/_javascript.html:628
 msgid "Quantity"
 msgstr "Valeurs"
 
-#: templates/water/_javascript.html:517
+#: templates/water/_javascript.html:588
 msgid "Total"
 msgstr "Total"
 
@@ -276,8 +276,8 @@ msgstr "Graphique"
 msgid "Data"
 msgstr "Données"
 
-#: templates/water/_modal.html:31 templates/water/controlpanel/flows.html:39
-#: templates/water/controlpanel/flows.html:101
+#: templates/water/_modal.html:31 templates/water/controlpanel/flows.html:44
+#: templates/water/controlpanel/flows.html:106
 msgid "Description"
 msgstr "Description"
 
@@ -298,31 +298,31 @@ msgstr "Télécharger un fichier"
 msgid "Year(s) covered"
 msgstr "Année(s) concernée(s)"
 
-#: templates/water/controlpanel/file.html:32
+#: templates/water/controlpanel/file.html:31
 msgid "Number of rows"
 msgstr "Nombre de rangées"
 
-#: templates/water/controlpanel/file.html:38
+#: templates/water/controlpanel/file.html:37
 msgid "Processed?"
 msgstr "Traité?"
 
-#: templates/water/controlpanel/file.html:39
+#: templates/water/controlpanel/file.html:38
 msgid "Yes"
 msgstr "Oui"
 
-#: templates/water/controlpanel/file.html:39
+#: templates/water/controlpanel/file.html:38
 msgid "No"
 msgstr "Non"
 
-#: templates/water/controlpanel/file.html:44
+#: templates/water/controlpanel/file.html:43
 msgid "Data overview"
 msgstr "Aperçu des données"
 
-#: templates/water/controlpanel/file.html:46
+#: templates/water/controlpanel/file.html:45
 msgid "data points recorded."
 msgstr "points de données enregistrés."
 
-#: templates/water/controlpanel/file.html:48
+#: templates/water/controlpanel/file.html:47
 msgid ""
 "The data in this spreadsheet have been recorded in the database and are used "
 "to create the sankey diagrams."
@@ -330,15 +330,15 @@ msgstr ""
 "Les données de cette feuille de calcul ont été enregistrées dans la base de "
 "données et sont utilisées pour créer les diagrammes de Sankey."
 
-#: templates/water/controlpanel/file.html:49
+#: templates/water/controlpanel/file.html:48
 msgid "Click here if you want to download the original data."
 msgstr "Cliquez ici si vous souhaitez télécharger les données d'origine."
 
-#: templates/water/controlpanel/file.html:52
+#: templates/water/controlpanel/file.html:51
 msgid "Delete data"
 msgstr "Suprimmer les données"
 
-#: templates/water/controlpanel/file.html:53
+#: templates/water/controlpanel/file.html:52
 msgid ""
 "Use the button below to remove the data from the database. We will keep the "
 "file (for now), which you can decide to delete later."
@@ -347,15 +347,15 @@ msgstr ""
 "données. Nous conserverons le fichier (pour l'instant), que vous pourrez "
 "décider de supprimer ultérieurement."
 
-#: templates/water/controlpanel/file.html:55
+#: templates/water/controlpanel/file.html:54
 msgid "Delete data from database"
 msgstr "Supprimer les données de la base de données"
 
-#: templates/water/controlpanel/file.html:60
+#: templates/water/controlpanel/file.html:59
 msgid "Spreadsheet overview"
 msgstr "Présentation de la feuille de calcul"
 
-#: templates/water/controlpanel/file.html:62
+#: templates/water/controlpanel/file.html:61
 msgid ""
 "The data below shows all the rows that were successfully detected in your "
 "spreadsheet. Remember that only level-2 data is being detected and stored. "
@@ -370,24 +370,24 @@ msgstr ""
 "existantes, vous devez d'abord supprimer les anciennes données afin de ne "
 "pas dupliquer les données."
 
-#: templates/water/controlpanel/file.html:68
+#: templates/water/controlpanel/file.html:67
 msgid "What do you want to do with this file?"
 msgstr "Que voulez-vous faire avec ce fichier ?"
 
-#: templates/water/controlpanel/file.html:70
+#: templates/water/controlpanel/file.html:69
 msgid "Import data"
 msgstr "Importer des données"
 
-#: templates/water/controlpanel/file.html:77
+#: templates/water/controlpanel/file.html:76
 msgid "Are you sure?"
 msgstr "Etes-vous sûr.e?"
 
-#: templates/water/controlpanel/file.html:78
+#: templates/water/controlpanel/file.html:77
 #: templates/water/controlpanel/upload.level3.html:49
 msgid "Delete file"
 msgstr "Supprimer le fichier"
 
-#: templates/water/controlpanel/file.html:85
+#: templates/water/controlpanel/file.html:84
 msgid "Back to overview"
 msgstr "Retour à l'aperçu"
 
@@ -395,27 +395,27 @@ msgstr "Retour à l'aperçu"
 msgid "Manage flows"
 msgstr "Gérer les flux"
 
-#: templates/water/controlpanel/flows.html:36
-#: templates/water/controlpanel/flows.html:84
-#: templates/water/controlpanel/nodes.html:85 templates/water/sankey.html:32
+#: templates/water/controlpanel/flows.html:41
+#: templates/water/controlpanel/flows.html:89
+#: templates/water/controlpanel/nodes.html:90 templates/water/sankey.html:32
 #: templates/water/sankey.html:35 templates/water/sankey.html:39
-#: templates/water/sankey.html:69
+#: templates/water/sankey.html:44 templates/water/sankey.html:74
 msgid "Level"
 msgstr "Niveau"
 
-#: templates/water/controlpanel/flows.html:54
+#: templates/water/controlpanel/flows.html:59
 msgid "Level 1"
 msgstr "Niveau 1"
 
-#: templates/water/controlpanel/flows.html:54
+#: templates/water/controlpanel/flows.html:59
 msgid "Flow #"
 msgstr "Flux #"
 
-#: templates/water/controlpanel/flows.html:65
+#: templates/water/controlpanel/flows.html:70
 msgid "Add a new flow"
 msgstr "Ajouter un nouveau flux"
 
-#: templates/water/controlpanel/flows.html:67
+#: templates/water/controlpanel/flows.html:72
 msgid ""
 "NOTE: for new flows to become visible in the system diagram, graphic design "
 "changes are required."
@@ -423,15 +423,15 @@ msgstr ""
 "REMARQUE : pour que les nouveaux flux deviennent visibles dans le schéma du "
 "système, des modifications de conception graphique sont nécessaires."
 
-#: templates/water/controlpanel/flows.html:93
+#: templates/water/controlpanel/flows.html:98
 msgid "Number"
 msgstr "Numéro"
 
-#: templates/water/controlpanel/flows.html:105
+#: templates/water/controlpanel/flows.html:110
 msgid "Part of flow"
 msgstr "Partie du flux"
 
-#: templates/water/controlpanel/flows.html:108
+#: templates/water/controlpanel/flows.html:113
 msgid ""
 "Most level-2 flows are part of a level-1 flows. Please enter the number of "
 "the level-1 flow here."
@@ -439,11 +439,11 @@ msgstr ""
 "La plupart des flux de niveau 2 font partie d'un flux de niveau 1. Veuillez "
 "saisir ici le numéro du flux de niveau 1."
 
-#: templates/water/controlpanel/flows.html:113
+#: templates/water/controlpanel/flows.html:118
 msgid "Include when calculating line width"
 msgstr "Inclure lors du calcul de la largeur de ligne"
 
-#: templates/water/controlpanel/flows.html:116
+#: templates/water/controlpanel/flows.html:121
 msgid "Uncheck if this flow is extraordinarily large"
 msgstr "Décochez si ce flux est trop large"
 
@@ -519,7 +519,7 @@ msgid "Add a new material"
 msgstr "Ajouter un nouveau matériau"
 
 #: templates/water/controlpanel/materials.html:35
-#: templates/water/controlpanel/nodes.html:66
+#: templates/water/controlpanel/nodes.html:71
 msgid "Category"
 msgstr "Catégorie"
 
@@ -531,31 +531,31 @@ msgstr "Couleurs"
 msgid "Manage nodes"
 msgstr "Gérer les nœuds"
 
-#: templates/water/controlpanel/nodes.html:33
+#: templates/water/controlpanel/nodes.html:38
 msgid "nodes found"
 msgstr "nœuds trouvés"
 
-#: templates/water/controlpanel/nodes.html:52
+#: templates/water/controlpanel/nodes.html:57
 msgid "Add a new node"
 msgstr "Ajouter un nouveau nœud"
 
-#: templates/water/controlpanel/nodes.html:62
+#: templates/water/controlpanel/nodes.html:67
 msgid "Identifier"
 msgstr "Identifiant"
 
-#: templates/water/controlpanel/nodes.html:75
+#: templates/water/controlpanel/nodes.html:80
 msgid "Entry/summing up flows"
 msgstr "Utilisé pour la somme du nœud"
 
-#: templates/water/controlpanel/nodes.html:77
+#: templates/water/controlpanel/nodes.html:82
 msgid "These flows will be added up to show the total quantity"
 msgstr "Ces flux seront additionnés pour afficher la quantité totale"
 
-#: templates/water/controlpanel/nodes.html:80
+#: templates/water/controlpanel/nodes.html:85
 msgid "Other associated flows"
 msgstr "Autres flux associés"
 
-#: templates/water/controlpanel/nodes.html:82
+#: templates/water/controlpanel/nodes.html:87
 msgid ""
 "Other flows linked to this node but not just for summing up (e.g. exit flows)"
 msgstr ""
@@ -649,32 +649,40 @@ msgid "Emissions data template"
 msgstr "Maquette de données Gaz à Effet de Serre"
 
 #: templates/water/controlpanel/upload.html:56
-msgid "Materials data template"
-msgstr "Modèle de données de matériaux"
+msgid "Materials data template: level 1"
+msgstr "Modèle de données matériaux : niveau 1"
 
-#: templates/water/controlpanel/upload.html:61
+#: templates/water/controlpanel/upload.html:60
+msgid "Materials data template: level 2"
+msgstr "Modèle de données matériaux : niveau 2"
+
+#: templates/water/controlpanel/upload.html:64
+msgid "Materials data template: level 2 circular"
+msgstr "Modèle de données matériaux : niveau 2 Circularité"
+
+#: templates/water/controlpanel/upload.html:69
 msgid "Upload data"
 msgstr "Téléverser des données"
 
-#: templates/water/controlpanel/upload.html:69
+#: templates/water/controlpanel/upload.html:77
 msgid "Next"
 msgstr "Suivant"
 
-#: templates/water/controlpanel/upload.html:73
+#: templates/water/controlpanel/upload.html:81
 #: templates/water/controlpanel/upload.level3.html:31
 msgid "Uploaded files"
 msgstr "Fichiers téléversés"
 
-#: templates/water/controlpanel/upload.html:80
+#: templates/water/controlpanel/upload.html:88
 #: templates/water/controlpanel/upload.level3.html:38
 msgid "Uploader"
 msgstr "Téléchargeur"
 
-#: templates/water/controlpanel/upload.html:81
+#: templates/water/controlpanel/upload.html:89
 msgid "Data stored"
 msgstr "Données stockées"
 
-#: templates/water/controlpanel/upload.html:93
+#: templates/water/controlpanel/upload.html:101
 msgid "No data stored"
 msgstr "Aucune donnée stockée"
 
@@ -702,7 +710,11 @@ msgstr ""
 msgid "Click here to explore the metabolism of Eau d'Azur"
 msgstr "Cliquez ici pour accéder au Métabolisme de Eau d’Azur"
 
-#: templates/water/sankey.html:58
+#: templates/water/sankey.html:39
+msgid "Circular"
+msgstr "Circularité"
+
+#: templates/water/sankey.html:63
 msgid ""
 "NOVEMBER 2023 NOTE: this website is currently being worked on. Data and "
 "information shown for testing purposes only."
@@ -711,19 +723,19 @@ msgstr ""
 "réalisation. Données et informations présentées à des fins de test "
 "uniquement."
 
-#: templates/water/sankey.html:67
+#: templates/water/sankey.html:72
 msgid "Metabolism"
 msgstr "Métabolisme"
 
-#: templates/water/sankey.html:87
+#: templates/water/sankey.html:92
 msgid "Animation"
 msgstr "Activer le mode animation"
 
-#: templates/water/sankey.html:134
+#: templates/water/sankey.html:141
 msgid "Authentication required"
 msgstr "Authentification requise"
 
-#: templates/water/sankey.html:137
+#: templates/water/sankey.html:144
 msgid "Please log in to see level 3 data."
 msgstr "Veuillez vous connecter pour voir les données de niveau 3."
 
@@ -731,20 +743,20 @@ msgstr "Veuillez vous connecter pour voir les données de niveau 3."
 msgid "Homepage"
 msgstr "Accueil"
 
-#: water/views.py:283
+#: water/views.py:287
 msgid "You are logged in."
 msgstr "Vous êtes connecté."
 
-#: water/views.py:286
+#: water/views.py:290
 msgid "We could not authenticate you, please try again."
 msgstr "Nous n'avons pas pu vous authentifier, veuillez réessayer."
 
-#: water/views.py:318 water/views.py:347 water/views.py:373 water/views.py:399
-#: water/views.py:454 water/views.py:479 water/views.py:522
+#: water/views.py:322 water/views.py:351 water/views.py:377 water/views.py:403
+#: water/views.py:458 water/views.py:483 water/views.py:526
 msgid "Information was saved"
 msgstr "Les informations ont été enregistrées"
 
-#: water/views.py:519
+#: water/views.py:523
 msgid ""
 "We could not find the level-1 flow that you entered so we left this field "
 "blank."
@@ -752,29 +764,29 @@ msgstr ""
 "Nous n'avons pas pu trouver le flux de niveau 1 que vous avez entré, nous "
 "avons donc laissé ce champ vide."
 
-#: water/views.py:528
+#: water/views.py:532
 msgid "All flows updated"
 msgstr "Tous les flux mis à jour"
 
-#: water/views.py:548
+#: water/views.py:552
 msgid "The file was deleted successfully."
 msgstr "Le fichier a été supprimé avec succès."
 
-#: water/views.py:559
+#: water/views.py:563
 msgid "The file was uploaded successfully."
 msgstr "Le fichier a été téléchargé avec succès."
 
-#: water/views.py:579
+#: water/views.py:583
 msgid "The file was uploaded successfully. Please review the data below."
 msgstr ""
 "Le fichier a été téléchargé avec succès. Veuillez consulter les données ci-"
 "dessous."
 
-#: water/views.py:598
+#: water/views.py:602
 msgid "The file was deleted successfully"
 msgstr "Le fichier a été supprimé avec succès"
 
-#: water/views.py:605
+#: water/views.py:610
 msgid ""
 "The data was deleted successfully from the database. You can reload it "
 "below, or delete the original file."
@@ -782,15 +794,15 @@ msgstr ""
 "Les données ont été supprimées avec succès de la base de données. Vous "
 "pouvez le recharger ci-dessous ou supprimer le fichier d'origine."
 
-#: water/views.py:775
+#: water/views.py:796
 msgid "Year/month information is not valid."
 msgstr "Les informations année/mois ne sont pas valides."
 
-#: water/views.py:802
+#: water/views.py:824
 msgid "The data has been saved in the database"
 msgstr "Les données ont été enregistrées dans la base de données"
 
-#: water/views.py:804
+#: water/views.py:826
 msgid ""
 "Sorry, we could not save your data. Are all the quantities filled in "
 "correctly? The error is printed below: "
