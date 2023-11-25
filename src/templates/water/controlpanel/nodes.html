@@ -26,6 +26,11 @@
       <li class="nav-item">
         <a class="btn {% if request.GET.level == "2" %}btn-dark{% endif %}" href="?category={{ request.GET.category }}&amp;level=2">Level 2</a>
       </li>
+      {% if request.GET.category == "4" %}
+        <li class="nav-item">
+          <a class="btn {% if request.GET.level == "3" %}btn-dark{% endif %}" href="?category={{ request.GET.category }}&amp;level=3">Level 2 Circulaire</a>
+        </li>
+      {% endif %}
     </ul>
     {% endif %}
 

@@ -34,6 +34,11 @@ footer{display:none}
         <li class="nav-item">
           <a data-level="2" class="btn {% if level == 2 %}btn-dark{% endif %} {% if category.slug == "emissions" %}disabled{% endif %}" href="?region={{ request.GET.region }}&amp;level=2">{{ _("Level") }} 2</a>
         </li>
+        {% if category.slug == "materials" %}
+          <li class="nav-item">
+            <a data-level="3" class="btn {% if level == 3 %}btn-dark{% endif %}" href="?region={{ request.GET.region }}&amp;level=3">{{ _("Level") }} 2 Circulaire</a>
+          </li>
+        {% endif %}
         {% if category.slug == "water" %}
           <li class="nav-item">
             <a data-level="3" class="btn {% if level == 3 %}btn-dark{% endif %}" href="?region={{ request.GET.region }}&amp;level=3">{{ _("Level") }} 3</a>
@@ -60,7 +65,7 @@ footer{display:none}
 
         <div class="watergraphs">
 
-          {% if level < 3 %}
+          {% if level < 3 or category.slug == "materials" %}
 
             <p class="text-center mt-2 mb-1">
               «

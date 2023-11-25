@@ -1,0 +1,36 @@
+# GENERAL DESIGN WORKFLOW
+
+Upon receiving the SVG files, this is the current workflow:
+
+1. Ensuring the SVG has the id "sankey_svg" (without this ID, the SAVE button will not work)
+2. Ensuring the BASEMAP layers includes the right code. It is as simple as copying the 6 image tags from a previous file.
+3. Ensuring that all the flows (elements with class="path") have been added to the database. Can be checked in the control panel. 
+4. Ensuring that all the nodes (elements with class="node") have been added to the database. The id of the node is the identifier in the database.
+5. Ensuring that all the nodes have the right flows moving into and out of the node configured in the database. Can all be set up in the control panel. These entry/exit flows are used to calculate the total quantity shown in the label of the node and to ensure they are hidden of no flow whatsoever moved into or out of this node when particular filters are applied.
+
+# DYNAMIC IMAGES IN SANKEYS
+
+For materials where icons need to be dynamically shown (e.g. when selecting a metal, a 'metal' icon should appear in some of the nodes):
+1. Identify the nodes that have dynamic icons based on the graphic design instructions.
+2. Remove any 'image' tag that might be present inside this node.
+3. Add a separate image tag with a 'data-node' attribute which sets the number of the node it pertains to.
+4. That same image tag should have the class 'swapimage' and the x and y attributes should be used to position it on the page (will require some trial and error to get them right).
+
+SAMPLE CODE:
+  <image data-node="1" width="20" height="20" xlink:href="" class="swapimage" x="247.5" y="84" />
+
+Notes:
+- Easiest way is to copy this from a previous file (e.g. materials.svg) and just change the node IDs and the x/y settings.
+- The way this works is that in the javascript code, the xlink:href attribute is being changed to reflect the path to the appropriate image file depending on the chosen flow.
+
+
+# ELEMENTS TO CHECK:
+
+- Images that represent the background map are called "space-X" with X being the ID of this territory in the database. This is used to highlight the chosen territory on the map.
+- Paths (flows) have three classes: 
+  - path -> required class
+  - COLOR -> either the name of a color class (see the javascript file with definitions), or colorX with X being a number 1-5, for those with dynamic colors that change upon selecting a material type (only applies to materials/stock sankeys)
+  - forward/backward -> this defines the direction of the flow. Sometimes counter-intuitive because it all depends on the start and end point chosen when drawing the line. Simply swap it around in case they flow in the wrong direction when animated.
+- Paths have a data-id which refers to the number of the flow as defined in the database (field: "identifier") and in the data spreadsheets that are being uploaded
+- Nodes have an id "node-X" with X being a number denoting the ID of this node. This ID is used in the database (see nodes: identifier) and it allows us to correctly print the quantity of this node (not all nodes show quantities, but many do), and to hide this node if the quantity is 0. 
+- The text inside the node that displays the quantity should have the class "qty"
