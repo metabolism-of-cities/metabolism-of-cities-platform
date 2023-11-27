@@ -56,7 +56,7 @@
    <path id="path220-3" d="m148.85 27.508c0.15517 0.05687 0.30072 0.12594 0.43437 0.20722l15.06 9.1764c1.0397 0.6326 0.95288 1.7696-0.19438 2.5401l-16.628 11.17c-0.99951 0.67116-2.4713 0.84176-3.5212 0.45622-0.15518-0.05718-0.30104-0.12626-0.43502-0.20754l-15.06-9.1764c-1.04-0.6326-0.9507-1.7686 0.19437-2.5397l16.631-11.169c0.9976-0.67212 2.4707-0.84208 3.5196-0.45686" fill="#dcdedc" stroke-width=".91072"/>
   </g>
   <text id="text540" transform="rotate(30)" x="270.86386" y="-53.046375" fill="#000000" font-size="3.5058px" font-weight="bold" stroke-width=".41551" text-align="center" text-anchor="middle"><tspan id="tspan5224" x="270.86386" y="-53.046375">MATIERES &amp;</tspan><tspan id="tspan5226" x="270.86386" y="-48.664177">MATERIAUX</tspan></text>
-  <text id="text746-3" transform="rotate(30)" x="258.90955" y="-43.772526" fill="#000000" font-size="2.7963px" font-weight="100" stroke-width=".35193"><tspan id="tspan744-6" class="qty" x="258.90955" y="-43.772526" fill="#666666" font-size="2.7963px" font-weight="normal" stroke-width=".35193"></tspan></text>
+  <text id="text746-3" transform="rotate(30)" x="258.90955" y="-43.772526" fill="#000000" font-size="2.7963px" font-weight="100" stroke-width=".35193"><tspan id="tspan744-6" class="qty" font-family="Montserrat" x="258.90955" y="-43.772526" fill="#666666" font-size="3.6px" font-weight="normal" stroke-width=".35193"></tspan></text>
  </g>
  <g id="node-2" class="node" transform="matrix(.72267 0 0 .72267 118.94 88.102)">
   <g id="g20367-8" transform="matrix(1.3029 0 0 1.3029 73.223 36.634)">
