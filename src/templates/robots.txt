@@ -15,3 +15,6 @@ Disallow: /
 
 User-agent: Amazonbot
 Disallow: /
+
+User-agent: TurnitinBot
+Disallow: /
