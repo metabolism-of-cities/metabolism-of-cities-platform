@@ -10,9 +10,12 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"> 
 
 {% if level == 3 %}
-<style type="text/css">
-footer{display:none}
-</style>
+  <style type="text/css">
+    footer{display:none}
+    {% if category.slug == "materials" %}
+      #svg_box svg{margin-top:100px}
+    {% endif %}
+  </style>
 {% endif %}
 
 {% endblock %}
@@ -45,7 +48,7 @@ footer{display:none}
           </li>
         {% endif %}
 
-        {% if level != 3 %}
+        {% if level != 3 or category.slug == "materials" %}
           <li class="nav-item ml-auto">
             <a href="#" id="download"><i class="fa fa-download"></i></a>
           </li>
@@ -145,8 +148,11 @@ footer{display:none}
 
             </span>
 
+            <div id="svg_box">
             {% include svg %}
+            <canvas id="canvas" hidden></canvas>
             {% include "water/_modal.html" %}
+            </div>
 
             {% if is_admin and DEBUG %}
               <div class="alert alert-info mt-5 d-print-none">

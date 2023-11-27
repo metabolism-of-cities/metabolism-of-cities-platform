@@ -1,5 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg id="sankey_svg" width="400mm" height="288mm" version="1.1" viewBox="0 0 400 288" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" style="margin-top:100px">
+<svg
+   width="400mm"
+   height="288mm"
+   version="1.1"
+   viewBox="0 0 400 288"
+   id="sankey_svg"
+   sodipodi:docname="emissions level 1-1.svg"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+
  <defs id="defs137">
   <marker id="TriangleOutL" overflow="visible" orient="auto">
    <path id="path1944" transform="scale(.4)" d="m5.77 0-8.65 5v-10l8.65 5z" fill="context-stroke" fill-rule="evenodd" stroke="context-stroke" stroke-width="1pt"/>

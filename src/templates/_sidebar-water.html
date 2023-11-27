@@ -21,7 +21,7 @@
     </ul>
   </div>
 
-  <div id="sidebar-territory" class="text-center pt-3 pb-3">
+  <div id="sidebar-territory" class="text-center pt-3 pb-3" {% if category.slug == "stock" %}hidden{% endif %}>
 
     <div>
       <h3>{{ _("Territory") }}</h3>
