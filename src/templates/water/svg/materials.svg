@@ -245,9 +245,9 @@
  </g>
 
   <!--- swappable icons representing chosen material -->
-  <image data-node="4" width="20" height="20" xlink:href="" class="swapimage" x="25.5" y="108.5" />
-  <image data-node="3" width="20" height="20" xlink:href="" class="swapimage" x="95" y="67" />
-  <image data-node="2" width="20" height="20" xlink:href="" class="swapimage" x="303.5" y="133.5" />
-  <image data-node="1" width="20" height="20" xlink:href="" class="swapimage" x="247.5" y="84" />
+  <image data-node="4" width="18" height="18" xlink:href="" class="swapimage" x="26.5" y="108.5" />
+  <image data-node="3" width="18" height="18" xlink:href="" class="swapimage" x="96" y="67" />
+  <image data-node="2" width="18" height="18" xlink:href="" class="swapimage" x="304.5" y="133.5" />
+  <image data-node="1" width="18" height="18" xlink:href="" class="swapimage" x="248.5" y="84" />
 
 </svg>
