@@ -34,3 +34,26 @@ Notes:
 - Paths have a data-id which refers to the number of the flow as defined in the database (field: "identifier") and in the data spreadsheets that are being uploaded
 - Nodes have an id "node-X" with X being a number denoting the ID of this node. This ID is used in the database (see nodes: identifier) and it allows us to correctly print the quantity of this node (not all nodes show quantities, but many do), and to hide this node if the quantity is 0. 
 - The text inside the node that displays the quantity should have the class "qty"
+
+GENERAL FUNCTIONING
+
+- Water level 1 is calculated based on the level-2 flows. For each level-2 flow in the back-end, there is a configuration saved that indicates which level-1 flow this should contribute to. This 'adding up' is done dynamically, when creating the json response that is created through an ajax request at the moment of generating the sankey. 
+- Water level 2 has different 'variants' of the sankey. Some of the nodes and flows are manually hidden because of particular features in the data which makes things NOT conform to the previously outlined rules (which state that nodes/lines should only be hidden if 0, and shown if > 0. These 'variants' are called alternative designs, and the _javascript.html file contains enough comments to understand what happens when.
+- Energy level 1 and 2 are calculated like water; with level 2 data stored in the database, and level 1 data calculated on the fly. 
+- For the materials level 1 chart it was NOT possible to calculate them based on level-2 data, so an exception is built into the ajax function that returns the json object. For this sankey, level 1 data is simply stored separately in the database and retrieved directly from the db when building the sankey. 
+- An unplanned chart called 'Level 2 circulair' was added to the materials sankeys. In order not to complexify the database this is stored and managed as 'level 3' data, but shown to the user as 'Level 2 circulair'.
+
+SANKEY DIAGRAMS
+
+At the core of this platform are sankey diagrams (and a set of bar-charts for the Material Stock section). These diagrams display the flows (or stocks) for the chosen territory, time period, and material. The user can change these filters to show exactly what is of interest. In addition, different levels of detail are possible, with level 1 sankeys showing a more aggregated level of data, and level 2 showing a more disaggregated, complex picture of the situation.
+
+The sankeys include nodes which are connected with lines. The width of the lines as well as the labels on the nodes (displaying how much of a material flows 'into' the node) are dynamically generated, depending on the chosen filter. This happens by placing an ajax call with the relevant parameters. The returned json object is then processed in a javascript script and the relevant elements are adjusted. Furthermore, the user can click any of the lines to pull up a chart, table, and description of the chosen flow. These details are also generated on-the-fly, by placing another ajax query to a different function, and again receiving a json object. 
+
+The core files to manage all this are:
+
+- sankey.html -> the HTML page with the general skeleton for the different elements
+- _javascript.html -> the javascript code for all the ajax requests and different manipulations of the SVG files etc. It is saved as an HTML file in order to more easily be able to include Django templating code inside this file. 
+- the .svg files with the actual drawings in the templates/water/svg folder
+- the views.py file in the water project; specifically the sankey, ajax, and ajax_chart_data functions
+
+Code comments are available in the sankey.html, _javascript and Django views.py files to understand what is happening in different places. 
