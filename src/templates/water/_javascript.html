@@ -168,6 +168,7 @@
 
       $(".path title").remove(); // Remove all titles so we can create new ones below
       $(".arrow title").remove(); // Some are .arrow classes
+      $("rect title").remove(); // Some are .arrow classes
       $.each(response, function(key, val) {
         {% if category.slug == "stock" %}
           flow = $("[data-id=path-" + key + "] rect");
@@ -574,72 +575,144 @@
     }
   }
 
-  // If you click on a flow then we show a chart with all historic data for the entire period
-  $(".path").click(function(){
-    get_id = $(this).data("id");
-    title = flow_titles[get_id];
+  {% if category.slug == "stock" %}
+    // If you click on a flow then we show a chart with all historic data for the entire period
+    $(".stocknode .bar").click(function(){
+      get_id = $(this).data("flow");
+      get_id_number = get_id;
+      region = $(this).closest(".stocknode").data("id");
+      title = flow_titles["path-" + get_id];
 
-    $("#chartTitle").text("Territoire : " + $("#title_region").text());
-    $("#chart").modal();
-    $(".modal .nav-tabs a.swap-tab[data-show=chartbox]").click(); // Show the chart by default
-
-    if ($(this).hasClass("unknown-flow")) {
-      $(".unknown-flow-content").show();
-      $(".known-flow-content").hide();
-    } else {
-      $(".unknown-flow-content").hide();
-      $(".known-flow-content").show();
-      $("#chartbox").highcharts().setTitle({text:title});
-
-      if ($("#chartbox").highcharts().get("chart_data")) {
-        $("#chartbox").highcharts().get("chart_data").remove();
-      };
-
-      get_id_number = get_id.split("-")[1]; // The id will be something like 'path-51' so we need to get just 51
-
-      // Let's see which period is selected (nth child), because we need to ONLY show those periods that 
-      // have been selected. We do this by removing the periods BEFORE the nth child from the list that
-      // holds all the periods (used in the x_axis labels)
-      selected_date = $("select[name=date_start] option:selected");
-      items_to_remove = selected_date.index();
-      x_labels = [...time_frames];
-      if (items_to_remove > 0) {
-        x_labels.splice(0, items_to_remove);
+      all_regions = {
+        {% for key,value in REGIONS.items %}{{ key }}: "{{ value }}",
+        {% endfor %}
       }
 
-      jsonURL = "{% url "water:ajax_chart_data" %}?flow=" + get_id_number + "&category={{ category.id }}&level=" + $("input[name=level]").val();
-      jsonURL += "&date_start=" + $("select[name='date_start']").val() + "&date_end=" + $("select[name='date_end']").val();
-      jsonURL += "&material=" + $("[name='material']").val();
+      $("#chartTitle").text("Territoire : " + all_regions[region]);
+      $("#chart").modal();
+      $(".modal .nav-tabs a.swap-tab[data-show=chartbox]").click(); // Show the chart by default
 
-      $(".region-bar a.btn-dark").each(function(){
-        jsonURL += "&space=" + $(this).data("region");
-      });
+      if ($(this).hasClass("unknown-flow")) {
+        $(".unknown-flow-content").show();
+        $(".known-flow-content").hide();
+      } else {
+        $(".unknown-flow-content").hide();
+        $(".known-flow-content").show();
+        $("#chartbox").highcharts().setTitle({text:title});
 
-      $.getJSON(jsonURL)
-      .done(function(response) {
+        if ($("#chartbox").highcharts().get("chart_data")) {
+          $("#chartbox").highcharts().get("chart_data").remove();
+        };
 
-        table = '<table class="table table-striped"><thead><tr><th>{{ _("Date") }}</th><th>{{ _("Quantity") }} ({{ category.unit.symbol }})</th></tr></thead><tbody>';
-        data = [];
-        total = 0;
-        for (let x of response) {
-          data.push(x["quantity"]);
-          table += '<tr><td>' + x["date"] + '</td><td>' + formatter_single_digit.format(x["quantity"]) + '</td></tr>';
-          total += x["quantity"];
+        // Let's see which period is selected (nth child), because we need to ONLY show those periods that 
+        // have been selected. We do this by removing the periods BEFORE the nth child from the list that
+        // holds all the periods (used in the x_axis labels)
+        selected_date = $("select[name=date_start] option:selected");
+        items_to_remove = selected_date.index();
+        x_labels = [...time_frames];
+        if (items_to_remove > 0) {
+          x_labels.splice(0, items_to_remove);
         }
-        table += '</tbody><tfoot><tr><th>{{ _("Total") }}</th><th>' + formatter_single_digit.format(total) + '</th></tr></tfoot></table>';
-        $("#tablebox").html(table);
 
-        $(".description").hide();
-        $("#description-" + get_id_number).show();
-        chart = $("#chartbox").highcharts();
-        chart.addSeries({ id: "chart_data", data: data}); 
-        chart.xAxis[0].setCategories(x_labels);
-      })
-      .fail(function() {
-        errorMessage("Failed to load data. Are you connected to the internet? Please reload the page or try again later.")
-      });
-    }
-  });
+        jsonURL = "{% url "water:ajax_chart_data" %}?stock=" + get_id;
+        jsonURL += "&date_start=" + $("select[name='date_start']").val() + "&date_end=" + $("select[name='date_end']").val();
+        jsonURL += "&material=" + $("[name='material']").val();
+        jsonURL += "&space=" + region;
+
+        $.getJSON(jsonURL)
+        .done(function(response) {
+
+          table = '<table class="table table-striped"><thead><tr><th>{{ _("Date") }}</th><th>{{ _("Quantity") }} ({{ category.unit.symbol }})</th></tr></thead><tbody>';
+          data = [];
+          total = 0;
+          for (let x of response) {
+            data.push(x["quantity"]);
+            table += '<tr><td>' + x["date"] + '</td><td>' + formatter_single_digit.format(x["quantity"]) + '</td></tr>';
+            total += x["quantity"];
+          }
+          table += '</tbody><tfoot><tr><th>{{ _("Total") }}</th><th>' + formatter_single_digit.format(total) + '</th></tr></tfoot></table>';
+          $("#tablebox").html(table);
+
+          $(".description").hide();
+          $("#description-" + get_id_number).show();
+          chart = $("#chartbox").highcharts();
+          chart.addSeries({ id: "chart_data", data: data}); 
+          chart.xAxis[0].setCategories(x_labels);
+        })
+        .fail(function() {
+          errorMessage("Failed to load data. Are you connected to the internet? Please reload the page or try again later.")
+        });
+      }
+    });
+
+  {% else %}
+    // If you click on a flow then we show a chart with all historic data for the entire period
+    $(".path").click(function(){
+      get_id = $(this).data("id");
+      title = flow_titles[get_id];
+
+      $("#chartTitle").text("Territoire : " + $("#title_region").text());
+      $("#chart").modal();
+      $(".modal .nav-tabs a.swap-tab[data-show=chartbox]").click(); // Show the chart by default
+
+      if ($(this).hasClass("unknown-flow")) {
+        $(".unknown-flow-content").show();
+        $(".known-flow-content").hide();
+      } else {
+        $(".unknown-flow-content").hide();
+        $(".known-flow-content").show();
+        $("#chartbox").highcharts().setTitle({text:title});
+
+        if ($("#chartbox").highcharts().get("chart_data")) {
+          $("#chartbox").highcharts().get("chart_data").remove();
+        };
+
+        get_id_number = get_id.split("-")[1]; // The id will be something like 'path-51' so we need to get just 51
+
+        // Let's see which period is selected (nth child), because we need to ONLY show those periods that 
+        // have been selected. We do this by removing the periods BEFORE the nth child from the list that
+        // holds all the periods (used in the x_axis labels)
+        selected_date = $("select[name=date_start] option:selected");
+        items_to_remove = selected_date.index();
+        x_labels = [...time_frames];
+        if (items_to_remove > 0) {
+          x_labels.splice(0, items_to_remove);
+        }
+
+        jsonURL = "{% url "water:ajax_chart_data" %}?flow=" + get_id_number + "&category={{ category.id }}&level=" + $("input[name=level]").val();
+        jsonURL += "&date_start=" + $("select[name='date_start']").val() + "&date_end=" + $("select[name='date_end']").val();
+        jsonURL += "&material=" + $("[name='material']").val();
+
+        $(".region-bar a.btn-dark").each(function(){
+          jsonURL += "&space=" + $(this).data("region");
+        });
+
+        $.getJSON(jsonURL)
+        .done(function(response) {
+
+          table = '<table class="table table-striped"><thead><tr><th>{{ _("Date") }}</th><th>{{ _("Quantity") }} ({{ category.unit.symbol }})</th></tr></thead><tbody>';
+          data = [];
+          total = 0;
+          for (let x of response) {
+            data.push(x["quantity"]);
+            table += '<tr><td>' + x["date"] + '</td><td>' + formatter_single_digit.format(x["quantity"]) + '</td></tr>';
+            total += x["quantity"];
+          }
+          table += '</tbody><tfoot><tr><th>{{ _("Total") }}</th><th>' + formatter_single_digit.format(total) + '</th></tr></tfoot></table>';
+          $("#tablebox").html(table);
+
+          $(".description").hide();
+          $("#description-" + get_id_number).show();
+          chart = $("#chartbox").highcharts();
+          chart.addSeries({ id: "chart_data", data: data}); 
+          chart.xAxis[0].setCategories(x_labels);
+        })
+        .fail(function() {
+          errorMessage("Failed to load data. Are you connected to the internet? Please reload the page or try again later.")
+        });
+      }
+    });
+  {% endif %}
 
   // We load an empty highchart, which will be populated with actual chart data once
   // a flow is being clicked.

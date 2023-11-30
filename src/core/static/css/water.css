@@ -31,6 +31,10 @@
     opacity:1;
     cursor: pointer;
 }
+.stocknode rect:hover {
+  fill-opacity:1;
+  cursor: pointer;
+}
 /* use forward and backward to determine direction */
 /* misnomer because it can be either, depends on how line was drawn */
 /* trial and error to see what works */

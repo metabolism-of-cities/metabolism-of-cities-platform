@@ -229,6 +229,12 @@ def ajax_chart_data(request):
             flow__part_of_flow__identifier=request.GET["flow"], 
             space__in=request.GET.getlist("space")
         ).values("date", "timeframe").annotate(total=Sum("quantity")).order_by("date")
+    elif "stock" in request.GET:
+        data = WaterSystemData.objects.filter(
+            category_id=5, 
+            flow__identifier=request.GET["stock"], 
+            space__in=request.GET.getlist("space")
+        ).values("date", "timeframe").annotate(total=Sum("quantity")).order_by("date")
     else:
         data = WaterSystemData.objects.filter(
             category_id=request.GET["category"], 
@@ -250,8 +256,12 @@ def ajax_chart_data(request):
 
     data = data.filter(date__gte=date_start, date__lte=date_end)
 
-    if request.GET.get("material") and request.GET.get("material") != "undefined":
-        data = data.filter(material_id=request.GET.get("material"))
+    if "stock" in request.GET:
+        if request.GET.get("material") and request.GET.get("material") != "undefined":
+            data = data.filter(material__category_id=request.GET.get("material"))
+    else:
+        if request.GET.get("material") and request.GET.get("material") != "undefined":
+            data = data.filter(material_id=request.GET.get("material"))
 
     for each in data:
         date = each["date"]
