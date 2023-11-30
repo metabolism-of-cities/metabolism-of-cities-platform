@@ -191,7 +191,14 @@ def ajax_stock(request):
     data = data.filter(flow__level=request.GET["level"])
 
     if request.GET.get("material") and request.GET.get("material") != "undefined":
-        data = data.filter(material_id=request.GET.get("material"))
+        data = data.filter(material__category__id=request.GET.get("material"))
+
+    regions = request.GET.getlist("region")
+    if regions and False:
+        data = data.filter(space__in=regions)
+    else:
+        # If no specific regions are set, then we only want the traditional 6 regions
+        data = data.filter(space__in=[2,3,4,5,6,7])
 
     date_start = request.GET["date_start"]
     if len(date_start) == 4:

@@ -95,18 +95,11 @@
     });
     link += $("input[name=level]").val()
 
-    {% if category.slug == "materials" %}
+    {% if category.slug == "materials" or category.slug == "stock" %}
       link += "&material=";
       var material = $("[name='material']").val();
       $(this).attr("href", link + material);
       link += material
-    {% endif %}
-
-    {% if category.slug == "stock" %}
-      link += "&materialcategory=";
-      var materialcategory = $("input[name='materialcategory']:checked").val();
-      $(this).attr("href", link + materialcategory);
-      link += materialcategory
     {% endif %}
 
     history.replaceState(undefined, undefined, link);
@@ -120,7 +113,7 @@
     /* Let's build the URL */
     category = {{ category.id }};
 
-    var jsonURL = "{% if category.slug == "stock" %}{% url "water:ajax_stock" %}{% else %}{% url "water:ajax" %}{% endif %}?category=" + category + "&level=" + $("input[name=level]").val() + "&material=" + $("[name='material']:checked").val();
+    var jsonURL = "{% if category.slug == "stock" %}{% url "water:ajax_stock" %}{% else %}{% url "water:ajax" %}{% endif %}?category=" + category + "&level=" + $("input[name=level]").val() + "&material=" + $("[name='material']").val();
 
     $(".region-bar a.btn-dark").each(function(){
       var region = $(this).data("region");
@@ -153,10 +146,16 @@
         }
       });
 
-      max_width = 10;
-      min_width = 0.7;
+      {% if category.slug == "stock" %}
+        max_width = 60;
+        min_width = 0;
+      {% else %}
+        max_width = 10;
+        min_width = 0.7;
+      {% endif %}
       all_flows = [];
       node_totals = {}
+      stock_totals = {}
       /* every time we run this script, we copy all_nodes into hidden_nodes
       *  so that all nodes are hidden until they are removed from this list
       *  as matching flows appear 
@@ -170,9 +169,17 @@
       $(".path title").remove(); // Remove all titles so we can create new ones below
       $(".arrow title").remove(); // Some are .arrow classes
       $.each(response, function(key, val) {
-        flow = $("[data-id=path-" + key + "]");
+        {% if category.slug == "stock" %}
+          flow = $("[data-id=path-" + key + "] rect");
+        {% else %}
+          flow = $("[data-id=path-" + key + "]");
+        {% endif %}
         if (val == null) {
-          flow.css("stroke-width", min_width + "px");
+          {% if category.slug == "stock" %}
+            flow.attr("height", 0);
+          {% else %}
+            flow.css("stroke-width", min_width + "px");
+          {% endif %}
           flow.attr("title", "Inconnu");
           flow.addClass("unknown-flow");
           var title = document.createElementNS("http://www.w3.org/2000/svg", "title");
@@ -188,6 +195,16 @@
             width = max_width;
           }
 
+          {% if category.slug == "stock" %}
+          /* For stock we need to calculate the total for each block, summing up all three flows */
+            node_id = key.split("_")[0];
+            if (stock_totals[node_id]) {
+              stock_totals[node_id] += val;
+            } else {
+              stock_totals[node_id] = val;
+            }
+          {% endif %}
+
           /* We apply minimum width if the flow has been manually set to ignore regular scaling */
           additional_text = "";
           index = ignore_size.indexOf(parseInt(key));
@@ -196,7 +213,11 @@
             additional_text = " - {{ _("NOTE: flow width is not to scale") }}";
           }
 
-          flow.attr("stroke-width", width + "px");
+          {% if category.slug == "stock" %}
+            flow.attr("height", width + "px");
+          {% else %}
+            flow.attr("stroke-width", width + "px");
+          {% endif %}
           flow.removeClass("unknown-flow");
           var title = document.createElementNS("http://www.w3.org/2000/svg", "title");
           var titletext  = document.createTextNode({% if is_admin and DEBUG %}"FLOW #" + key + " - " + {% endif %}formatter.format(val) + " {{ category.unit.symbol }}" + additional_text);
@@ -243,18 +264,31 @@
 
       });
 
-      for (const [node_id, node_total] of Object.entries(node_totals)) {
-        if (node_total == null) {
-          $("#node-" + node_id + " .qty").text("");
-        } else {
-          $("#node-" + node_id + " .qty").text(formatter.format(node_total) + " {{ category.unit.symbol }}");
-        }
-      }
+      {% if category.slug == "stock" %}
 
-      /* Whichever flow was NOT included in the ajax response needs to be removed from the map */
-      $.each(all_flows, function(index, value) {
-        $("[data-id=path-" + value + "]").hide("fast");
-      });
+        for (const [stock_id, stock_total] of Object.entries(stock_totals)) {
+          if (stock_total == null) {
+            $("#node-" + stock_id + " .qty").text("");
+          } else {
+            $("#node-" + stock_id + " .qty").text(formatter.format(stock_total) + " {{ category.unit.symbol }}");
+          }
+        }
+      {% else %}
+
+        for (const [node_id, node_total] of Object.entries(node_totals)) {
+          if (node_total == null) {
+            $("#node-" + node_id + " .qty").text("");
+          } else {
+            $("#node-" + node_id + " .qty").text(formatter.format(node_total) + " {{ category.unit.symbol }}");
+          }
+        }
+
+        /* Whichever flow was NOT included in the ajax response needs to be removed from the map */
+        $.each(all_flows, function(index, value) {
+          $("[data-id=path-" + value + "]").hide("fast");
+        });
+
+    {% endif %}
 
       $("svg").css("opacity", "1");
       $(".loading").hide(); 
@@ -392,6 +426,9 @@
     title_region = title_region.substring(0, title_region.length - 2);
     $("#title_region").html(title_region);
 
+    {% if category.slug == "stock" %}
+      $(".map-region").addClass("active-space");
+    {% else %}
     if ($(".region-bar a[data-region='1']").hasClass("btn-dark")) {
       /*  Either ALL or NO region activated, so fallback to Eau d'Azur */
       $(".map-region").addClass("active-space");
@@ -419,6 +456,7 @@
         $("#space-"+region).addClass("active-space");
       });
     }
+    {% endif %}
 
   }
 
@@ -485,7 +523,9 @@
   $("[name='material']").change(function(){
     getData();
     updateLevelLinks();
-    setLogosAndColors();
+    {% if category.slug == "materials" %}
+      setLogosAndColors();
+    {% endif %}
   });
 
   $("#animate").click(function(){
