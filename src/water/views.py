@@ -136,8 +136,8 @@ def ajax(request):
     regions = request.GET.getlist("region")
     data = WaterSystemData.objects.filter(category_id=request.GET["category"]).values("flow__identifier", "flow__part_of_flow__identifier").annotate(total=Sum("quantity"))
 
-    # For materials we split up level 1 and 2 data, so we must filter exclusively for the chosen level
-    if request.GET["category"] == "4":
+    # For materials and emissions we split up level 1 and 2 data, so we must filter exclusively for the chosen level
+    if request.GET["category"] == "4" or request.GET["category"] == "3":
         data = data.filter(flow__level=request.GET["level"])
 
     if regions:
@@ -162,7 +162,7 @@ def ajax(request):
 
     results = {}
     for each in data:
-        if request.GET["level"] == "2" or request.GET["category"] == "4":
+        if request.GET["level"] == "2" or request.GET["category"] == "4" or request.GET["category"] == "3":
             results[each["flow__identifier"]] = each["total"]
         else:
             # Okay so here is how it works... level 1 is not a REAL data level
@@ -185,7 +185,7 @@ def ajax(request):
 
 def ajax_chart_data(request):
     results = []
-    if request.GET.get("level") == "1" and request.GET.get("category") != "4":
+    if request.GET.get("level") == "1" and request.GET.get("category") != "4" and request.GET.get("category") != "3":
         data = WaterSystemData.objects.filter(
             category_id=request.GET["category"], 
             flow__part_of_flow__identifier=request.GET["flow"], 
@@ -715,8 +715,8 @@ def controlpanel_file(request, id):
 
             # We delete all records that are not level 2 records
             try:
-                # But only if this is NOT the materials flow, because there we use the level 1 data
-                if category.id != 4:
+                # But only if this is NOT the materials or emissions flow, because there we use the level 1 data
+                if category.id != 4 and category.id != 3:
                     df = df[df.level == 2]
             except:
                 error = "We could not locate the LEVEL (niveau) column, please review."
@@ -757,6 +757,7 @@ def controlpanel_file(request, id):
             row = row.to_dict()
             flow = row["flow"]
             level = row["level"]
+            # Level "2C" is the "circulair" version of materials level 2. Technically, this is stored as level 3 data to keep life easy.
             if level == "2C":
                 level = 3
             try:
