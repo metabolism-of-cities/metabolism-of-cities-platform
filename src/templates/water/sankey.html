@@ -30,35 +30,39 @@
     <div class="col-lg-10 main offset-lg-2">
 
       <input type="hidden" name="level" value="{{ level }}" />
-      <ul class="nav nav-pills d-print-none" id="top-tabs">
-        <li class="nav-item">
-          <a data-level="1" class="btn {% if level == 1 %}btn-dark{% endif %}" href="?region={{ request.GET.region }}&amp;level=1">{{ _("Level") }} 1</a>
-        </li>
-        <li class="nav-item">
-          <a data-level="2" class="btn {% if level == 2 %}btn-dark{% endif %}" href="?region={{ request.GET.region }}&amp;level=2">{{ _("Level") }} 2</a>
-        </li>
-        {% if category.slug == "materials" %}
+
+      {% if category.slug != "stock" %}
+        <ul class="nav nav-pills d-print-none" id="top-tabs">
           <li class="nav-item">
-            <a data-level="3" class="btn {% if level == 3 %}btn-dark{% endif %}" href="?region={{ request.GET.region }}&amp;level=3">{{ _("Level") }} 2 {{ _("Circular") }}</a>
+            <a data-level="1" class="btn {% if level == 1 %}btn-dark{% endif %}" href="?region={{ request.GET.region }}&amp;level=1">{{ _("Level") }} 1</a>
           </li>
-        {% endif %}
-        {% if category.slug == "water" %}
           <li class="nav-item">
-            <a data-level="3" class="btn {% if level == 3 %}btn-dark{% endif %}" href="?region={{ request.GET.region }}&amp;level=3">{{ _("Level") }} 3</a>
+            <a data-level="2" class="btn {% if level == 2 %}btn-dark{% endif %}" href="?region={{ request.GET.region }}&amp;level=2">{{ _("Level") }} 2</a>
           </li>
-        {% endif %}
+          {% if category.slug == "materials" %}
+            <li class="nav-item">
+              <a data-level="3" class="btn {% if level == 3 %}btn-dark{% endif %}" href="?region={{ request.GET.region }}&amp;level=3">{{ _("Level") }} 2 {{ _("Circular") }}</a>
+            </li>
+          {% endif %}
+          {% if category.slug == "water" %}
+            <li class="nav-item">
+              <a data-level="3" class="btn {% if level == 3 %}btn-dark{% endif %}" href="?region={{ request.GET.region }}&amp;level=3">{{ _("Level") }} 3</a>
+            </li>
+          {% endif %}
 
-        {% if level != 3 or category.slug == "materials" %}
-          <li class="nav-item ml-auto">
-            <a href="#" id="download"><i class="fa fa-download"></i></a>
-          </li>
+          {% if level != 3 or category.slug == "materials" %}
+            <li class="nav-item ml-auto">
+              <a href="#" id="download"><i class="fa fa-download"></i></a>
+            </li>
 
-          <li class="nav-item ml-2">
-            <a href="javascript:print()"><i class="fa fa-print"></i></a>
-          </li>
-        {% endif %}
+            <li class="nav-item ml-2">
+              <a href="javascript:print()"><i class="fa fa-print"></i></a>
+            </li>
+          {% endif %}
 
-      </ul> 
+        </ul> 
+      {% endif %}
+
       <div class="main-body level-{{ request.GET.level }}">
 
 
@@ -118,10 +122,13 @@
             </span>
 
             <span class="animate-toggle d-print-none">
-              <label class="btn font-weight-bold">
-                <input type="checkbox" id="animate" value="true">
-                {{ _("Animation") }}
-              </label>
+
+              {% if category.slug != "stock" %}
+                <label class="btn font-weight-bold">
+                  <input type="checkbox" id="animate" value="true">
+                  {{ _("Animation") }}
+                </label>
+              {% endif %}
 
               {% if category.slug == "materials" %}
                 <div style="" class="materialselection">
@@ -136,13 +143,14 @@
                   </div>
                 </div>
               {% elif category.slug == "stock" %}
-                <span class="d-print-none" style="position:relative;top:60px;left:23px">
-                  {% for each in materialcategories %}
-                    <label class="font-weight-bold d-block">
-                      <input type="radio" name="materialcategory" value="{{ each.id }}">
-                      {{ each }}
-                    </label>
-                  {% endfor %}
+                <span class="d-print-none" style="position:relative;left:23px">
+                    <select class="form-control" name="material">
+                    {% for each in materialcategories %}
+                      <option value="{{ each.id }}" {% if each.id == 0 %}selected{% endif %}>
+                        {{ each }}
+                      </option>
+                    {% endfor %}
+                  </select>
                 </span>
               {% endif %}
 

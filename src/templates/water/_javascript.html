@@ -119,7 +119,8 @@
 
     /* Let's build the URL */
     category = {{ category.id }};
-    var jsonURL = "{% url "water:ajax" %}?category=" + category + "&level=" + $("input[name=level]").val() + "&material=" + $("[name='material']:checked").val();
+
+    var jsonURL = "{% if category.slug == "stock" %}{% url "water:ajax_stock" %}{% else %}{% url "water:ajax" %}{% endif %}?category=" + category + "&level=" + $("input[name=level]").val() + "&material=" + $("[name='material']:checked").val();
 
     $(".region-bar a.btn-dark").each(function(){
       var region = $(this).data("region");

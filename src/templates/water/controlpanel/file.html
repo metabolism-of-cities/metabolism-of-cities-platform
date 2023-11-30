@@ -59,7 +59,7 @@
     <h2 class="mt-5">{{ _("Spreadsheet overview") }}</h2>
     <div class="alert alert-info">
       {{ _("The data below shows all the rows that were successfully detected in your spreadsheet. Remember that only level-2 data is being detected and stored. The system will NOT remove any existing data. If you upload data for existing periods, then you should remove the old data first as not to duplicate data.") }}
-      {{ _("NOTE: for materials as well as emissions, level-1 data WILL be stored and used for the diagrams.") }}
+      {{ _("NOTE: for materials, stock as well as emissions, level-1 data WILL be stored and used for the diagrams.") }}
     </div>
     <div class="databox">
       {{ table }}
@@ -82,7 +82,7 @@
 
   {% endif %}
 
-  <a href="../" class="btn btn-primary-outline mt-4"><i class="fa fa-arrow-left"></i> {{ _("Back to overview") }}</a>
+  <a href="../{% if info.category.id == 5 %}?type=stock{% endif %}" class="btn btn-primary-outline mt-4"><i class="fa fa-arrow-left"></i> {{ _("Back to overview") }}</a>
 
 
 {% endblock %}

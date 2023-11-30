@@ -173,6 +173,8 @@ def ajax(request):
             # If so (not all do... some are level-2 TOTALS that shouldn't be shown in level 1)
             # then we add it to the level 1 flow (with the identifier for level 1). If not, don't 
             # do anything with the data.
+            # NOTE: this was the default system until changes were requested that made level-1 data
+            # not always part of level-2 data, hence the exceptions that are stipulated above.
             part_of = each["flow__part_of_flow__identifier"]
             if part_of:
                 if part_of in results and results[part_of]:
@@ -180,6 +182,35 @@ def ajax(request):
                         results[part_of] += each["total"]
                 else:
                     results[part_of] = each["total"]
+
+    return JsonResponse(results)
+
+def ajax_stock(request):
+    data = WaterSystemData.objects.filter(category_id=request.GET["category"]).values("space_id", "flow__identifier", "flow__part_of_flow__identifier").annotate(total=Sum("quantity"))
+
+    data = data.filter(flow__level=request.GET["level"])
+
+    if request.GET.get("material") and request.GET.get("material") != "undefined":
+        data = data.filter(material_id=request.GET.get("material"))
+
+    date_start = request.GET["date_start"]
+    if len(date_start) == 4:
+        date_start = parse(date_start + "-01-01")
+    else:
+        date_start = parse(date_start + "-01")
+
+    date_end = request.GET["date_end"]
+    if len(date_end) == 4:
+        date_end = parse(date_end + "-01-01")
+    else:
+        date_end = parse(date_end + "-01")
+
+    data = data.filter(date__gte=date_start, date__lte=date_end)
+
+    results = {}
+    for each in data:
+        label = f"{each['space_id']}_{each['flow__identifier']}"
+        results[label] = each["total"]
 
     return JsonResponse(results)
 
@@ -583,9 +614,15 @@ def controlpanel_upload(request):
         messages.success(request, _("The file was uploaded successfully. Please review the data below."))
         return redirect(reverse("water:controlpanel_file", args=[info.id]))
 
+    files = WaterSystemFile.objects.all()
+    if request.GET.get("type") == "stock":
+        files = files.filter(category__id=5)
+    else:
+        files = files.exclude(category__id=5)
+
     context = {
         "types": WaterSystemCategory.objects.all(),
-        "files": WaterSystemFile.objects.all(),
+        "files": files,
         "section": "controlpanel",
     }
     return render(request, "water/controlpanel/upload.html", context)
@@ -628,6 +665,7 @@ def controlpanel_file(request, id):
         try:
             category_name = df["FLUX"].iloc[0]
             conversion = {
+                "STOCK": 5,
                 "MATIERES & MATERIAUX": 4,
                 "GAZ A EFFETS DE SERRE": 3,
                 "ENERGIE": 2,
@@ -715,8 +753,8 @@ def controlpanel_file(request, id):
 
             # We delete all records that are not level 2 records
             try:
-                # But only if this is NOT the materials or emissions flow, because there we use the level 1 data
-                if category.id != 4 and category.id != 3:
+                # But only if this is NOT the materials or emissions flow or stock data, because there we use the level 1 data
+                if category.id != 4 and category.id != 3 and category.id != 5:
                     df = df[df.level == 2]
             except:
                 error = "We could not locate the LEVEL (niveau) column, please review."

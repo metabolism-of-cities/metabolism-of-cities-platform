@@ -7,7 +7,7 @@
     {{ _("Back to Control Panel") }}
   </a>
 
-  <h2>{% block title %}{{ _("Sankey diagram data") }}{% endblock %}</h2>
+  <h2>{% block title %}{% if request.GET.type == "stock" %}{{ _("Stock data") }}{% else %}{{ _("Sankey diagram data") }}{% endif %}{% endblock %}</h2>
 
   <div class="alert alert-info mt-2">
   <p><strong>{{ _("Instructions:") }}</strong></p>
@@ -16,53 +16,53 @@
       {{ _("Download the template file. Use the sample data to review the format, and use this same format for the new data you want to upload.") }}
     </li>
     <li>
-      {{ _("Delete all rows that are not relevant for your dataset. Enter 'Unknown' if you have no data for a particular cell but you want the flow to appear on the sankey diagram.") }}
+      {{ _("Delete all rows that are not relevant for your dataset.") }}
+      {% if request.GET.type != "stock" %}
+        {{ _("Enter 'Unknown' if you have no data for a particular cell but you want the flow to appear on the sankey diagram.") }}
+      {% endif %}
     </li>
     <li>
       {{ _("You can add rows for as many months or years as you want to upload.") }}
-    </li>
-    <li>
-      {{ _("Please fill out data using the following units:") }}
-      <ul>
-        <li>{{ _("Water") }}: km3</li>
-        <li>{{ _("Energy") }}: MWh</li>
-        <li>{{ _("Emissions") }}: TCO2EQ</li>
-        <li>{{ _("Materials") }}: kt</li>
-        <li>{{ _("Stock") }}: kt</li>
-      </ul>
     </li>
   </ul>
   </div>
 
   <section class="mt-5">
     <h3>{{ _("Download templates") }}</h3>
-    <p>
-      {{ _("You can use the templates below to upload new data.") }}
-    </p>
-    <a href="/media/water/templates/water.xlsx" class="btn btn-secondary mt-2" target="_blank">
-      <i class="fa fa-download"></i>
-      {{ _("Ẁater data template") }}
-    </a>
-    <a href="/media/water/templates/energy.xlsx" class="btn btn-secondary mt-2" target="_blank">
-      <i class="fa fa-download"></i>
-      {{ _("Energy data template") }}
-    </a>
-    <a href="/media/water/templates/emissions.xlsx" class="btn btn-secondary mt-2" target="_blank">
-      <i class="fa fa-download"></i>
-      {{ _("Emissions data template") }}
-    </a>
-    <a href="/media/water/templates/materials.xlsx" class="btn btn-secondary mt-2" target="_blank">
-      <i class="fa fa-download"></i>
-      {{ _("Materials data template: level 1") }}
-    </a>
-    <a href="/media/water/templates/materials2.xlsx" class="btn btn-secondary mt-2" target="_blank">
-      <i class="fa fa-download"></i>
-      {{ _("Materials data template: level 2") }}
-    </a>
-    <a href="/media/water/templates/materials2c.xlsx" class="btn btn-secondary mt-2" target="_blank">
-      <i class="fa fa-download"></i>
-      {{ _("Materials data template: level 2 circular") }}
-    </a>
+    {% if request.GET.type == "stock" %}
+      <a href="/media/water/templates/stock.xlsx" class="btn btn-secondary mt-2" target="_blank">
+        <i class="fa fa-download"></i>
+        {{ _("Stock data template") }}
+      </a>
+    {% else %}
+      <p>
+        {{ _("You can use the templates below to upload new data.") }}
+      </p>
+      <a href="/media/water/templates/water.xlsx" class="btn btn-secondary mt-2" target="_blank">
+        <i class="fa fa-download"></i>
+        {{ _("Ẁater data template") }}
+      </a>
+      <a href="/media/water/templates/energy.xlsx" class="btn btn-secondary mt-2" target="_blank">
+        <i class="fa fa-download"></i>
+        {{ _("Energy data template") }}
+      </a>
+      <a href="/media/water/templates/emissions.xlsx" class="btn btn-secondary mt-2" target="_blank">
+        <i class="fa fa-download"></i>
+        {{ _("Emissions data template") }}
+      </a>
+      <a href="/media/water/templates/materials.xlsx" class="btn btn-secondary mt-2" target="_blank">
+        <i class="fa fa-download"></i>
+        {{ _("Materials data template: level 1") }}
+      </a>
+      <a href="/media/water/templates/materials2.xlsx" class="btn btn-secondary mt-2" target="_blank">
+        <i class="fa fa-download"></i>
+        {{ _("Materials data template: level 2") }}
+      </a>
+      <a href="/media/water/templates/materials2c.xlsx" class="btn btn-secondary mt-2" target="_blank">
+        <i class="fa fa-download"></i>
+        {{ _("Materials data template: level 2 circular") }}
+      </a>
+    {% endif %}
   </section>
 
   <section>
