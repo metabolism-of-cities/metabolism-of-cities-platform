@@ -56,7 +56,12 @@ def sankey(request, category):
     else:
         region = 1
 
-    selected_regions = ["1"] if category.slug == "emissions" or category.slug == "water" or not "region" in request.GET else request.GET.getlist("region")
+    if not "region" in request.GET:
+        selected_regions = ["1"]
+    elif int(request.GET.get("region")) == 0 and category.slug != "stock":
+        selected_regions = ["1"]
+    else:
+        selected_regions = request.GET.getlist("region")
 
     context = {
         "title": category,

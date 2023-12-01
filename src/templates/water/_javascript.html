@@ -267,11 +267,19 @@
 
       {% if category.slug == "stock" %}
 
+        all_stock_nodes = [1,2,3,4,5,6,7,8,9,10,11,12];
+        hidden_nodes = [...all_stock_nodes];
+
         for (const [stock_id, stock_total] of Object.entries(stock_totals)) {
           if (stock_total == null) {
             $("#node-" + stock_id + " .qty").text("");
           } else {
             $("#node-" + stock_id + " .qty").text(formatter.format(stock_total) + " {{ category.unit.symbol }}");
+            node = parseInt(stock_id);
+            index = hidden_nodes.indexOf(node);
+            if (index !== -1) {
+              hidden_nodes.splice(index, 1); // 2nd parameter means remove one item only
+            }
           }
         }
       {% else %}
@@ -296,6 +304,7 @@
 
       // We want to hide all the nodes that should not be displayed, and show the ones that do have values
       $(".node").addClass("show-this-node");
+      $(".stocknode").addClass("show-this-node");
       for (let node of hidden_nodes) {
         get_node = $("#node-" + node);
         if (get_node.is(":visible")) {
@@ -427,11 +436,11 @@
     title_region = title_region.substring(0, title_region.length - 2);
     $("#title_region").html(title_region);
 
-    {% if category.slug == "stock" %}
-      $(".map-region").addClass("active-space");
-    {% else %}
     if ($(".region-bar a[data-region='1']").hasClass("btn-dark")) {
       /*  Either ALL or NO region activated, so fallback to Eau d'Azur */
+      $(".map-region").addClass("active-space");
+    } else if ($(".region-bar a[data-region='0']").hasClass("btn-dark")) {
+      /*  The EAU D'AZUR (territories) option for stocks has region=0 but we need to activate all of them */
       $(".map-region").addClass("active-space");
     } else {
       $(".map-region").removeClass("active-space");
@@ -457,7 +466,6 @@
         $("#space-"+region).addClass("active-space");
       });
     }
-    {% endif %}
 
   }
 

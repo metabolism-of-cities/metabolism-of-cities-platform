@@ -28,13 +28,13 @@
       <ul class="nav flex-column mt-4 region-bar">
         {% if category.slug == "stock" %}
           <li class="nav-item">
-            <a class="btn btn-dark" href="{% url 'water:water' %}?region=0" data-region="0">
-            Eau d'Azur (territoires)
+            <a class="btn {% if '1' in selected_regions %}btn-dark{% endif %}" href="{% url 'water:water' %}?region=1" data-region="1">
+            Eau d'Azur (total)
             </a>
           </li>
           <li class="nav-item">
-            <a class="btn" href="{% url 'water:water' %}?region=1" data-region="1">
-            Eau d'Azur (total)
+            <a class="btn {% if '0' in selected_regions %}btn-dark{% endif %}" href="{% url 'water:water' %}?region=0" data-region="0">
+            Eau d'Azur (territoires)
             </a>
           </li>
         {% else %}
