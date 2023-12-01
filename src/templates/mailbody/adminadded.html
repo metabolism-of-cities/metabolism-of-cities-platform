@@ -1,0 +1,18 @@
+{% extends "mailbody/_mailbase.html" %}
+{% load i18n %}
+
+{% block content %}
+
+{% trans "Hello" %} {{ name }}, <br>
+<br>
+{% trans "A new administrator account was registered for you on the following website:" %} {{ project.name }}.<br>
+<br>
+{% trans "This account was created by:" %} {{ user }}.<br>
+<br>
+{% trans "Your temporary pin to log onto the website is:" %} <strong>{{ password }}</strong>. 
+{% trans "Please change this pin when you log in for the first time." %}<br>
+<br>
+{{ project.name }}<br>
+{{ project.url }}<br>
+
+{% endblock %}

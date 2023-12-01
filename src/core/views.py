@@ -46,6 +46,7 @@ import pytz
 from functools import wraps
 import json
 from django.utils.translation import gettext_lazy as _
+from django.utils import translation 
 
 # Social media imports
 import twitter
@@ -203,10 +204,13 @@ def user_login(request, project=None):
 
         if user is not None:
             login(request, user)
-            messages.success(request, "You are logged in.")
+            messages.success(request, _("You are logged in."))
+            people = People.objects.get(user=user)
+            if people.meta_data and "temporary_password" in people.meta_data:
+                messages.success(request, _("Please change your temporary pin. You can set your own password here:") + "<br><a href='/hub/profile/edit/?shortened=true'>" + _("Edit my profile") + "</a>")
             return redirect(redirect_url)
         else:
-            messages.error(request, "We could not authenticate you, please try again.")
+            messages.error(request, _("We could not authenticate you, please try again."))
 
     context = {
         "project": project,
@@ -266,10 +270,14 @@ def user_profile(request, id=None, project=None):
 @login_required
 def user_profile_form(request, id=None):
 
+    if "shortened" in request.GET:
+        fields = ["name", "email"]
+    else:
+        fields = ["name", "description", "research_interests", "image", "website", "email", "twitter", "google_scholar", "orcid", "researchgate", "linkedin"]
     ModelForm = modelform_factory(
         People,
-        fields = ("name", "description", "research_interests", "image", "website", "email", "twitter", "google_scholar", "orcid", "researchgate", "linkedin"),
-        labels = { "description": "Profile/bio", "image": "Photo" }
+        fields = fields,
+        labels = { "description": "Profile/bio", "image": "Photo", "name": _("Name"), "Email": _("Email") }
     )
     form = ModelForm(request.POST or None, request.FILES or None, instance=request.user.people)
 
@@ -335,6 +343,8 @@ def user_profile_form(request, id=None):
 
             if "password" in request.POST and request.POST["password"]:
                 # user will be logged out after changing password - let's log them back in
+                if people.meta_data and "temporary_password" in people.meta_data:
+                    del(people.meta_data["temporary_password"])
                 login(request, user)
 
             meta_data = people.meta_data if people.meta_data else {}
@@ -350,7 +360,10 @@ def user_profile_form(request, id=None):
                 people.spaces.add(ReferenceSpace.objects.get(pk=request.POST["space"]))
 
             messages.success(request, "Your profile information was saved.")
-            return redirect(request.GET["return"])
+            if "return" in request.GET:
+                return redirect(request.GET["return"])
+            else:
+                return redirect("/")
         else:
             messages.error(request, "We could not save your form, please fill out all fields")
 
@@ -912,6 +925,89 @@ def controlpanel_users(request):
         "load_datatables": True,
     }
     return render(request, "controlpanel/users.html", context)
+
+# This is a page that can be used to exclusively manage admin users. It is simpler and best to use for 
+# sites that don't need finegrained user types etc.
+@login_required
+def controlpanel_users_admins(request):
+    if not has_permission(request, request.project, ["admin"]):
+        unauthorized_access(request)
+
+    project = get_project(request)
+
+    if "delete" in request.GET:
+        check = RecordRelationship.objects.filter(record_child_id=request.project, pk=request.GET["delete"])
+        if check:
+            check = check[0]
+            messages.success(request, _("The following user is no longer an administrator:") + " " + str(check.record_parent))
+            check.delete()
+
+    if "name" in request.POST:
+        email = request.POST.get("email")
+        name = request.POST.get("name")
+        user = User.objects.filter(email=email)
+        error = False
+        if user:
+            user = user[0]
+            people = People.objects.get(user=user)
+            current_site = PROJECT_LIST["core"]["url"]
+            if RecordRelationship.objects.filter(record_parent=people, record_child_id=request.project, relationship_id=21).exists():
+                messages.warning(request, _("This user is already an administrator"))
+                error = True
+            else:
+                messages.success(request, _("The user was added as an administrator. NOTE: this user already had an account on this website or any of the other websites in the Metabolism of Cities network. This same account can be used by this user to log in and access the control panel on this website."))
+        else:
+            import random
+            password = str(random.randrange(1000,9999))
+            user = User.objects.create_user(email, email, password)
+            user.first_name = name
+            user.is_superuser = False
+            user.is_staff = False
+            user.save()
+            people = People.objects.create(name=name, email=user.email)
+            people.user = user
+            people.meta_data = {
+                "temporary_password": True,
+            }
+            people.save()
+
+            messages.success(request, _("The new user was created and added as an administrator. An invitation e-mail was sent to their e-mail address: ") + email)
+
+            mailcontext = {
+                "name": name,
+                "project": project,
+                "password": password,
+                "user": str(request.user.people),
+            }
+
+            subject = _("Welcome to ") + project.name
+            msg_html = render_to_string("mailbody/adminadded.html", mailcontext)
+            msg_plain = render_to_string("mailbody/adminadded.txt", mailcontext)
+
+            sender = '"' + project.name + '" <' + settings.DEFAULT_FROM_EMAIL + '>'
+            recipient = '"' + name + '" <' + email + '>'
+
+            send_mail(
+                subject,
+                msg_plain,
+                sender,
+                [recipient],
+                html_message=msg_html,
+            )
+
+        if not error:
+            RecordRelationship.objects.create(
+                record_parent = people,
+                record_child_id = request.project,
+                relationship_id = 21,
+            )
+
+
+    context = {
+        "users": RecordRelationship.objects.filter(record_child_id=request.project, relationship_id=21),
+        "load_datatables": True,
+    }
+    return render(request, "controlpanel/users.admins.html", context)
 
 @login_required
 def controlpanel_relationships(request, id):

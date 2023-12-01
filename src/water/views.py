@@ -338,6 +338,9 @@ def water_login(request):
         if user is not None:
             login(request, user)
             messages.success(request, _("You are logged in."))
+            people = People.objects.get(user=user)
+            if people.meta_data and "temporary_password" in people.meta_data:
+                messages.success(request, _("Please change your temporary pin. You can set your own password here:") + "<br><a href='/hub/profile/edit/?shortened=true'>" + _("Edit my profile") + "</a>")
             return redirect(redirect_url)
         else:
             messages.error(request, _("We could not authenticate you, please try again."))

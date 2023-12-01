@@ -13,17 +13,18 @@
     {% include "hub/_nav.html" %}
   {% endif %}
 
-  <form method="post" class="form form-horizontal" enctype="multipart/form-data">
+  <form method="post" class="form form-horizontal profile-form" enctype="multipart/form-data">
 
     {% bootstrap_form form layout="horizontal" %}
 
     <div class="form-group row">
-      <label class="col-sm-3 col-form-label">New password</label>
+      <label class="col-sm-3 col-form-label">{{ _("New password") }}</label>
       <div class="col-sm-9">
-        <input type="password" name="password" class="form-control" placeholder="Only if you want to change it">
+        <input type="password" name="password" class="form-control" placeholder="{{ _("Only if you want to change it") }}">
       </div>
     </div>
 
+    {% if not "shortened" in request.GET %}
     <div class="form-group row">
       <label class="col-sm-3 col-form-label">My place</label>
       <div class="col-sm-9">
@@ -46,13 +47,14 @@
         Send notifications by e-mail
       </div>
     </div>
+    {% endif %}
 
     <div class="form-group row">
       <div class="offset-md-3 col-md-9">
         <button type="submit" class="btn btn-success">
-          <i class="fa fa-save"></i> Save
+          <i class="fa fa-save"></i> {{ _("Save") }}
         </button>
-        <a class="float-right" href="#" id="delete">Want to delete your profile?</a>
+        <a class="float-right" href="#" id="delete">{{ _("Want to delete your profile?") }}</a>
         {% csrf_token %}
       </div>
     </div>

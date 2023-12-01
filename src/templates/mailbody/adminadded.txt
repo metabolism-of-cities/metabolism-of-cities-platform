@@ -1,0 +1,13 @@
+{% load i18n %}
+
+{% trans "Hello" %} {{ name }},
+
+{% trans "A new administrator account was registered for you on the following website:" %} {{ project.name }}.
+
+{% trans "This account was created by:" %} {{ user }}.
+
+{% trans "Your temporary pin to log onto the website is:" %} {{ password }}. 
+{% trans "Please change this pin when you log in for the first time." %}
+
+{{ project.name }}
+{{ project.url }}

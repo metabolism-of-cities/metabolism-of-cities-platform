@@ -119,6 +119,7 @@ baseline_urlpatterns = [
     path("controlpanel/project/", core.controlpanel_project, name="controlpanel_project"),
     path("controlpanel/stats/", core.controlpanel_stats, name="controlpanel_stats"),
     path("controlpanel/users/", core.controlpanel_users, name="controlpanel_users"),
+    path("controlpanel/users/admins/", core.controlpanel_users_admins, name="controlpanel_users_admins"),
     path("controlpanel/users/create/", core.controlpanel_relationship_form),
     path("controlpanel/users/new/", core.controlpanel_people_form),
     path("controlpanel/users/<int:id>/", core.controlpanel_relationship_form),

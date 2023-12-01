@@ -1,0 +1,70 @@
+{% extends "_base.html" %}
+
+{% block content %}
+
+<div class="manage_users">
+  <h1 class="mb-0">{% block title %}{{ _("Our team") }}{% endblock %}</h1>
+  <a href="../" class="btn btn-primary-basic mb-4">
+    <i class="fal fa-angle-left"></i>
+    {{ _("Back to control panel") }}
+  </a>
+
+  <table class="table table-striped datatable">
+    <thead>
+      <tr>
+        <th>{{ _("User") }}</th>
+        <th>{{ _("E-mail") }}</th>
+        <th>{{ _("Since") }}</th>
+        <th>{{ _("Remove access") }}</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in users %}
+      <tr>
+        <td>{{ each.record_parent }}</td>
+        <td>{{ each.record_parent.people.email }}</td>
+        <td>{{ each.date_created|date:"M d, Y" }}</td>
+        <td>
+        <a href="?delete={{ each.id }}"
+	onclick="javascript:return confirm('{{ _("Are you sure?") }}')"
+  class="btn btn-secondary-outline">{{ _("Remove access") }}</a>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+  <h2 class="mt-5">{{ _("Add a new administrator") }}</h2>
+  <form method="post">
+
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">{{ _("Name") }}</label>
+    <div class="col-sm-10">
+      <input class="form-control" name="name" required>
+    </div>
+  </div>
+
+  <div class="form-group row">
+    <label class="col-sm-2 col-form-label">{{ _("E-mail") }}</label>
+    <div class="col-sm-10">
+      <input class="form-control" name="email" type="email" required>
+    </div>
+  </div>
+
+  {% csrf_token %}
+
+  <button type="submit" class="btn btn-success">
+    <i class="fas fa-save"></i> {{ _("Save") }}
+  </button>
+
+  </form>
+
+  <div>
+    <a href="../" class="btn btn-primary-basic mt-4">
+      <i class="fal fa-angle-left"></i>
+      {{ _("Back to control panel") }}
+    </a>
+  </div>
+</div>
+
+{% endblock %}
