@@ -21,24 +21,37 @@
     </ul>
   </div>
 
-  <div id="sidebar-territory" class="text-center pt-3 pb-3" {% if category.slug == "stock" %}hidden{% endif %}>
+  <div id="sidebar-territory" class="text-center pt-3 pb-3">
 
     <div>
       <h3>{{ _("Territory") }}</h3>
       <ul class="nav flex-column mt-4 region-bar">
-      {% for key,value in REGIONS.items %}
-        {% if key < 8 %}
+        {% if category.slug == "stock" %}
           <li class="nav-item">
-            <a class="btn
-              {% if key|slugify in selected_regions %}
-                btn-dark
-              {% endif %}"
-            href="{% url 'water:water' %}?region={{ key }}" data-region="{{ key }}">
-              {{ value }}
+            <a class="btn btn-dark" href="{% url 'water:water' %}?region=0" data-region="0">
+            Eau d'Azur (territoires)
             </a>
           </li>
-          {% endif %}
-        {% endfor %}
+          <li class="nav-item">
+            <a class="btn" href="{% url 'water:water' %}?region=1" data-region="1">
+            Eau d'Azur (total)
+            </a>
+          </li>
+        {% else %}
+          {% for key,value in REGIONS.items %}
+            {% if key < 8 %}
+              <li class="nav-item">
+                <a class="btn
+                  {% if key|slugify in selected_regions %}
+                    btn-dark
+                  {% endif %}"
+                href="{% url 'water:water' %}?region={{ key }}" data-region="{{ key }}">
+                  {{ value }}
+                </a>
+              </li>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
       </ul>
     </div>
 

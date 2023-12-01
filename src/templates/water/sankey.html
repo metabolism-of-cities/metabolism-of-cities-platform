@@ -9,14 +9,21 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet"> 
 
+<style type="text/css">
 {% if level == 3 %}
-  <style type="text/css">
-    footer{display:none}
-    {% if category.slug == "materials" %}
-      #svg_box svg{margin-top:100px}
-    {% endif %}
-  </style>
+  footer{display:none}
+  {% if category.slug == "materials" %}
+    #svg_box svg{margin-top:100px}
+  {% endif %}
 {% endif %}
+{% if category.slug == "stock" %}
+  #svg_box{text-align:center}
+  #legendbox{list-style:none}
+  #legendbox li{height:2em;margin-top:10px}
+  #legendbox span{display:inline-block;width:1.5em;height:1.5em;position:relative;top:6px;}
+{% endif %}
+</style>
+
 
 {% endblock %}
 
@@ -31,8 +38,8 @@
 
       <input type="hidden" name="level" value="{{ level }}" />
 
-      {% if category.slug != "stock" %}
         <ul class="nav nav-pills d-print-none" id="top-tabs">
+        {% if category.slug != "stock" %}
           <li class="nav-item">
             <a data-level="1" class="btn {% if level == 1 %}btn-dark{% endif %}" href="?region={{ request.GET.region }}&amp;level=1">{{ _("Level") }} 1</a>
           </li>
@@ -49,6 +56,7 @@
               <a data-level="3" class="btn {% if level == 3 %}btn-dark{% endif %}" href="?region={{ request.GET.region }}&amp;level=3">{{ _("Level") }} 3</a>
             </li>
           {% endif %}
+        {% endif %}
 
           {% if level != 3 or category.slug == "materials" %}
             <li class="nav-item ml-auto">
@@ -61,7 +69,6 @@
           {% endif %}
 
         </ul> 
-      {% endif %}
 
       <div class="main-body level-{{ request.GET.level }}">
 
@@ -152,6 +159,18 @@
                     {% endfor %}
                   </select>
                 </span>
+                <ul id="legendbox">
+                <li>
+                <span style="background:#6bb8d2"></span>
+                STOCK AEP</li>
+                <li>
+                <span style="background:#d7ac72"></span>
+                STOCK EU</li>
+                <li>
+                <span style="background:#999998"></span>
+                STOCK ACTIVITE SUPPORT
+                </li>
+                </ul>
               {% endif %}
 
             </span>
