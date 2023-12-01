@@ -1,3 +1,5 @@
+{% load moc_extras %}
+
 <div id="sidebar-container">
 
   <div id="sidebar" class="text-center pt-3 pb-3">
@@ -60,12 +62,16 @@
       <ul class="nav flex-column mt-4 region-bar">
       {% for key,value in REGIONS.items %}
         {% if key > 7 %}
-          <li class="nav-item">
+          <li class="nav-item mb-3">
             <a class="btn
               {% if key|slugify in selected_regions %}
                 btn-dark
               {% endif %}"
-            href="{% url 'water:water' %}?region={{ key }}" data-region="{{ key }}">
+            href="{% url 'water:water' %}?region={{ key }}" data-region="{{ key }}"
+            {% if key in region_fullnames %}
+            title="{{ region_fullnames|get_item:key }}"
+            {% endif %}
+            >
               {{ value }}
             </a>
           </li>
@@ -105,7 +111,7 @@
           {% endif %}
         {% endfor %}
       </select>
-      <select class="form-control mb-2" name="date_end">
+      <select class="form-control mb-2" name="date_end" {% if time_frames.count == 1 %}hidden{% endif %}>
         {% for each in time_frames %}
           {% if each.timeframe == "month" %}
             <option value="{{ each.date|date:"Y-m" }}" 

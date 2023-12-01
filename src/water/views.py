@@ -79,6 +79,7 @@ def sankey(request, category):
         "level": int(level),
         "selected_regions": selected_regions,
         "combinations": NICE_REGIONS_COMBINATIONS,
+        "region_fullnames": NICE_REGIONS_FULLNAMES,
         "materials": WaterMaterial.objects.all(),
         "materialcategories": WaterMaterialCategory.objects.all(),
     }

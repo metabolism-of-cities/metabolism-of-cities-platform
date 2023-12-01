@@ -217,9 +217,9 @@ def work_item_unvote(info, people):
 NICE_REGIONS = {
     1: "Eau d'Azur",
     2: "Nice",
-    3: "Rive Droite",
-    4: "Est-Littoral",
-    5: "Moyen Pays Rive Gauche",
+    3: "Rive Droite (RD)",
+    4: "Est-Littoral (EL)",
+    5: "Moyen Pays Rive Gauche (MPRG)",
     6: "Tinée",
     7: "Vésubie",
 
@@ -228,6 +228,13 @@ NICE_REGIONS = {
     10: "Nice + EL",
     11: "Nice + EL + MPRG",
     12: "Nice + EL + MPRG + RD",
+}
+
+NICE_REGIONS_FULLNAMES = {
+    9: "Moyen Pays Rive Gauche + Tinéé + Vésubie",
+    10: "Nice + Est-Littoral",
+    11: "Nice + Est-Littoral + Moyen Pays Rive Gauce",
+    12: "Nice + Est-Littoral + Moyen Pays Rive Gauce + Rive Droite",
 }
 
 NICE_REGIONS_COMBINATIONS = {
