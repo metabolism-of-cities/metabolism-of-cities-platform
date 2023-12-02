@@ -2,7 +2,8 @@
 
 {% block content %}
 
-  <h1>Your AScUS registration</h1>
+  <h1>{% block title %}Your AScUS registration{% endblock %}</h1>
+  <p>Welcome, {{ request.user.people }}</p>
   {% if is_registered %}
     <div class="alert alert-success">You are already registered for the unconference.</div>
     <p>
