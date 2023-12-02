@@ -199,7 +199,10 @@ def ajax_stock(request):
     if request.GET.get("material") and request.GET.get("material") != "undefined":
         data = data.filter(material__category__id=request.GET.get("material"))
 
-    region = int(request.GET.get("region"))
+    region = 0
+    if request.GET.get("region"):
+        region = int(request.GET.get("region"))
+
     if region > 0:
         data = data.filter(space=region)
     else:

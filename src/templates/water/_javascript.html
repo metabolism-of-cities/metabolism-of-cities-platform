@@ -535,15 +535,21 @@
     {% if category.slug == "materials" %}
       setLogosAndColors();
     {% endif %}
+    if ($("#animate").is(":checked")) {
+      animateFlows();
+    }
   });
 
+  function animateFlows() {
+    // The @keyframes are very CPU intense so we don't have them in the CSS by default and only
+    // add them when the user wants to see the animations.
+    $("<style type='text/css' id='animation-css'>@keyframes forward { to { stroke-dashoffset: -1; } } @keyframes backward { to { stroke-dashoffset: 1; } } </style>").appendTo("head");
+    $(".path").css("stroke-dasharray", "1");
+    $(".animate-toggle label").addClass("btn-dark");
+  }
   $("#animate").click(function(){
     if ($(this).is(":checked")) {
-      // The @keyframes are very CPU intense so we don't have them in the CSS by default and only
-      // add them when the user wants to see the animations.
-      $("<style type='text/css' id='animation-css'>@keyframes forward { to { stroke-dashoffset: -1; } } @keyframes backward { to { stroke-dashoffset: 1; } } </style>").appendTo("head");
-      $(".path").css("stroke-dasharray", "1");
-      $(".animate-toggle label").addClass("btn-dark");
+      animateFlows();
     } else {
       $("#animation-css").remove();
       $(".path").css("stroke-dasharray", "0");
@@ -834,6 +840,14 @@
         .replace('image/png', 'image/octet-stream');
       triggerDownload(imgURI);
     };
+  });
+
+  $("#zoom").click(function(e){
+    e.preventDefault();
+    $("#sankey_svg").css("width", "150%");
+    $("#sankey_svg").css("max-width", "150%");
+    $("#sankey_svg").css("max-height", "none");
+    $("#sankey_svg").css("height", "{% if level == 2 %}300vh{% else %}200vh{% endif %}");
   });
 
   /* Run this at page load */
