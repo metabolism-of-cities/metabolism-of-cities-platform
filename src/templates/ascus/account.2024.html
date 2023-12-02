@@ -1,0 +1,197 @@
+{% extends "_base.html" %}
+
+{% block title %}My Account{% endblock %}
+
+{% block content %}
+
+{% if "abstracts" in request.GET %}
+
+  <h2>Abstracts</h2>
+
+  <p>
+    Below you find a list of the submitted abstracts. We encourage you to 
+    view each of them by clicking on the title.
+  </p>
+  <p>
+  The comment function allows you to establish contact with the author and to
+  provide (openly visible) feedback. We highly encourage all participants to
+  actively use this feature and to provide also critical comments and feedback,
+  allowing the author(s) to incorporate suggestions and further improve their
+  work. Similarly, we encourage you to upload your contribution timely (and even
+  in a draft version), allowing to obtain feedback from the community.
+  </p>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Author(s)</th>
+        <th>Type</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for each in abstracts %}
+      <tr>
+        <td><a href="{% url URLS.LIBRARY_ITEM each.id %}">{{ each.name }}</a></td>
+        <td>{{ each.author_list|truncatechars:40 }}</td>
+        <td>{{ each.type }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+{% else %}
+
+{% if registration_is_live %}
+  <p>
+    Below you find an overview of the upcoming discussion sessions during the unconference. 
+    Please click the REGISTER button to register for individual sessions.
+  </p>
+
+  {% if topics %}
+  <table class="table table-striped">
+    <tr>
+      <th>Topic</th>
+      <th>Time and date (CEST)</th>
+      <th>Register</th>
+    </tr>
+  {% for each in topics %}
+    <tr>
+      <td><a href="{% if "Pre-conference" in each.name %}{% url "ascus2024:preconference" %}{% else %}{% url "ascus2024:overview" %}{% endif %}#topic-{{ each.id }}">{{ each }}</a>
+      {% if each in my_topic_registrations %}
+      {% endif %}
+
+      </td>
+      <td>{{ each.start_date|date:"l d M Y · H:i" }}-{{ each.end_date|date:"H:i" }}</td>
+      <td>
+        <form method="post" class="form form-horizontal">
+          {% csrf_token %}
+          {% if each in my_topic_registrations %}
+            <i class="fa fa-check"></i> You are registered!
+            {% if each.url %}
+              <a class="btn btn-info" href="{{ each.url }}">Open room</a>
+            {% endif %}
+            <button type="submit" class="btn btn-primary-outline" name="unregister" value="{{ each.id }}">Unregister</button>
+          {% else %}
+            <button type="submit" class="btn btn-success" name="register" value="{{ each.id }}">Register</button>
+          {% endif %}
+        </form>
+      </td>
+    </tr>
+  {% endfor %}
+  </table>
+
+  {% else %}
+    <div class="alert alert-warning">No upcoming sessions found</div>
+  {% endif %}
+
+{% endif %}
+
+{% if request.POST %}
+
+  <p><a href="{% url "ascus2024:account" %}" class="btn btn-primary">Back to my account</a></p>
+
+{% else %}
+
+  <div class="card-deck">
+
+    <div class="card">
+      {% if my_intro %}
+        <h5 class="card-header text-white bg-success"><i class="fa fa-check fa-fw"></i> Submitted</h5>
+      {% else %}
+        <h5 class="card-header text-white bg-danger">Pending</h5>
+      {% endif %}
+      <div class="card-body">
+        <h5 class="card-title">Introduction video</h5>
+        <p class="card-text">
+          Upload a 1-minute introduction video of yourself.
+          Deadline: <strong>Mar 5</strong>.
+        </p>
+        <a href="{% url "ascus2024:account_introvideo" %}" class="btn btn-outline-dark">Read more</a>
+      </div>
+    </div>
+
+    <div class="card">
+      {% if request.user.people.image %}
+        <h5 class="card-header text-white bg-success"><i class="fa fa-check fa-fw"></i> Submitted</h5>
+      {% else %}
+        <h5 class="card-header text-white bg-danger">Pending</h5>
+      {% endif %}
+      <div class="card-body">
+        <h5 class="card-title">Your profile</h5>
+        <p class="card-text">
+          Complete your profile so that people know more about 
+          your research interests and background.
+        </p>
+        {% if request.user.people.image %}
+          <a href="{% url "ascus2024:account_edit" %}" class="btn btn-outline-dark">Edit profile</a>
+        {% else %}
+          <a href="{% url "ascus2024:account_edit" %}" class="btn btn-outline-dark">Complete now</a>
+        {% endif %}
+      </div>
+    </div>
+
+    {% if show_abstract %}
+      <div class="card">
+        {% if my_presentations %}
+          <h5 class="card-header text-white bg-success">Please review</h5>
+          <h5 hidden class="card-header text-white bg-success"><i class="fa fa-check fa-fw"></i> Submitted</h5>
+        {% else %}
+          <h5 class="card-header text-white bg-danger">Pending</h5>
+        {% endif %}
+        <div class="card-body">
+          <h5 class="card-title">Upload Abstract</h5>
+          <p class="card-text">
+            Authors are requested to upload their final abstract
+            by <strong>XXXXX</strong>.
+          </p>
+          <p>
+            <a href="{% url "ascus2024:account_presentation" %}" class="btn btn-outline-dark">{% if my_presentations %}Manage{% else %}Upload now{% endif %}</a>
+          </p>
+          {% if False %}
+            <p><a href="/" class="btn btn-outline-dark">A co-author will upload our work</a></p>
+          {% endif %}
+        </div>
+      </div>
+    {% endif %}
+
+    {% if show_discussion %}
+
+      {% if True %}
+        <div class="card">
+          {% if my_outputs %}
+            <h5 class="card-header text-white bg-success"><i class="fa fa-check fa-fw"></i> Submitted</h5>
+          {% else %}
+            <h5 class="card-header text-white bg-danger">Pending</h5>
+          {% endif %}
+          <div class="card-body">
+            <h5 class="card-title">Path to Action</h5>
+            <p class="card-text">
+              {% if my_outputs %}
+              Manage your path to action
+              {% else %}
+              Use this section to update your path to action document. 
+              {% endif %}
+            </p>
+            {% if my_outputs %}
+              {% for each in my_outputs %}
+                <p><a href="{% url "ascus2024:account_output" %}?type=Path%20to%20Action&amp;id={{ each.id }}" class="btn btn-outline-dark">Edit</a></p>
+              {% endfor %}
+            {% endif %}
+              <p><a href="{% url "ascus2024:account_output" %}?type=Path%20to%20Action" class="btn btn-outline-dark">Add document</a></p>
+          </div>
+        </div>
+      {% endif %}
+    {% endif %}
+
+  </div>
+
+  <p class="mt-3">Did you complete your payment yet? If not, please find the <a href="{% url "ascus2024:article" "payment" %}">payment instructions</a> here.</p>
+
+  <p><a href="{% url "ascus2024:logout" %}" class="btn btn-light"><i class="fa fa-sign-out-alt fw"></i> Click here to log out</a></p>
+
+{% endif %}
+
+{% endif %}
+
+{% endblock %}

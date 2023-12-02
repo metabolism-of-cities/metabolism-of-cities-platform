@@ -144,6 +144,15 @@ def user_register(request, project="core", section=None):
                 messages.success(request, "You have been registered for the unconference.")
                 return redirect("ascus2021:article", slug="payment")
 
+            if project.slug == "ascus2024":
+                RecordRelationship.objects.create(
+                    record_parent = people,
+                    record_child_id = request.project,
+                    relationship_id = 12,
+                )
+                messages.success(request, "You have been registered for the unconference.")
+                return redirect("ascus2024:article", slug="payment")
+
             messages.success(request, "You are successfully registered.")
 
             mailcontext = {

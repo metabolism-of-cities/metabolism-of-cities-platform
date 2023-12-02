@@ -278,7 +278,7 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         submenu = "library"
 
     info = None
-    if project.slug == "ascus2021":
+    if project.slug == "ascus2021" or project.slug == "ascus2024":
         # For AScUS participants we DO show those objects
         # that are marked as private, because the participants must be able to see them
         # We should really embed this verification into the available_library_items function instead
@@ -337,7 +337,10 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         space = info.spaces.all()[0]
 
     if info.type.name == "Image":
-        info = info.photo
+        try:
+            info = info.photo
+        except:
+            pass
 
     if request.user.is_authenticated:
         if has_permission(request, request.project, ["curator", "dataprocessor"]) or request.user.people == info.uploader or request.user.people == info.author:
@@ -974,7 +977,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         if project.slug == "water":
             if "sectors" in fields:
                 fields.remove("sectors")
-        if project.slug == "ascus2021":
+        if project.slug == "ascus2021" or project.slug == "ascus2024":
             if "license" in fields:
                 fields.remove("license")
             if "spaces" in fields:
@@ -1104,14 +1107,17 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         if type.name == "Image":
             model = Photo
             if "position" not in fields and id:
-                info = info.photo
-                if not info.tags.all():
-                    # Only those not tagged will have a position field
-                    fields.append("position")
+                try:
+                    info = info.photo
+                    if not info.tags.all():
+                        # Only those not tagged will have a position field
+                        fields.append("position")
+                except:
+                    pass
         else:
             model = LibraryItem
 
-        if project.slug == "ascus2021":
+        if project.slug == "ascus2021" or project.slug == "ascus2024":
             if "license" in fields:
                 fields.remove("license")
             if "spaces" in fields:
