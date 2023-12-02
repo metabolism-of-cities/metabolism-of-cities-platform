@@ -38,8 +38,11 @@
         </form>
 
         {% if not project %}
-          <h4 class="no-account">Don't have an account yet?</h4>
+          <h4 class="no-account mt-5">Don't have an account yet?</h4>
           <a href="{% url 'core:register' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}" class="btn btn-primary"><i class="fal fa-fw fa-user-plus"></i> Join Metabolism of Cities</a>
+        {% elif PROJECT.slug == "ascus2024" %}
+          <h4 class="no-account mt-5">Don't have an account yet?</h4>
+          <a href="{% url 'ascus2024:register' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}" class="btn btn-primary"><i class="fal fa-fw fa-user-plus"></i> Create an account</a>
         {% endif %}
       </div>
     </div>

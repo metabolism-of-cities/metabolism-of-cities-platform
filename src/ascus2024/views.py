@@ -425,7 +425,7 @@ def ascus_account_presentation(request, introvideo=False):
                 related_to = info,
                 workactivity_id = 14,
             )
-            return redirect("ascus2024:account_presentation")
+            return redirect("ascus2024:account")
         else:
             messages.error(request, "We could not save your form, please fill out all fields")
     context = {
@@ -523,7 +523,7 @@ def ascus_account_edit(request):
             messages.success(request, "Your profile information was saved.")
             if not info.image:
                 messages.warning(request, "Please do not forget to upload a profile photo!")
-            return redirect("ascus2020:account")
+            return redirect("ascus2024:account")
         else:
             messages.error(request, "We could not save your form, please fill out all fields")
     context = {
@@ -836,7 +836,7 @@ def ascus_admin_work_item(request, id):
         if form.is_valid():
             info = form.save()
             messages.success(request, "The details were saved.")
-            return redirect("ascus2020:admin_payments")
+            return redirect("ascus2024:admin_payments")
         else:
             messages.error(request, "We could not save your form, please fill out all fields")
 

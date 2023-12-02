@@ -127,7 +127,7 @@
             </li>
           {% endif %}
 
-          {% if PROJECT.slug != "ascus2021" %}
+          {% if PROJECT.slug != "ascus2021" and PROJECT.slug != "ascus2024" %}
 
             {% if info.year %}
               <li class="list-group-item table-item">
@@ -220,6 +220,7 @@
             </li>
           {% endif %}
 
+          {% if PROJECT.slug != "ascus2024" %}
           <li class="list-group-item hide-water">
             <i class="fal fa-fw fa-quote-right mb-1 mr-1" aria-hidden="true"></i> Citation
             <br>
@@ -234,8 +235,9 @@
             </a>
             <!-- <a class="btn btn-sm btn-primary-outline" href="?format=bibtex&amp;download=true">Add to reference manager</a> -->
           </li>
+          {% endif %}
 
-          {% if info.type.group == "academic" and PROJECT.slug != "ascus2021" and PROJECT.slug != "water" %}
+          {% if info.type.group == "academic" and PROJECT.slug != "ascus2021" and PROJECT.slug != "water" and PROJECT.slug != "ascus2024" %}
           <li class="list-group-item">
             <i class="fal fa-fw fa-search mb-1 mr-1" aria-hidden="true"></i> Search
             <br>
@@ -282,7 +284,7 @@
         </ul>
       </div>
 
-      {% if PROJECT.slug == "ascus" or PROJECT.slug == "ascus2021" %}
+      {% if PROJECT.slug == "ascus" or PROJECT.slug == "ascus2021" or PROJECT.slug == "ascus2024" %}
 
         {% if info.author_list %}
           <div class="card">
@@ -302,7 +304,7 @@
         {% for each in authors_temp %}
           <div class="card mt-4">
             {% if each.image %}
-            <a href="{% url 'ascus2021:participant' each.id %}">
+            <a href="{% url 'ascus2024:participant' each.id %}">
               <img class="card-img-top" src="{{ each.image.thumbnail.url }}">
             </a>
             {% endif %}
@@ -310,7 +312,7 @@
               <div class="mb-4">
                 <span class="details">
                   {% if each.image %}
-                  <a href="{% url 'ascus2021:participant' each.id %}">
+                  <a href="{% url 'ascus2024:participant' each.id %}">
                     <strong>{{ each }}</strong>
                   </a>
                   {% else %}
@@ -328,7 +330,7 @@
           </div>
         {% endfor %}
 
-        <form method="post" class="form form-horizontal mt-2" action="{% url 'ascus2021:account_vote' %}">
+        <form method="post" class="form form-horizontal mt-2" action="{% url 'ascus2024:account_vote' %}" hidden>
           {% csrf_token %}
           <div class="alert alert-warning">
             <h3>Best PTA</h3>
@@ -986,7 +988,7 @@
       </section>
       {% endif %}
 
-      {% if PROJECT.slug == "ascus" or PROJECT.slug == "ascus2021" %}
+      {% if PROJECT.slug == "ascus" or PROJECT.slug == "ascus2021" or PROJECT.slug == "ascus2024" %}
         <section class="messages">
           {% include "_messages.html" %}
         </section>
