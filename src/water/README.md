@@ -48,7 +48,8 @@ For materials where icons need to be dynamically shown (e.g. when selecting a me
 4. That same image tag should have the class 'swapimage' and the x and y attributes should be used to position it on the page (will require some trial and error to get them right).
 
 SAMPLE CODE:
-  <image data-node="1" width="20" height="20" xlink:href="" class="swapimage" x="247.5" y="84" />
+
+  `<image data-node="1" width="20" height="20" xlink:href="" class="swapimage" x="247.5" y="84" />`
 
 Notes:
 - Easiest way is to copy this from a previous file (e.g. materials.svg) and just change the node IDs and the x/y settings.
