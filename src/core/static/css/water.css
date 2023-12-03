@@ -27,9 +27,11 @@
   stroke-dasharray: 0; /* Change to 1 to animate the flow */
   opacity:0.7;
 }
-.path:hover {
-    opacity:1;
+.copy-path:hover {
     cursor: pointer;
+}
+.copy-path{
+  opacity:0;
 }
 .stocknode rect:hover {
   fill-opacity:1;
