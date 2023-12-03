@@ -361,6 +361,14 @@ def water_login(request):
 def controlpanel_index(request):
     if not has_permission(request, request.project, ["curator", "admin"]):
         unauthorized_access(request)
+    
+    if "alert" in request.POST:
+        project = get_project(request)
+        if not project.meta_data:
+            project.meta_data = {}
+        project.meta_data["alert"] = request.POST["alert"]
+        project.save()
+        messages.success(request, _("Information was saved"))
 
     context = {
         "section": "controlpanel",

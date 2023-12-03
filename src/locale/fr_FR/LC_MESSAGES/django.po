@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-01 13:01+0000\n"
-"PO-Revision-Date: 2023-12-01 15:01+0200\n"
+"POT-Creation-Date: 2023-12-03 14:34+0000\n"
+"PO-Revision-Date: 2023-12-03 16:35+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_FR\n"
@@ -33,40 +33,48 @@ msgstr "Mois"
 msgid "Year"
 msgstr "Année"
 
-#: core/views.py:207 water/views.py:340
+#: core/views.py:216 water/views.py:344
 msgid "You are logged in."
 msgstr "Vous êtes connecté."
 
-#: core/views.py:210 water/views.py:343
+#: core/views.py:219 water/views.py:347
 msgid "Please change your temporary pin. You can set your own password here:"
 msgstr ""
 "Veuillez modifier votre code PIN temporaire. Vous pouvez définir votre "
 "propre mot de passe ici :"
 
-#: core/views.py:210 water/views.py:343
+#: core/views.py:219 water/views.py:347
 msgid "Edit my profile"
 msgstr "Edit my profile"
 
-#: core/views.py:213 water/views.py:346
+#: core/views.py:222 water/views.py:350
 msgid "We could not authenticate you, please try again."
 msgstr "Nous n'avons pas pu vous authentifier, veuillez réessayer."
 
-#: core/views.py:225
+#: core/views.py:234
 msgid "You are now logged out"
 msgstr "Vous êtes maintenant déconnecté(e)"
 
-#: core/views.py:280 core/views.py:1209
-#: templates/controlpanel/users.admins.html:35
+#: core/views.py:289 core/views.py:1234
+#: templates/controlpanel/users.admins.html:41
 #: templates/water/controlpanel/flows.html:102
 #: templates/water/controlpanel/nodes.html:63
 msgid "Name"
 msgstr "Nom"
 
-#: core/views.py:280
+#: core/views.py:289
 msgid "Email"
 msgstr "E-mail"
 
-#: core/views.py:943
+#: core/views.py:951
+msgid "The following user is no longer an administrator:"
+msgstr "L'utilisateur suivant n'est plus administrateur :"
+
+#: core/views.py:964
+msgid "This user is already an administrator"
+msgstr "Cet utilisateur est déjà administrateur"
+
+#: core/views.py:967
 msgid ""
 "The user was added as an administrator. NOTE: this user already had an "
 "account on this website or any of the other websites in the Metabolism of "
@@ -79,7 +87,7 @@ msgstr ""
 "par cet utilisateur pour se connecter et accéder au panneau de contrôle de "
 "ce site Web."
 
-#: core/views.py:959
+#: core/views.py:983
 msgid ""
 "The new user was created and added as an administrator. An invitation e-mail "
 "was sent to their e-mail address: "
@@ -87,21 +95,21 @@ msgstr ""
 "Le nouvel utilisateur a été créé et ajouté en tant qu'administrateur. Un e-"
 "mail d'invitation a été envoyé à leur adresse e-mail : "
 
-#: core/views.py:968
+#: core/views.py:992
 msgid "Welcome to "
 msgstr "Bienvenue à "
 
-#: core/views.py:1210 templates/auth/login.html:29
+#: core/views.py:1235 templates/auth/login.html:29
 #: templates/controlpanel/users.admins.html:16
-#: templates/controlpanel/users.admins.html:42
+#: templates/controlpanel/users.admins.html:48
 msgid "E-mail"
 msgstr "E-mail"
 
-#: core/views.py:1238
+#: core/views.py:1263
 msgid "Information was saved."
 msgstr "Les informations ont été enregistrées."
 
-#: core/views.py:1250
+#: core/views.py:1275
 msgid "Add person"
 msgstr "Ajouter une personne"
 
@@ -141,44 +149,44 @@ msgstr "Se connecter"
 msgid "Control panel"
 msgstr "Panneau de configuration"
 
-#: templates/_sidebar-water.html:4 templates/water/controlpanel/flows.html:43
-#: templates/water/sankey.html:115
+#: templates/_sidebar-water.html:6 templates/water/controlpanel/flows.html:43
+#: templates/water/sankey.html:121
 msgid "Flow"
 msgstr "Flux"
 
-#: templates/_sidebar-water.html:7
+#: templates/_sidebar-water.html:9
 msgid "Water"
 msgstr "Eaux"
 
-#: templates/_sidebar-water.html:10
+#: templates/_sidebar-water.html:12
 msgid "Energy"
 msgstr "Energies"
 
-#: templates/_sidebar-water.html:13
+#: templates/_sidebar-water.html:15
 msgid "GHG Emissions"
 msgstr "Gaz à Effet de Serre"
 
-#: templates/_sidebar-water.html:16 templates/water/controlpanel/index.html:104
+#: templates/_sidebar-water.html:18 templates/water/controlpanel/index.html:104
 msgid "Materials"
 msgstr "Matières et Matériaux"
 
-#: templates/_sidebar-water.html:19
+#: templates/_sidebar-water.html:21
 msgid "Material stock"
 msgstr "Stocks"
 
-#: templates/_sidebar-water.html:27
+#: templates/_sidebar-water.html:29
 msgid "Territory"
 msgstr "Territoire"
 
-#: templates/_sidebar-water.html:59
+#: templates/_sidebar-water.html:61
 msgid "Combined territories"
 msgstr "Territoires combinés"
 
-#: templates/_sidebar-water.html:80 templates/water/sankey.html:117
+#: templates/_sidebar-water.html:86 templates/water/sankey.html:123
 msgid "Period"
 msgstr "Période"
 
-#: templates/_sidebar-water.html:133
+#: templates/_sidebar-water.html:139
 msgid "Change"
 msgstr "Actualiser"
 
@@ -204,8 +212,9 @@ msgstr "Seulement si tu veux le changer"
 
 #: templates/auth/profile.form.html:55
 #: templates/controlpanel/people.form.html:61
-#: templates/controlpanel/users.admins.html:51
+#: templates/controlpanel/users.admins.html:57
 #: templates/water/controlpanel/flows.html:126
+#: templates/water/controlpanel/index.html:133
 #: templates/water/controlpanel/materialcategories.html:35
 #: templates/water/controlpanel/materials.html:54
 #: templates/water/controlpanel/nodes.html:94
@@ -271,7 +280,7 @@ msgid "Our team"
 msgstr "Notre équipe"
 
 #: templates/controlpanel/users.admins.html:9
-#: templates/controlpanel/users.admins.html:59
+#: templates/controlpanel/users.admins.html:65
 #: templates/controlpanel/users.html:9 templates/controlpanel/users.html:51
 msgid "Back to control panel"
 msgstr "Retour au panneau de configuration"
@@ -286,7 +295,17 @@ msgstr "Utilisateur"
 msgid "Since"
 msgstr "Depuis"
 
-#: templates/controlpanel/users.admins.html:31
+#: templates/controlpanel/users.admins.html:18
+#: templates/controlpanel/users.admins.html:30
+msgid "Remove access"
+msgstr "Supprimer l'accès"
+
+#: templates/controlpanel/users.admins.html:29
+#: templates/water/controlpanel/file.html:77
+msgid "Are you sure?"
+msgstr "Etes-vous sûr.e?"
+
+#: templates/controlpanel/users.admins.html:37
 msgid "Add a new administrator"
 msgstr "Ajouter un nouvel administrateur"
 
@@ -343,21 +362,21 @@ msgstr "Votre code PIN temporaire pour vous connecter au site Web est :"
 msgid "Please change this pin when you log in for the first time."
 msgstr "Veuillez modifier ce code PIN lors de votre première connexion."
 
-#: templates/water/_javascript.html:214
+#: templates/water/_javascript.html:263
 msgid "NOTE: flow width is not to scale"
 msgstr "REMARQUE : la largeur du débit n'est pas à l'échelle"
 
-#: templates/water/_javascript.html:633 templates/water/_javascript.html:701
+#: templates/water/_javascript.html:700 templates/water/_javascript.html:769
 #: templates/water/controlpanel/upload.html:87
 msgid "Date"
 msgstr "Date"
 
-#: templates/water/_javascript.html:633 templates/water/_javascript.html:701
-#: templates/water/_javascript.html:750
+#: templates/water/_javascript.html:700 templates/water/_javascript.html:769
+#: templates/water/_javascript.html:818
 msgid "Quantity"
 msgstr "Valeurs"
 
-#: templates/water/_javascript.html:641 templates/water/_javascript.html:709
+#: templates/water/_javascript.html:708 templates/water/_javascript.html:777
 msgid "Total"
 msgstr "Total"
 
@@ -483,10 +502,6 @@ msgstr "Que voulez-vous faire avec ce fichier ?"
 msgid "Import data"
 msgstr "Importer des données"
 
-#: templates/water/controlpanel/file.html:77
-msgid "Are you sure?"
-msgstr "Etes-vous sûr.e?"
-
 #: templates/water/controlpanel/file.html:78
 #: templates/water/controlpanel/upload.level3.html:49
 msgid "Delete file"
@@ -502,9 +517,9 @@ msgstr "Gérer les flux"
 
 #: templates/water/controlpanel/flows.html:41
 #: templates/water/controlpanel/flows.html:89
-#: templates/water/controlpanel/nodes.html:90 templates/water/sankey.html:44
-#: templates/water/sankey.html:47 templates/water/sankey.html:51
-#: templates/water/sankey.html:56 templates/water/sankey.html:116
+#: templates/water/controlpanel/nodes.html:90 templates/water/sankey.html:45
+#: templates/water/sankey.html:48 templates/water/sankey.html:52
+#: templates/water/sankey.html:57 templates/water/sankey.html:122
 msgid "Level"
 msgstr "Niveau"
 
@@ -603,10 +618,26 @@ msgid "Team"
 msgstr "Équipe"
 
 #: templates/water/controlpanel/index.html:128
+msgid "Show alert message for visitors"
+msgstr "Afficher un message d'alerte pour les visiteurs"
+
+#: templates/water/controlpanel/index.html:129
+msgid ""
+"By entering text in the box below, all of the sankey diagrams will show this "
+"information at the top. You can use this to alert people that the "
+"information is not currently accurate (while it is being worked on), for "
+"instance."
+msgstr ""
+"En saisissant du texte dans la case ci-dessous, tous les diagrammes Sankey "
+"afficheront ces informations en haut. Vous pouvez l'utiliser pour alerter "
+"les gens que les informations ne sont pas exactes actuellement (pendant "
+"qu'elles sont en cours de traitement), par exemple."
+
+#: templates/water/controlpanel/index.html:137
 msgid "Work-in-progress"
 msgstr "Travail en cours"
 
-#: templates/water/controlpanel/index.html:131
+#: templates/water/controlpanel/index.html:140
 msgid ""
 "Parts of these sections have been built, but development has been paused "
 "until required data can be made available. The links and code are conserved "
@@ -616,11 +647,11 @@ msgstr ""
 "a été suspendu jusqu'à ce que les données requises soient disponibles. Les "
 "liens et le code sont conservés ici pour une utilisation future."
 
-#: templates/water/controlpanel/index.html:140
+#: templates/water/controlpanel/index.html:149
 msgid "Master dataset"
 msgstr "Jeu de données principal"
 
-#: templates/water/controlpanel/index.html:150
+#: templates/water/controlpanel/index.html:159
 msgid "All datasets"
 msgstr "Tous les ensembles de données"
 
@@ -816,32 +847,23 @@ msgstr ""
 msgid "Click here to explore the metabolism of Eau d'Azur"
 msgstr "Cliquez ici pour accéder au Métabolisme de Eau d’Azur"
 
-#: templates/water/sankey.html:51
+#: templates/water/sankey.html:52
 msgid "Circular"
 msgstr "Circularité"
 
-#: templates/water/sankey.html:77
-msgid ""
-"NOVEMBER 2023 NOTE: this website is currently being worked on. Data and "
-"information shown for testing purposes only."
-msgstr ""
-"NOVEMBRE 2023 REMARQUE : ce site Web est actuellement en cours de "
-"réalisation. Données et informations présentées à des fins de test "
-"uniquement."
-
-#: templates/water/sankey.html:89
+#: templates/water/sankey.html:95
 msgid "Authentication required"
 msgstr "Authentification requise"
 
-#: templates/water/sankey.html:92
+#: templates/water/sankey.html:98
 msgid "Please log in to see level 3 data."
 msgstr "Veuillez vous connecter pour voir les données de niveau 3."
 
-#: templates/water/sankey.html:114
+#: templates/water/sankey.html:120
 msgid "Metabolism"
 msgstr "Métabolisme"
 
-#: templates/water/sankey.html:136
+#: templates/water/sankey.html:142
 msgid "Animation"
 msgstr "Activer le mode animation"
 
@@ -849,12 +871,12 @@ msgstr "Activer le mode animation"
 msgid "Homepage"
 msgstr "Accueil"
 
-#: water/views.py:378 water/views.py:407 water/views.py:433 water/views.py:459
-#: water/views.py:514 water/views.py:539 water/views.py:582
+#: water/views.py:371 water/views.py:390 water/views.py:419 water/views.py:445
+#: water/views.py:471 water/views.py:526 water/views.py:551 water/views.py:594
 msgid "Information was saved"
 msgstr "Les informations ont été enregistrées"
 
-#: water/views.py:579
+#: water/views.py:591
 msgid ""
 "We could not find the level-1 flow that you entered so we left this field "
 "blank."
@@ -862,29 +884,29 @@ msgstr ""
 "Nous n'avons pas pu trouver le flux de niveau 1 que vous avez entré, nous "
 "avons donc laissé ce champ vide."
 
-#: water/views.py:588
+#: water/views.py:600
 msgid "All flows updated"
 msgstr "Tous les flux mis à jour"
 
-#: water/views.py:608
+#: water/views.py:620
 msgid "The file was deleted successfully."
 msgstr "Le fichier a été supprimé avec succès."
 
-#: water/views.py:619
+#: water/views.py:631
 msgid "The file was uploaded successfully."
 msgstr "Le fichier a été téléchargé avec succès."
 
-#: water/views.py:639
+#: water/views.py:651
 msgid "The file was uploaded successfully. Please review the data below."
 msgstr ""
 "Le fichier a été téléchargé avec succès. Veuillez consulter les données ci-"
 "dessous."
 
-#: water/views.py:664
+#: water/views.py:676
 msgid "The file was deleted successfully"
 msgstr "Le fichier a été supprimé avec succès"
 
-#: water/views.py:672
+#: water/views.py:684
 msgid ""
 "The data was deleted successfully from the database. You can reload it "
 "below, or delete the original file."
@@ -892,21 +914,29 @@ msgstr ""
 "Les données ont été supprimées avec succès de la base de données. Vous "
 "pouvez le recharger ci-dessous ou supprimer le fichier d'origine."
 
-#: water/views.py:860
+#: water/views.py:872
 msgid "Year/month information is not valid."
 msgstr "Les informations année/mois ne sont pas valides."
 
-#: water/views.py:888
+#: water/views.py:900
 msgid "The data has been saved in the database"
 msgstr "Les données ont été enregistrées dans la base de données"
 
-#: water/views.py:890
+#: water/views.py:902
 msgid ""
 "Sorry, we could not save your data. Are all the quantities filled in "
 "correctly? The error is printed below: "
 msgstr ""
 "Désolé, nous n'avons pas pu enregistrer vos données. Toutes les quantités "
 "sont-elles correctement renseignées ? L'erreur est imprimée ci-dessous : "
+
+#~ msgid ""
+#~ "NOVEMBER 2023 NOTE: this website is currently being worked on. Data and "
+#~ "information shown for testing purposes only."
+#~ msgstr ""
+#~ "NOVEMBRE 2023 REMARQUE : ce site Web est actuellement en cours de "
+#~ "réalisation. Données et informations présentées à des fins de test "
+#~ "uniquement."
 
 #~ msgid "Please fill out data using the following units:"
 #~ msgstr "Veuillez remplir les données en utilisant les unités suivantes :"

@@ -77,10 +77,11 @@
 
       <div class="main-body level-{{ request.GET.level }}">
 
-
-      <div class="alert alert-warning">
-       {{ _("NOVEMBER 2023 NOTE: this website is currently being worked on. Data and information shown for testing purposes only.") }}
-      </div>
+      {% if PROJECT.meta_data.alert %}
+        <div class="alert alert-warning mt-2">
+          {{ PROJECT.meta_data.alert }}
+        </div>
+      {% endif %}
 
         <div class="watergraphs">
 

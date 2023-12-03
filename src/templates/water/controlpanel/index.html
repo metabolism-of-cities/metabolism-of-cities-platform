@@ -125,6 +125,15 @@
 
   </section>
 
+  <h2>{{ _("Show alert message for visitors") }}</h2>
+  <p>{{ _("By entering text in the box below, all of the sankey diagrams will show this information at the top. You can use this to alert people that the information is not currently accurate (while it is being worked on), for instance.") }}</p>
+
+  <form method="post">
+    <input class="form-control mb-2" name="alert" value="{{ PROJECT.meta_data.alert }}" />
+    <button class="btn btn-success">{{ _("Save") }}</button>
+    {% csrf_token %}
+  </form>
+
   <h2>{{ _("Work-in-progress") }}</h2>
 
   <p>
