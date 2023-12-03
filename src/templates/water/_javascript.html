@@ -394,7 +394,18 @@
           alternative = "B";
         } else if (!includes_nice && includes_moyenpays && !includes_vesubie) {
           alternative = "A";
+        } else if ($(".region-bar a[data-region='8']").hasClass("btn-dark")) {
+          alternative = "B";
+        } else if ($(".region-bar a[data-region='9']").hasClass("btn-dark")) {
+          alternative = "F";
+        } else if ($(".region-bar a[data-region='10']").hasClass("btn-dark")) {
+          alternative = "C";
+        } else if ($(".region-bar a[data-region='11']").hasClass("btn-dark")) {
+          alternative = "C";
+        } else if ($(".region-bar a[data-region='12']").hasClass("btn-dark")) {
+          alternative = "C";
         }
+
         $(".alternative-element").hide();
         if (alternative) {
           {% if is_admin %}
