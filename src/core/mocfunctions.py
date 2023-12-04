@@ -231,10 +231,10 @@ NICE_REGIONS = {
 }
 
 NICE_REGIONS_FULLNAMES = {
-    9: "Moyen Pays Rive Gauche + Tinéé + Vésubie",
+    9: "Moyen Pays Rive Gauche + Tinée + Vésubie",
     10: "Nice + Est-Littoral",
-    11: "Nice + Est-Littoral + Moyen Pays Rive Gauce",
-    12: "Nice + Est-Littoral + Moyen Pays Rive Gauce + Rive Droite",
+    11: "Nice + Est-Littoral + Moyen Pays Rive Gauche",
+    12: "Nice + Est-Littoral + Moyen Pays Rive Gauche + Rive Droite",
 }
 
 NICE_REGIONS_COMBINATIONS = {
