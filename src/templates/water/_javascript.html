@@ -910,6 +910,16 @@
     $("#sankey_svg").css("max-width", "150%");
     $("#sankey_svg").css("max-height", "none");
     $("#sankey_svg").css("height", "{% if level == 2 %}300vh{% else %}200vh{% endif %}");
+    $(this).hide();
+    $("#zoomout").show();
+  });
+
+  $("#zoomout").click(function(e){
+    e.preventDefault();
+    $("#sankey_svg").css("max-width", "100%");
+    $("#sankey_svg").css("max-height", "calc(100vh - 232px)");
+    $(this).hide();
+    $("#zoom").show();
   });
 
   /* Run this at page load */

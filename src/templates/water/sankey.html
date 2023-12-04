@@ -22,7 +22,7 @@
   #legendbox li{height:2em;margin-top:10px}
   #legendbox span{display:inline-block;width:1.5em;height:1.5em;position:relative;top:6px;}
 {% endif %}
-
+#zoomout{display:none}
 </style>
 
 
@@ -62,6 +62,7 @@
           {% if level != 3 or category.slug == "materials" %}
             <li class="nav-item ml-auto">
               <a href="#" id="zoom"><i class="fa fa-search-plus"></i></a>
+              <a href="#" id="zoomout"><i class="fa fa-search-minus"></i></a>
             </li>
 
             <li class="nav-item ml-2">
