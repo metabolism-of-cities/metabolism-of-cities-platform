@@ -73,6 +73,7 @@ svg {
   top: 20%;
   left: 20%;
   z-index: 999999999;
+  display:none;
 }
 .loading {
   font-size: 4em;
