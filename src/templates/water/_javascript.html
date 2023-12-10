@@ -155,6 +155,7 @@
     /*  We start by fading out the map and showing a loading icon */
     $("svg").css("opacity", "0.2");
     $(".loading").show();
+    $(".nodata").hide();
 
     /* We remove all the cloned paths which need to be redrawn once the new paths are loaded */
     $(".copy-path").remove();
@@ -218,6 +219,8 @@
       $(".path title").remove(); // Remove all titles so we can create new ones below
       $(".arrow title").remove(); // Some are .arrow classes
       $("rect title").remove(); // Some are .arrow classes
+      all_values_are_zero = true;
+
       $.each(response, function(key, val) {
         {% if category.slug == "stock" %}
           flow = $("[data-id=path-" + key + "] rect");
@@ -284,6 +287,7 @@
           /* If this flow has a value (or is UNKNOWN), then we should automatically SHOW all the nodes that are 
           *  related to this flow. We do this by removing the node from the hidden_nodes array
           */
+          all_values_are_zero = false;
           for ([node, included_flows] of Object.entries(node_mapping)) {
             for (var i = 0; i < included_flows.length; i++) {
               if (included_flows[i] == key) {
@@ -348,8 +352,14 @@
 
     {% endif %}
 
-      $("svg").css("opacity", "1");
-      $(".loading").hide(); 
+      if (all_values_are_zero) {
+        $("svg").css("opacity", "0");
+        $(".loading").hide(); 
+        $(".nodata").show();
+      } else {
+        $("svg").css("opacity", "1");
+        $(".loading").hide(); 
+      }
 
       // We want to hide all the nodes that should not be displayed, and show the ones that do have values
       $(".node").addClass("show-this-node");

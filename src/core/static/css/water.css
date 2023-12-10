@@ -67,6 +67,13 @@ svg {
   top: 5px;
   left: 10px;
 }
+.nodata {
+  font-size: 3em;
+  position: absolute;
+  top: 20%;
+  left: 20%;
+  z-index: 999999999;
+}
 .loading {
   font-size: 4em;
   position: absolute;

@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-03 14:34+0000\n"
-"PO-Revision-Date: 2023-12-03 16:35+0200\n"
+"POT-Creation-Date: 2023-12-10 06:13+0000\n"
+"PO-Revision-Date: 2023-12-10 08:14+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: fr_FR\n"
@@ -150,7 +150,7 @@ msgid "Control panel"
 msgstr "Panneau de configuration"
 
 #: templates/_sidebar-water.html:6 templates/water/controlpanel/flows.html:43
-#: templates/water/sankey.html:121
+#: templates/water/sankey.html:122
 msgid "Flow"
 msgstr "Flux"
 
@@ -182,7 +182,7 @@ msgstr "Territoire"
 msgid "Combined territories"
 msgstr "Territoires combinés"
 
-#: templates/_sidebar-water.html:86 templates/water/sankey.html:123
+#: templates/_sidebar-water.html:86 templates/water/sankey.html:124
 msgid "Period"
 msgstr "Période"
 
@@ -362,21 +362,21 @@ msgstr "Votre code PIN temporaire pour vous connecter au site Web est :"
 msgid "Please change this pin when you log in for the first time."
 msgstr "Veuillez modifier ce code PIN lors de votre première connexion."
 
-#: templates/water/_javascript.html:263
+#: templates/water/_javascript.html:266
 msgid "NOTE: flow width is not to scale"
 msgstr "REMARQUE : la largeur du débit n'est pas à l'échelle"
 
-#: templates/water/_javascript.html:700 templates/water/_javascript.html:769
+#: templates/water/_javascript.html:710 templates/water/_javascript.html:779
 #: templates/water/controlpanel/upload.html:87
 msgid "Date"
 msgstr "Date"
 
-#: templates/water/_javascript.html:700 templates/water/_javascript.html:769
-#: templates/water/_javascript.html:818
+#: templates/water/_javascript.html:710 templates/water/_javascript.html:779
+#: templates/water/_javascript.html:828
 msgid "Quantity"
 msgstr "Valeurs"
 
-#: templates/water/_javascript.html:708 templates/water/_javascript.html:777
+#: templates/water/_javascript.html:718 templates/water/_javascript.html:787
 msgid "Total"
 msgstr "Total"
 
@@ -519,7 +519,7 @@ msgstr "Gérer les flux"
 #: templates/water/controlpanel/flows.html:89
 #: templates/water/controlpanel/nodes.html:90 templates/water/sankey.html:45
 #: templates/water/sankey.html:48 templates/water/sankey.html:52
-#: templates/water/sankey.html:57 templates/water/sankey.html:122
+#: templates/water/sankey.html:57 templates/water/sankey.html:123
 msgid "Level"
 msgstr "Niveau"
 
@@ -851,19 +851,23 @@ msgstr "Cliquez ici pour accéder au Métabolisme de Eau d’Azur"
 msgid "Circular"
 msgstr "Circularité"
 
-#: templates/water/sankey.html:95
+#: templates/water/sankey.html:96
 msgid "Authentication required"
 msgstr "Authentification requise"
 
-#: templates/water/sankey.html:98
+#: templates/water/sankey.html:99
 msgid "Please log in to see level 3 data."
 msgstr "Veuillez vous connecter pour voir les données de niveau 3."
 
-#: templates/water/sankey.html:120
+#: templates/water/sankey.html:121
 msgid "Metabolism"
 msgstr "Métabolisme"
 
-#: templates/water/sankey.html:142
+#: templates/water/sankey.html:135
+msgid "Sorry, no data available based on the selected filters."
+msgstr "Désolé, aucune donnée disponible en fonction des filtres sélectionnés."
+
+#: templates/water/sankey.html:146
 msgid "Animation"
 msgstr "Activer le mode animation"
 
