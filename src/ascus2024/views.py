@@ -92,6 +92,7 @@ def signup(request):
 
 @check_ascus_access
 def participants(request):
+
     project = get_project(request)
     list = RecordRelationship.objects.filter(
         record_child = project,
@@ -129,7 +130,7 @@ def participant(request, id):
     video = Video.objects_include_private \
         .filter(child_list__record_parent=info) \
         .filter(parent_list__record_child=project) \
-        .filter(tags__id=769)
+        .filter(tags__id=769, file_url__isnull=False)
     if video:
         video = video[0]
     else:
