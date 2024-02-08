@@ -9,12 +9,13 @@ iframe {
 </style>
 {% endblock %}
 
+{% block title %}Videos{% endblock %}
+
 {% block content %}
 
 <div class="row row-cols-1 row-cols-md-2">
 
-  {% for each in list %}
-    {% if each.video.get_embed_code %}
+  {% for each in videos %}
 
   <div class="col mb-4">
     <div class="card">
@@ -26,7 +27,6 @@ iframe {
       </div>
     </div>
   </div>
-    {% endif %}
   {% endfor %}
 
 </div>

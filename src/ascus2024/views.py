@@ -106,14 +106,14 @@ def participants(request):
 
 @check_ascus_access
 def introvideos(request):
-    list = LibraryItem.objects_include_private \
+    videos = LibraryItem.objects_include_private \
         .filter(parent_list__record_child__id=request.project) \
-        .filter(tags__id=769) \
+        .filter(tags__id=769, file_url__isnull=False) \
         .order_by("name")
     context = {
         "header_title": "Introduction videos",
         "header_subtitle": get_subtitle(request),
-        "list": list,
+        "videos": videos,
     }
     return render(request, "ascus/introvideos.html", context)
 
