@@ -30,7 +30,7 @@
               <select class="custom-select" name="relationship" required>
                 <option value=""></option>
                 {% for each in relationships %}
-                  <option {% if each == info.relationship %}selected{% endif %} value="{{ each.id }}">{{ each }}</option>
+                  <option {% if each == info.relationship or each.name == request.GET.type %}selected{% endif %} value="{{ each.id }}">{{ each }}</option>
                 {% endfor %}
               </select>
             </div>
@@ -43,12 +43,16 @@
             </div>
           </div>
 
+          {% if request.GET.manage_users and not info %}
+            <input name="date" value="{{ today }}" hidden />
+          {% else %}
           <div class="form-group row">
             <label class="col-sm-2 col-form-label">Since</label>
             <div class="col-sm-10">
               <input type="date" name="date" class="form-control" {% if info %}value="{{ info.date_created|date:"Y-m-d" }}"{% endif %} />
             </div>
           </div>
+          {% endif %}
 
           {% csrf_token %}
       </div>

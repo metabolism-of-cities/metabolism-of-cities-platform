@@ -6,7 +6,7 @@
     {% for key,value in types.items %}
     <li class="nav-item">
       {% with link=PROJECT.slug|add:":admin_list" %}
-        <a class="nav-link {% if type == key %}active{% endif %}" href="{% url link key %}">{{ value }}</a>
+        <a class="nav-link {% if this_type == key %}active{% endif %}" href="{% url link key %}">{{ value }}</a>
       {% endwith %}
     </li>
     {% endfor %}
@@ -30,9 +30,14 @@
     </tbody>
   </table>
 
+  <p class="mt-5">
   {% with link=PROJECT.slug|add:":admin_massmail" %}
-    <p class="mt-5"><a href="{% url link %}?people={% for each in list %}{{ each.record_parent.people.id }},{% endfor %}" class="btn btn-info"><i class="fa fa-envelope"></i> Send mass mail</a></p>
+    <a href="{% url link %}?people={% for each in list %}{{ each.record_parent.people.id }},{% endfor %}" class="btn btn-info"><i class="fa fa-envelope"></i> Send mass mail</a>
   {% endwith %}
+  {% with link=PROJECT.slug|add:":controlpanel_relationship" %}
+    <a href="{% url link %}?type={{ get_type }}&amp;manage_users=true&amp;next={{ request.get_full_path }}" class="btn btn-info"><i class="fa fa-plus"></i> Add person</a>
+  {% endwith %}
+  </p>
   {% with link=PROJECT.slug|add:":controlpanel" %}
     <p><a href="{% url link %}" class="btn btn-info"><i class="fa fa-user-lock"></i> Back to AScUS admin</a></p>
   {% endwith %}

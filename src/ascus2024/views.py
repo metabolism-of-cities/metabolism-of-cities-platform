@@ -582,10 +582,10 @@ def ascus_admin(request):
 @check_ascus_admin_access
 def ascus_admin_list(request, type="participant"):
     types = {
-        "participant": "Participant", 
-        "organizer": "Organizer", 
-        "presenter": "Presenter", 
-        "session": "Session organizer",
+        "participant": "Participant", # 12
+        "organizer": "Organizer", # 14
+        "presenter": "Presenter", # 15
+        "session": "Session organizer", # 16
     }
     get_type = types[type]
     list = RecordRelationship.objects.filter(
@@ -598,7 +598,8 @@ def ascus_admin_list(request, type="participant"):
         "list": list,
         "load_datatables": True,
         "types": types,
-        "type": type,
+        "this_type": type,
+        "get_type": get_type,
     }
     return render(request, "ascus/admin.list.html", context)
 
