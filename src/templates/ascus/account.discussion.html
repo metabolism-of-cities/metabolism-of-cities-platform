@@ -7,9 +7,9 @@
 
 {% if not event %}
 
-  {{ info.description|safe }}
 
-  {% if list %}
+  {% if my_discussions %}
+    {{ info.description|safe }}
     <p>You are the organizer of the following presentation(s):</p>
     <table class="table table-striped">
       <thead>
@@ -19,12 +19,12 @@
         </tr>
       </thead>
       <tbody>
-      {% for each in list %}
+      {% for each in my_discussions %}
         <tr>
           <td>{{ each }}</td>
           <td>
-            <a href="{% url "ascus2021:account_discussion" each.id %}" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a>
-            <a href="{% url "ascus2021:account_discussion_attendance" each.id %}" class="btn btn-primary"><i class="fa fa-users"></i> Attendance list</a>
+            <a href="{% url "ascus2024:account_discussion" each.id %}" class="btn btn-primary"><i class="fa fa-pencil"></i> Edit</a>
+            <a hidden href="{% url "ascus2024:account_discussion_attendance" each.id %}" class="btn btn-primary"><i class="fa fa-users"></i> Attendance list</a>
           </td>
         </tr>
       {% endfor %}
@@ -32,12 +32,12 @@
     </table>
   {% endif %}
 
-  <form method="post" class="form form-horizontal" enctype="multipart/form-data" {% if not request.GET.show_form %}hidden{% endif %}>
+  <form method="post" class="form form-horizontal" enctype="multipart/form-data" {% if not request.GET.show_form %}idden{% endif %}>
     <h2>Discussion topic form</h2>
 
-    <p hidden>
-      Everyone can submit a discussion topic proposal even if they have not submitted
-      an abstract. Proposals should include a brief synopsis of the discussion topic,
+    <p>
+      Please upload your discussion topic below. 
+      Proposals should include a brief synopsis of the discussion topic,
       a list of activities that are planned, and a general idea of the type of the
       path-to-action contribution that is expected (e.g., white paper, podcast,
       website, performance). We encourage participants to actively suggest discussion
@@ -90,8 +90,8 @@
 <script src="https://unpkg.com/@github/markdown-toolbar-element@latest/dist/index.umd.js"></script>
 <script type="text/javascript">
 $(function(){
-  $("#id_start_date").attr("placeholder", "Format: YYYY-MM-DD HH:MM, e.g. 2021-06-25 10:00");
-  $("#id_end_date").attr("placeholder", "Format: YYYY-MM-DD HH:MM, e.g. 2021-06-25 10:00");
+  $("#id_start_date").attr("placeholder", "Format: YYYY-MM-DD HH:MM, e.g. 2024-06-25 10:00");
+  $("#id_end_date").attr("placeholder", "Format: YYYY-MM-DD HH:MM, e.g. 2024-06-25 10:00");
 });
 </script>
 {% endblock %}

@@ -260,7 +260,7 @@ def ascus_account(request):
         "my_outputs": my_outputs,
         "my_presentations": my_presentations,
         "my_intro": my_intro,
-        "show_discussion": show_discussion, 
+        "show_discussion": True, #show_discussion, 
         "show_abstract": True,
         "topics": topics,
         "my_topic_registrations": my_topic_registrations,
@@ -268,6 +268,114 @@ def ascus_account(request):
         "registration_is_live": registration_is_live,
     }
     return render(request, "ascus/account.2024.html", context)
+
+@check_ascus_access
+def account_discussion_attendance(request, id):
+    info = Event.objects_include_private \
+        .filter(pk=id) \
+        .filter(parent_list__record_child__id=request.project) \
+        .filter(child_list__record_parent=request.user.people, child_list__relationship__id=14) \
+        .filter(tags__id=770)[0]
+    list = info.child_list.filter(relationship_id=12).order_by("record_parent__name")
+
+    context = {
+        "header_title": "Attendance register",
+        "header_subtitle": get_subtitle(request),
+        "info": info,
+        "list": list,
+        "hide_mail": False,
+    }
+    return render(request, "ascus/admin.attendance.html", context)
+
+#@check_ascus_access
+@login_required
+def ascus_account_discussion(request, id=None):
+    organizer_editing = False
+    info = get_object_or_404(Webpage, slug="/ascus/account/discussion/")
+    my_discussions = Event.objects_include_private \
+        .filter(parent_list__record_child__id=request.project) \
+        .filter(child_list__record_parent=request.user.people, child_list__relationship__id=14) \
+        .filter(tags__id=770).distinct()
+    event = None
+    if id and "org_mode" in request.GET:
+        check_organizer = RecordRelationship.objects.filter(
+            record_parent = request.user.people,
+            record_child_id = request.project,
+            relationship__name = "Organizer",
+        )
+        if check_organizer.exists() or has_permission(request, request.project, ["admin"]):
+            # Organizers can edit any event
+            organizer_editing = True
+            event = Event.objects_include_private \
+                .filter(pk=id) \
+                .filter(parent_list__record_child__id=request.project) \
+                .filter(tags__id=770)
+            event = event[0] if event else None
+    elif id:
+        event = Event.objects_include_private \
+            .filter(pk=id) \
+            .filter(child_list__record_parent=request.user.people) \
+            .filter(parent_list__record_child__id=request.project) \
+            .filter(tags__id=770)
+        event = event[0] if event else None
+    if not organizer_editing:
+        ModelForm = modelform_factory(
+            Event, 
+            fields = ("name",),
+            labels = { "name": "Title", }
+        )
+    else:
+        ModelForm = modelform_factory(
+            Event, 
+            fields = ("name", "start_date", "end_date", "url"),
+            labels = { "name": "Title", }
+        )
+    form = ModelForm(request.POST or None, instance=event)
+    if request.method == "POST":
+        if form.is_valid():
+            if event:
+                info = form.save(commit=False)
+                info.description = request.POST.get("text")
+                info.save()
+                messages.success(request, "The changes were saved.")
+            else:
+                info = form.save(commit=False)
+                info.description = request.POST.get("text")
+                info.is_public = False
+                info.type = "other"
+                info.save()
+                info.tags.add(Tag.objects.get(pk=770))
+                info.projects.add(get_project(request))
+                messages.success(request, "Your discussion topic was saved.")
+                RecordRelationship.objects.create(
+                    record_parent = info,
+                    record_child_id = request.project,
+                    relationship = Relationship.objects.get(name="Presentation"),
+                )
+                RecordRelationship.objects.create(
+                    record_parent = request.user.people,
+                    record_child = info,
+                    relationship = Relationship.objects.get(name="Organizer"),
+                )
+            if organizer_editing:
+                return redirect("ascus2024:admin_documents", type="topics")
+            else:
+                return redirect("ascus2024:account_discussion")
+        else:
+            messages.error(request, "We could not save your form, please fill out all fields")
+    context = {
+        "header_title": "Discussion topic",
+        "header_subtitle": get_subtitle(request),
+        "edit_link": "/admin/core/webpage/" + str(info.id) + "/change/",
+        "info": info,
+        "form": form,
+        "my_discussions": my_discussions,
+        "event": event,
+        "load_markdown": True,
+   }
+    return render(request, "ascus/account.discussion.html", context)
+
+
 
 @check_ascus_access
 def account_vote(request):
