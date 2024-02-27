@@ -17,7 +17,12 @@
             <label class="col-sm-2 col-form-label">Person</label>
             <div class="col-sm-10">
               <select class="custom-select" id="record_parent" name="record_parent" required>
-                {% if info %}
+                {% if people %}
+                  <option></option>
+                  {% for each in people %}
+                    <option {% if each.record_parent == info.record_parent %}selected{% endif %} value="{{ each.record_parent.id }}">{{ each.record_parent }} ({{ each.record_parent.people.email }})</option>
+                  {% endfor %}
+                {% elif info %}
                   <option selected value="{{ info.record_parent.id }}">{{ info.record_parent }}</option>
                 {% endif %}
               </select>
@@ -73,13 +78,15 @@
 {% endblock %}
 
 {% block footer %}
-  <script>
-    $("#record_parent").select2({
-      theme: "bootstrap4",
-      ajax: {
-        url: "{% url "core:search_ajax" "people" %}?show_details=true",
-        dataType: "json"
-      }
-    });
-  </script>
+  {% if not people %}
+    <script>
+      $("#record_parent").select2({
+        theme: "bootstrap4",
+        ajax: {
+          url: "{% url "core:search_ajax" "people" %}?show_details=true",
+          dataType: "json"
+        }
+      });
+    </script>
+  {% endif %}
 {% endblock %}

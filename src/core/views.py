@@ -1125,8 +1125,13 @@ def controlpanel_relationship_form(request, id=None):
         # We add DATA PROCESSOR PERMISSIONS if this is a data site
         relationships.append(33)
 
+    people = None
     if project.slug == "ascus2024" and request.GET.get("manage_users"):
         relationships = [14,16,15]
+        people = RecordRelationship.objects.filter(
+            record_child = get_project(request),
+            relationship = Relationship.objects.get(name="Participant")
+        ).order_by("record_parent__name")
 
     context = {
         "type": "people",
@@ -1134,7 +1139,8 @@ def controlpanel_relationship_form(request, id=None):
         "relationships": Relationship.objects.filter(pk__in=relationships),
         "child": child,
         "info": info,
-        "today": datetime.datetime.today().strftime('%Y-%m-%d')
+        "today": datetime.datetime.today().strftime('%Y-%m-%d'),
+        "people": people,
     }
     return render(request, "controlpanel/relationship.html", context)
 
