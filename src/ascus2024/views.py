@@ -260,7 +260,7 @@ def ascus_account(request):
         "my_outputs": my_outputs,
         "my_presentations": my_presentations,
         "my_intro": my_intro,
-        "show_discussion": True, #show_discussion, 
+        "show_discussion": show_discussion, 
         "show_abstract": True,
         "topics": topics,
         "my_topic_registrations": my_topic_registrations,
