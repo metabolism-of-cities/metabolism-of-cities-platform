@@ -1,10 +1,13 @@
-from django.shortcuts import render
 from core.mocfunctions import *
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from functools import wraps
 from django.contrib.auth.decorators import login_required
 from django.forms import modelform_factory
+
+# These are used so that we can send mail
+from django.core.mail import send_mail
+from django.template.loader import render_to_string, get_template
 
 def get_subtitle(request):
     return "Actionable Science for Urban Sustainability · 20-22 March 2024"
