@@ -21,14 +21,14 @@
         {{ each.organizer.email }}
       </td>
       <td>
-        <a href="{% url "ascus2021:account_discussion" each.id %}?org_mode=true" class="btn btn-default-outline"><i class="fa fa-pencil"></i> Edit</a>
-        <a hidden href="{% url "ascus2021:admin_discussion_attendance" each.id %}" class="btn btn-default-outline"><i class="fa fa-users"></i> Attendance</a>
+        <a href="{% url "ascus2024:account_discussion" each.id %}?org_mode=true" class="btn btn-default-outline"><i class="fa fa-pencil"></i> Edit</a>
+        <a hidden href="{% url "ascus2024:admin_discussion_attendance" each.id %}" class="btn btn-default-outline"><i class="fa fa-users"></i> Attendance</a>
       </td>
     </tr>
   {% endfor %}
   </table>
 
-  <a href="{% url "ascus2021:admin_massmail" %}?people={% for each in list %}{{ each.organizer.id }},{% endfor %}" class="btn btn-info"><i class="fa fa-envelope"></i> Mail all</a>
+  <a href="{% url "ascus2024:admin_massmail" %}?people={% for each in list %}{{ each.organizer.id }},{% endfor %}" class="btn btn-info"><i class="fa fa-envelope"></i> Mail all</a>
 
   <h2>Overview</h2>
 
