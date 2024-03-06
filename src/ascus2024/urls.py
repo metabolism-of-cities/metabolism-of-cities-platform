@@ -13,7 +13,7 @@ urlpatterns = baseline_urlpatterns + [
     path("signup/", views.signup, name="signup"),
     path("event-calendar/", community.event_list, name="events"),
     path("event-calendar/<int:id>/<slug:slug>/", community.event, name="event"),
-    path("schedule/", views.overview, name="overview"),
+    path("discussions/", views.overview, name="overview"),
     path("preconference/", views.overview, { "preconf": True}, name="preconference"),
 
     path("participants/", views.participants, name="participants"),
