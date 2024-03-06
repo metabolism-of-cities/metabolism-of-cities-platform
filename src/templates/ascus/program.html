@@ -47,7 +47,7 @@
       {% if not request.user.is_authenticated %}
         <p><em>You are not logged in. Please log in first and then register for this session.</em></p>
       {% else %}
-        <form method="post" class="form form-horizontal" action="{% url "ascus2021:account" %}">
+        <form method="post" class="form form-horizontal" action="{% url "ascus2024:account" %}">
           {% csrf_token %}
           {% if each in my_topic_registrations or each.id == 987834 or each.id == 987835 or "Pre-conference" in each.name %}
             <div class="alert alert-success">
@@ -67,7 +67,7 @@
 
         {% if activate_voting and request.user.is_authenticated %}
 
-          <form method="post" class="form form-horizontal mt-2" action="{% url "ascus2021:account_vote" %}">
+          <form method="post" class="form form-horizontal mt-2" action="{% url "ascus2024:account_vote" %}">
             {% csrf_token %}
             <div class="alert alert-warning">
               <h3>Best discussion session</h3>

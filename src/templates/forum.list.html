@@ -30,7 +30,7 @@
           {% if project %}
             Showing: general forum and project forum.<br>
             <a href="https://metabolismofcities.org/forum/">View the entire forum here.</a>
-          {% else %}
+          {% elif PROJECT.slug != "ascus2024" %}
             <select class="custom-select tag-filter">
               <option value="all">Filter by project</option>
               <option value="Project-1-id">General</option>

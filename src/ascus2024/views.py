@@ -91,6 +91,36 @@ def signup(request):
     }
     return render(request, "ascus/signup.html", context)
 
+def overview(request, preconf=False):
+    project = get_project(request)
+    discussions = Event.objects_include_private \
+        .filter(parent_list__record_child=project) \
+        .filter(tags__id=770).order_by("name").distinct() \
+        .order_by("start_date")
+    if preconf:
+        discussions = discussions.filter(name__contains="Pre-conference")
+        title = "Pre-conference events"
+    else:
+        discussions = discussions.exclude(name__contains="Pre-conference")
+        title = "Discussion sessions"
+    my_topic_registrations = None
+    if request.user.is_authenticated and hasattr(request.user, "people"):
+        my_topic_registrations = Event.objects_include_private \
+            .filter(child_list__record_parent=request.user.people, child_list__relationship__id=12) \
+            .filter(parent_list__record_child=project) \
+            .filter(tags__id=770)
+    context = {
+        "header_title": title,
+        "header_subtitle": get_subtitle(request),
+        "discussions": discussions,
+        "my_topic_registrations": my_topic_registrations,
+        "preconf": preconf,
+        "best_vote": RecordRelationship.objects.filter(relationship_id=37, record_parent=request.user.people) if request.user.is_authenticated else None,
+        "activate_voting": False,
+    }
+    return render(request, "ascus/program.html", context)
+
+
 # AScUS participants only!
 
 @check_ascus_access
@@ -168,7 +198,7 @@ def participant(request, id):
 def ascus_account(request):
     project = get_project(request)
 
-    registration_is_live = False
+    registration_is_live = True
 
     my_discussions = Event.objects_include_private \
         .filter(child_list__record_parent=request.user.people) \
@@ -235,7 +265,7 @@ def ascus_account(request):
                     record_child = topic,
                     relationship_id = 12,
                 )
-                messages.success(request, "You have been successfully registered for this session. The link to the room is provided in the table below.")
+                messages.success(request, "You have been successfully registered for this session. ")
             except:
                 messages.error(request, "Sorry, we could not register you. Try again or contact us if this issue persists.")
         elif "unregister" in request.POST:
@@ -378,7 +408,16 @@ def ascus_account_discussion(request, id=None):
    }
     return render(request, "ascus/account.discussion.html", context)
 
-
+@check_ascus_access
+def forum(request):
+    project = get_project(request)
+    list = ForumTopic.objects_include_private.filter(part_of_project=project).order_by("-last_update")
+    context = {
+        "list": list,
+        "header_title": "Forum",
+        "header_subtitle": get_subtitle(request),
+    }
+    return render(request, "forum.list.html", context)
 
 @check_ascus_access
 def account_vote(request):

@@ -32,7 +32,7 @@
       <textarea class="form-control" id="text" rows="6" name="text" required>{{ info.description|default_if_none:"" }}</textarea>
     </div>
 
-    {% if not edit_message %}
+    {% if not edit_message and PROJECT.slug != "ascus2024" %}
       <div class="form-group">
         <label for="tags">Category</label>
         <select id="tags" class="tags custom-select" name="project">

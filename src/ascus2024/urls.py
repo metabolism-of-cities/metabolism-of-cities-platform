@@ -13,6 +13,8 @@ urlpatterns = baseline_urlpatterns + [
     path("signup/", views.signup, name="signup"),
     path("event-calendar/", community.event_list, name="events"),
     path("event-calendar/<int:id>/<slug:slug>/", community.event, name="event"),
+    path("schedule/", views.overview, name="overview"),
+    path("preconference/", views.overview, { "preconf": True}, name="preconference"),
 
     path("participants/", views.participants, name="participants"),
     path("introvideos/", views.introvideos, name="introvideos"),
@@ -36,6 +38,12 @@ urlpatterns = baseline_urlpatterns + [
     path("account/discussion/", views.ascus_account_discussion, name="account_discussion"),
     path("account/discussion/<int:id>/", views.ascus_account_discussion, name="account_discussion"),
     path("account/discussion/<int:id>/attendance/", views.account_discussion_attendance, name="account_discussion_attendance"),
+
+    # Forum and messaging from baseline
+    path("forum/", views.forum, name="forum"),
+    path("forum/create/", community.forum_form),
+    path("forum/<int:id>/", community.forum, name="forum"),
+    path("forum/<int:id>/edit/<int:edit>/", community.forum_edit, name="forum_edit"),
 
     # Admin section
     path("account/admin/", views.ascus_admin, name="admin"),
