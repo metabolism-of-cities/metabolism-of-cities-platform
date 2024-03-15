@@ -774,14 +774,13 @@ def ascus_admin_documentsz(request):
 def admin_discussion_attendance(request, id):
     info = Event.objects_include_private \
         .filter(pk=id) \
-        .filter(parent_list__record_child__id=PAGE_ID["ascus"]) \
         .filter(tags__id=770)[0]
-    list = info.child_list.filter(relationship_id=12).order_by("record_parent__name")
+    attendees = info.child_list.filter(relationship_id=12).order_by("record_parent__name")
     context = {
         "header_title": "Attendance register",
         "header_subtitle": get_subtitle(request),
         "info": info,
-        "list": list,
+        "attendees": attendees,
     }
     return render(request, "ascus/admin.attendance.html", context)
 
@@ -798,26 +797,26 @@ def ascus_admin_documents(request, type="introvideos"):
     get_type = types[type]
 
     if type == "topics":
-        list = Event.objects_include_private \
+        records = Event.objects_include_private \
             .filter(parent_list__record_child=project) \
             .filter(tags__id=770).order_by("start_date")
     elif type == "presentations":
-        list = Work.objects_include_private \
+        records = Work.objects_include_private \
             .filter(related_to__parent_list__record_child=project) \
             .filter(related_to__tags__id=771)
     elif type == "introvideos":
-        list = LibraryItem.objects_include_private \
+        records = LibraryItem.objects_include_private \
             .filter(parent_list__record_child=project) \
             .filter(tags__id=769)
     elif type == "abstracts":
-        list = Work.objects_include_private \
+        records = Work.objects_include_private \
             .filter(related_to__parent_list__record_child=project) \
             .filter(related_to__tags__id=771)
 
     context = {
         "header_title": "AScUS Admin",
         "header_subtitle": get_subtitle(request),
-        "list": list,
+        "records": records,
         "load_datatables": True,
         "types": types,
         "type": type,

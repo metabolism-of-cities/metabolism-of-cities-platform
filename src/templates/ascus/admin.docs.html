@@ -9,7 +9,7 @@ body td .deleted{text-decoration: line-through;color:red;opacity:0.6}
 {% block content %}
 
   {% if type == "topics" %}
-    {% for each in list %}
+    {% for each in records %}
       <h3>{{ each }}</h3>
       <p><span class="badge badge-info">Upload date: {{ each.date_created }}</span></p>
       <p>{{ each.description|linebreaksbr }}</p>
@@ -28,7 +28,7 @@ body td .deleted{text-decoration: line-through;color:red;opacity:0.6}
         </tr>
       </thead>
       <tbody>
-        {% for each in list %}
+        {% for each in records %}
           <tr>
             <td>
               <a href="{% url "ascus2024:admin_document" each.id %}" {% if each.related_to.is_deleted %}class="deleted"{% endif %}>
@@ -46,9 +46,9 @@ body td .deleted{text-decoration: line-through;color:red;opacity:0.6}
   {% endif %}
 
   <p class="mt-5">
-    <a href="{% url "ascus2024:admin_massmail" %}?people={% for each in list %}{{ each.related_to.author.id }},{% endfor %}" class="btn btn-info"><i class="fa fa-envelope"></i> Mail all</a>
-    <a href="{% url "ascus2024:admin_massmail" %}?people={% for each in list %}{% if each.get_status_display == 'Completed' %}{{ each.related_to.author.id }},{% endif %}{% endfor %}" class="btn btn-info"><i class="fa fa-envelope"></i> Mail accepted abstract authors</a>
-    <a href="{% url "ascus2024:admin_massmail" %}?people={% for each in list %}{% if each.get_status_display == 'Discarded' %}{{ each.related_to.author.id }},{% endif %}{% endfor %}" class="btn btn-info"><i class="fa fa-envelope"></i> Mail discarded abstract authors</a>
+    <a href="{% url "ascus2024:admin_massmail" %}?people={% for each in records %}{{ each.related_to.author.id }},{% endfor %}" class="btn btn-info"><i class="fa fa-envelope"></i> Mail all</a>
+    <a href="{% url "ascus2024:admin_massmail" %}?people={% for each in records %}{% if each.get_status_display == 'Completed' %}{{ each.related_to.author.id }},{% endif %}{% endfor %}" class="btn btn-info"><i class="fa fa-envelope"></i> Mail accepted abstract authors</a>
+    <a href="{% url "ascus2024:admin_massmail" %}?people={% for each in records %}{% if each.get_status_display == 'Discarded' %}{{ each.related_to.author.id }},{% endif %}{% endfor %}" class="btn btn-info"><i class="fa fa-envelope"></i> Mail discarded abstract authors</a>
     </p>
 
   <p class="mt-5"><a href="{% url "ascus2024:admin" %}" class="btn btn-info"><i class="fa fa-user-lock"></i> Back to AScUS admin</a></p>

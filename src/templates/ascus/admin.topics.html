@@ -10,7 +10,7 @@
       <th>E-mail organizer</th>
       <th></th>
     </tr>
-  {% for each in list %}
+  {% for each in records %}
     <tr>
       <td data-sort="{{ each.start_date|date:"U" }}">
         <strong>{{ each|truncatewords:10 }}</strong>
@@ -22,17 +22,17 @@
       </td>
       <td>
         <a href="{% url "ascus2024:account_discussion" each.id %}?org_mode=true" class="btn btn-default-outline"><i class="fa fa-pencil"></i> Edit</a>
-        <a hidden href="{% url "ascus2024:admin_discussion_attendance" each.id %}" class="btn btn-default-outline"><i class="fa fa-users"></i> Attendance</a>
+        <a href="{% url "ascus2024:admin_discussion_attendance" each.id %}" class="btn btn-default-outline"><i class="fa fa-users"></i> Attendance</a>
       </td>
     </tr>
   {% endfor %}
   </table>
 
-  <a href="{% url "ascus2024:admin_massmail" %}?people={% for each in list %}{{ each.organizer.id }},{% endfor %}" class="btn btn-info"><i class="fa fa-envelope"></i> Mail all</a>
+  <a href="{% url "ascus2024:admin_massmail" %}?people={% for each in records %}{{ each.organizer.id }},{% endfor %}" class="btn btn-info"><i class="fa fa-envelope"></i> Mail all</a>
 
-  <h2>Overview</h2>
+  <h2 class="mt-5">Overview</h2>
 
-  {% for each in list %}
+  {% for each in records %}
     
     <h3 class="mt-4">{{ each }}</h3>
     <p><strong>Submitted by:</strong> {{ each.organizer }}</p>
