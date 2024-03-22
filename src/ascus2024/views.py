@@ -4,6 +4,7 @@ from django.contrib import messages
 from functools import wraps
 from django.contrib.auth.decorators import login_required
 from django.forms import modelform_factory
+from datetime import date
 
 # These are used so that we can send mail
 from django.core.mail import send_mail
@@ -116,7 +117,7 @@ def overview(request, preconf=False):
         "my_topic_registrations": my_topic_registrations,
         "preconf": preconf,
         "best_vote": RecordRelationship.objects.filter(relationship_id=37, record_parent=request.user.people) if request.user.is_authenticated else None,
-        "activate_voting": False,
+        "activate_voting": True,
     }
     return render(request, "ascus/program.html", context)
 
@@ -1005,7 +1006,8 @@ def controlpanel_vote(request):
 
     # This is all very spaggheti but it works, and will only be opened a few times
     # In the future we could do a proper COUNT but I am rushing here
-    best = RecordRelationship.objects.filter(relationship__id=37)
+    voting_start_date = date(2024, 3, 21)
+    best = RecordRelationship.objects.filter(relationship__id=37, date_created__gte=voting_start_date)
     best_list = {}
     for each in best:
         item = each.record_child

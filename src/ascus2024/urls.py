@@ -57,6 +57,8 @@ urlpatterns = baseline_urlpatterns + [
     path("account/admin/<slug:type>/", views.ascus_admin_list, name="admin_list"),
     path("account/admin/attendance/<int:id>/", views.admin_discussion_attendance, name="admin_discussion_attendance"),
 
+    # Votes
+    path("controlpanel/votes/", views.controlpanel_vote),
 
     path("<slug:slug>/", core.article, { "subtitle": "Actionable Science for Urban Sustainability · 20-22 March 2024", "project": 1018839}, name="article"),
 ]
