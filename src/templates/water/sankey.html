@@ -148,7 +148,7 @@
               {% endif %}
 
               {% if category.slug == "materials" %}
-                <div style="" class="materialselection">
+                <div style="position:relative;z-index:100000" class="materialselection">
                   <div class="d-print-none" style="width:300px">
                     <select class="form-control" name="material">
                     {% for each in materials %}
@@ -160,7 +160,7 @@
                   </div>
                 </div>
               {% elif category.slug == "stock" %}
-                <span class="d-print-none" style="position:relative;left:23px">
+                <span class="d-print-none" style="position:relative;left:23px;z-index:10000000">
                     <select class="form-control" name="material">
                     {% for each in materialcategories %}
                       <option value="{{ each.id }}" {% if each.id == 0 %}selected{% endif %}>

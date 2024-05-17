@@ -364,7 +364,9 @@
       // We want to hide all the nodes that should not be displayed, and show the ones that do have values
       $(".node").addClass("show-this-node");
       $(".stocknode").addClass("show-this-node");
+      $(".swapimage").show();
       for (let node of hidden_nodes) {
+        $("image[data-node=" + node + "]").hide();
         get_node = $("#node-" + node);
         if (get_node.is(":visible")) {
           get_node.hide("fast");
