@@ -1,0 +1,39 @@
+version: "3.1"
+
+services:  
+  db:
+    image: postgis/postgis:12-master
+    container_name: moc_db
+    environment:
+       POSTGRES_HOST_AUTH_METHOD: trust
+       POSTGRES_PASSWORD: postgres
+       POSTGRES_USER: postgres
+       POSTGRES_DB: moc
+
+  adminer:
+    command: php -S 0.0.0.0:8080 -t /var/www/html
+    image: adminer:4.8.1
+    depends_on: 
+      - db
+    ports:
+      - 8080:8080
+    container_name: moc_adminer
+
+  redis:
+    image: redis:6.0.5
+    ports:
+      - 6379:6379
+    container_name: moc_redis
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.macos  # Specify the macOS Dockerfile here
+    command: python3 manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./src:/src
+    ports:
+      - 8000:8000
+    depends_on:
+      - db
+    container_name: moc_web
