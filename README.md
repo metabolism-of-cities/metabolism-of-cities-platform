@@ -36,6 +36,14 @@ Let's say you have cloned this repository to /home/user/metabolism-of-cities
     $ cp src/ie/settings.sample.py src/ie/settings.py
     $ sudo docker-compose build
 
+If you are a MacOS user, you should run the MacOS Dockerfile:
+
+    $ sudo docker-compose -f docker-compose.yml -f docker-compose.macos.yml up
+
+If you encountered an error regarding the MacOS Python 3.8 Docker Image, you will have to pull this image manually:
+
+    $ docker pull python:3.8
+
 Now that this is done, you can run the container like so:
 
     $ cd /home/user/metabolism-of-cities
