@@ -38,7 +38,7 @@ Let's say you have cloned this repository to /home/user/metabolism-of-cities
 
 If you are a MacOS user, you should run the MacOS Dockerfile:
 
-    $ sudo docker-compose -f docker-compose.yml -f docker-compose.macos.yml up
+    $ sudo docker-compose -f docker-compose.macos.yml build
 
 If you encountered an error regarding the MacOS Python 3.8 Docker Image, you will have to pull this image manually:
 
@@ -48,6 +48,10 @@ Now that this is done, you can run the container like so:
 
     $ cd /home/user/metabolism-of-cities
     $ sudo docker-compose up
+
+If you are a MacOS user, you should run the docker-compose file of MacOS:
+
+    $ sudo docker-compose -f docker-compose.macos.yml up
 
 Wait a few moments, and the containers should be up and running. Your main container (moc_web) will display errors because there is no database yet. Please select your preferred database below and import this as follows:
 
