@@ -140,8 +140,7 @@ def forum_list(request, parent=None, section=None):
         return render(request, "forum.list.html", context)
 
 def forum(request, id, section=None):
-    info = Record.objects_include_private.get(pk=id)
-    #get_object_or_404(Record, pk=id) Reactivate after ascus
+    info = get_object_or_404(Record, pk=id) Reactivate after ascus
     list = Message.objects.filter(parent=id)
     project = get_project(request)
 
