@@ -34,6 +34,19 @@ def get_site_tag(request):
         return 219
     else:
         return 11
+    
+# this helper function helps get all the authors across library
+def get_all_authors():
+    all_authors = LibraryItem.objects.values_list("author_list", flat=True)
+
+    author_names = set()  
+    for entry in all_authors:
+        if entry:
+            author_names.update(entry.split(", ")) 
+
+    author_choices = tuple((author.lower().replace(" ", "_"), author) for author in sorted(author_names)[:7000]) # get only the first 7000 authors
+    
+    return author_choices
 
 def index(request):
     project = get_project(request)
@@ -45,6 +58,7 @@ def index(request):
     urban_only = True
     core_filter = get_site_tag(request)
     space = None
+    authors_choices = get_all_authors()
     if request.project == THIS_PROJECT:
         title = "Homepage"
     else:
@@ -60,6 +74,17 @@ def index(request):
             results = LibraryItem.objects.all()
         elif "type" in request.GET:
             results = LibraryItem.objects.filter(type__group__in=request.GET.getlist("type"))
+        else:
+            results = LibraryItem.objects.all()
+        if "author_list" in request.GET and request.GET["author_list"] == "all":
+            results = LibraryItem.objects.all()
+        elif "author_list" in request.GET:
+            author_list = request.GET.getlist("author_list")
+            normalized_authors = [author.replace("_", " ").title() for author in author_list]
+            query = Q()
+            for author in normalized_authors:
+                query |= Q(author_list__icontains=author)
+            results = LibraryItem.objects.filter(query)
         else:
             results = LibraryItem.objects.all()
         if not request.GET.get("urban_only"):
@@ -99,6 +124,7 @@ def index(request):
         "tag": tag,
         "tags": Tag.objects_unfiltered.filter(parent_tag__id__in=tags),
         "types": LibraryItemType.GROUP,
+        "author_list": authors_choices,
         "active_types": request.GET.getlist("type"),
         "items": results,
         "search_space": space,
