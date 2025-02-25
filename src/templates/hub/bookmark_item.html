@@ -1,0 +1,19 @@
+{% extends "_base.html" %}
+{% load humanize %}
+{% block title %}Volunteer Portal | Latest activity{% endblock %}
+{% block page_name %}volunteer portal latest{% endblock %} 
+
+{% block content %}
+    {% include "hub/_nav.html" %}
+    
+    <div class="btn-group mb-4" role="group" aria-label="History">
+        <a href="#" class="btn btn-secondary disabled"><i class="fal fa-history mr-0"></i></a>
+        <a href="?days=1{% if project_only %}&amp;project_only=true{% endif %}" class="btn btn-primary{% if days != 1 %}-outline{% endif %}">Last 24 hours</a>
+        <a href="?days=7{% if project_only %}&amp;project_only=true{% endif %}" class="btn btn-primary{% if days != 7 %}-outline{% endif %}">Last 7 days</a>
+        <a href="?days=14{% if project_only %}&amp;project_only=true{% endif %}" class="btn btn-primary{% if days != 14 %}-outline{% endif %}">14 days</a>
+        <a href="?days=30{% if project_only %}&amp;project_only=true{% endif %}" class="btn btn-primary{% if days != 30 %}-outline{% endif %}">30 days</a>
+    </div>
+
+    {% include "_library.list.html" %}
+    
+{% endblock %}

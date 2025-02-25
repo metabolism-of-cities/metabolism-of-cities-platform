@@ -106,6 +106,33 @@
 
       <div class="border rounded bg-white my-4">
         <ul class="list-group list-group-flush">
+          <!-- bookmark item -->
+          {% if request.user.is_authenticated %}
+            <li class="list-group-item table-item">
+              <div><i class="fal fa-fw fa-bookmark mr-1"></i>
+                Bookmark
+              </div>
+              <div>
+                <span class="bookmark-btn" data-item-id="{{ info.id }}" role="button" tabindex="0" 
+                  style="cursor: pointer; color: inherit; background: none; border: none; padding: 0; font: inherit; display: inline-flex; align-items: center;">
+                  {% if is_saved %}
+                      <i class="fas fa-fw fa-bookmark bookmark-icon" style="margin-right: 5px; color: gold;"></i> Remove
+                  {% else %}
+                      <i class="fal fa-fw fa-bookmark bookmark-icon" style="margin-right: 5px;"></i> Save
+                  {% endif %}
+                </span>
+              </div>
+            </li>
+            <style>
+              .bookmark-icon {
+                  transition: transform 0.3s ease-in-out;
+              }
+          
+              .bookmark-icon:hover {
+                  transform: scale(1.2);
+              }
+            </style>
+          {% endif %}
           <li class="list-group-item table-item">
             <div><i class="fal fa-fw fa-{{ info.type.icon }} mr-1"></i>
               {% if PROJECT.slug == "peeide" %}Reference{% endif %}
@@ -352,7 +379,6 @@
       {% else %}
 
         {% if request.user.is_authenticated %}
-
           <div class="list-group mb-4">
             {% if curator or request.user.people == info.uploader %}
               <a href="?edit&amp;return={{ request.get_full_path }}" class="list-group-item list-group-item-action list-group-item-primary">
@@ -1084,6 +1110,36 @@
         }
       });
     {% endif %}
-
+    
+    // Handle bookmark library item
+    document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll(".bookmark-btn").forEach(button => {
+      button.addEventListener("click", function() {
+          let itemId = this.dataset.itemId;
+          let button = this;
+          let saveURL = window.location.href; // send the request back to the current url
+          fetch(saveURL, {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json",
+                  "X-CSRFToken": "{{ csrf_token }}"
+              },
+              body: JSON.stringify({ item_id: itemId })
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.success) {
+                  if (data.action === "added") {
+                    this.innerHTML = '<i class="fas fa-fw fa-bookmark bookmark-icon" style="margin-right: 5px; color: gold;"></i>';
+                  } else {
+                    this.innerHTML = '<i class="fal fa-fw fa-bookmark bookmark-icon" style="margin-right: 5px;"></i>';
+                  }
+              } else {
+                  alert("Error: " + data.error);
+              }
+          });
+      });
+    });
+  });
   </script>
 {% endblock %}

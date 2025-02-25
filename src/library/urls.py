@@ -9,7 +9,6 @@ from ie.urls_library_baseline import baseline_library_urlpatterns
 app_name = "library"
 
 urlpatterns = baseline_urlpatterns + baseline_library_urlpatterns + [
-
     path("", views.index, name="index"),
     path("casestudies/", views.casestudies, name="casestudies"),
     path("list/", views.library_list, name="list"),
@@ -31,5 +30,4 @@ urlpatterns = baseline_urlpatterns + baseline_library_urlpatterns + [
 
     path("search/ajax/tags/", views.search_tags_ajax, name="search_tags_ajax"),
     path("preview/<int:id>/", staf.libraryframe, name="libraryframe"),
-    
 ]

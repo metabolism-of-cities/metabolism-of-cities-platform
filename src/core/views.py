@@ -54,6 +54,8 @@ import facebook
 
 from .mocfunctions import *
 
+import globals
+
 THIS_PROJECT = PROJECT_ID["core"]
 
 def user_register(request, project="core", section=None):
@@ -902,6 +904,28 @@ def hub_selector(request):
         "menu": "help",
     }
     return render(request, "hub/selector.html", context)
+
+# user's saved library item search
+@login_required
+def hub_bookmark_items(request):
+    user = request.user
+    saved_items_id = set()
+    if user in globals.test_map:
+        saved_items_id = globals.test_map[user]
+    saved_items = set()
+    for item_id in saved_items_id:
+        libraryItem = LibraryItem.objects.get(id=item_id)
+        saved_items.add(libraryItem)
+    
+    context = {
+        "items" : saved_items,
+        "show_tags" : True,
+        "show_creation" : True,
+        "load_datatables" : True,
+        "show_spaces" : True,
+    }
+    
+    return render(request, "hub/bookmark_item.html", context)
 
 # Control panel and general contribution components
 

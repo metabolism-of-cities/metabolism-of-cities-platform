@@ -160,7 +160,8 @@ baseline_urlpatterns = [
     path("hub/forum/<int:id>/", community.forum, { "section": "volunteer_hub" }, name="volunteer_forum"),
     path("hub/forum/<int:id>/edit/<int:edit>/", community.forum_edit, { "section": "volunteer_hub" }, name="volunteer_forum_edit"),
     path("hub/network/", core.hub_latest, { "network_wide": True }, name="network_activity"),
-
+    # User's bookmark search in library
+    path("hub/bookmark_items/", core.hub_bookmark_items, name="hub_bookmark_items"),
 
     # Various
     path("newsletter/", core.newsletter, name="newsletter"),

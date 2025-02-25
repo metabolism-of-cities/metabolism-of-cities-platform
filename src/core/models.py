@@ -1179,6 +1179,12 @@ class LibraryItem(Record):
     license = models.ForeignKey(License, on_delete=models.CASCADE, null=True, blank=True)
     geocodes = models.ManyToManyField("Geocode", blank=True)
     part_of_project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True, related_name="library_items")
+    
+    # Many-to-Many Relationship with the User model to let user saved the library items
+    # saved_by = models.ManyToManyField(User, related_name="saved_library_items", blank=True)
+
+    # store saved by char field for now
+    # saved_by = models.CharField(max_length=255, null=True, blank=True)
 
     STATUS = (
         ("pending", "Pending"),
