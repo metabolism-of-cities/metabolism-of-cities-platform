@@ -65,7 +65,34 @@
               <div><a class="btn btn-primary" href="{% url "library:casestudies" "map" %}"><i class="fa fa-globe"></i> View our map</a></div>
             </div>
           </div>
-          <div class="col-sm-6 col-md-8">
+          <div class="col-sm-6 col-md-3">
+            <div class="form-group">
+              <label for="fields">Search fields</label>
+              <select name="fields" class="fields">  
+                {% for key,value in fields %} 
+                  <option value="{{ key }}" {% if key in active_fields %}selected{% endif %}>{{ value }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-3">
+            <div class="form-group">
+              <label for="contains">Contains</label>
+              <select name="contains" class="contains">
+                {% for key,value in contains %}
+                  <option value="{{ key }}" {% if key in active_contains %}selected{% endif %}>{{ value }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-6">
+            <div class="form-group">
+              <label for="terms">Enter a search term for row</label>
+              <input type="text" class="form-control" id="terms" name="terms" value="{{ request.GET.after }}" placeholder="Enter a search term for row">
+            </div>
+          </div>
+          
+          <!-- <div class="col-sm-6 col-md-8">
             <div class="form-group">
               <label for="type">Restrict by type</label>
               <select name="type" class="type" multiple>
@@ -84,7 +111,7 @@
                 {% endfor %}
               </select>
             </div>
-          </div>
+          </div> -->
           {% if search_space %}
             <div class="col-sm-6 col-md-4">
               <div class="form-group">
@@ -96,6 +123,53 @@
               </div>
             </div>
           {% endif %}
+        </div>
+
+        <div class="row-2">
+          <div class="col-sm-6 col-md-1">
+            <div class="form-group">
+              <label for="boolean"></label>
+              <select name="boolean" class="boolean">
+                {% for key,value in boolean %}
+                  <option value="{{ key }}" {% if key in active_boolean %}selected{% endif %}>{{ value }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-3">
+            <div class="form-group">
+              <label for="fields"></label>
+              <select name="fields" class="fields">  
+                {% for key,value in fields %} 
+                  <option value="{{ key }}" {% if key in active_fields %}selected{% endif %}>{{ value }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-3">
+            <div class="form-group">
+              <label for="contains"></label>
+              <select name="contains" class="contains">
+                {% for key,value in contains %}
+                  <option value="{{ key }}" {% if key in active_contains %}selected{% endif %}>{{ value }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-5">
+            <div class="form-group">
+              <label for="terms"></label>
+              <input type="text" class="form-control" id="terms" name="terms" value="{{ request.GET.after }}" placeholder="Enter a search term for row">
+            </div>
+          </div>
+        </div>
+
+        <div class="row-3">
+          <div class="col-sm-6 col-md-2">
+            <div class="form-group"></div>
+            <label for="add-row-btn"></label>
+            <button id="add-row-btn" type="button" class="btn btn-primary">ADD A NEW ROW</button>
+          </div>
         </div>
       </section>
     </form>
@@ -283,16 +357,56 @@
     theme: "bootstrap4",
   });
 
-  $("select.type").select2({
+  $("select.boolean").select2({
     theme: "bootstrap4",
   });
 
-  $("select.author_list").select2({
+  $("select.fields").select2({
     theme: "bootstrap4",
   });
 
-  $("select.specific_regions").select2({
+  $("select.contains").select2({
     theme: "bootstrap4",
+  });
+
+  // $("select.type").select2({
+  //   theme: "bootstrap4",
+  // });
+
+  // $("select.author_list").select2({
+  //   theme: "bootstrap4",
+  // });
+
+  // $("select.specific_regions").select2({
+  //   theme: "bootstrap4",
+  // });
+
+  // Add new form row button
+  document.getElementById("add-row-btn").addEventListener("click", function() {
+      // Get all col elements in the last row
+      const lastCol = document.querySelector(".col-sm-6.col-md-1"); // Identify the first column
+      if (lastCol) {
+          const newCols = [];
+          
+          // Clone all columns in the last row and store in array
+          document.querySelectorAll(".col-sm-6.col-md-1").forEach(col => {
+              const newCol = col.cloneNode(true);
+
+              // Reset input/select values
+              newCol.querySelectorAll("input, select").forEach(input => {
+                  if (input.tagName === "INPUT") {
+                      input.value = ""; // Clear input fields
+                  } else {
+                      input.selectedIndex = 0; // Reset dropdowns
+                  }
+              });
+
+              newCols.push(newCol);
+          });
+
+          // Insert new set of columns after the last row
+          newCols.forEach(col => lastCol.parentNode.insertBefore(col, lastCol.nextSibling));
+      }
   });
 </script>
 {% endblock %}

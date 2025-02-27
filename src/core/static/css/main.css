@@ -1462,6 +1462,22 @@ body.library.search .select2-container--bootstrap4 .select2-dropdown {
 body.library.search .advanced-options {
   display: none; }
 
+body.library.search .advanced-options .row-2 {
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
+}
+
+body.library.search .advanced-options .row-3 {
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
+}
+
 body.library.search .large-icon-box .statistic {
   font-size: 1rem; }
 
