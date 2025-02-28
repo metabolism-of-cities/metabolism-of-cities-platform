@@ -1,11 +1,14 @@
 {% extends "_base.html" %}
 
+{% load static %}
+
 {% block page_name %}library search{% endblock %}
 
 {% block css %}
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1.3.2/dist/select2-bootstrap4.min.css"/>
-  {% if request.GET.before or request.GET.after or request.GET.type or request.GET.author_list or request.GET.specific_regions or request.GET.space %}
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  {% if request.GET.before or request.GET.after or request.GET.type or request.GET.specific_regions or request.GET.space %}
     <style type="text/css">
       body.library.search .advanced-options {
         display:block;
@@ -65,6 +68,30 @@
               <div><a class="btn btn-primary" href="{% url "library:casestudies" "map" %}"><i class="fa fa-globe"></i> View our map</a></div>
             </div>
           </div>
+          <div class="col-sm-6 col-md-8">
+            <div class="form-group">
+              <label for="type">Restrict by type</label>
+              <select name="type" class="type" multiple>
+                {% for key,value in types %}
+                  <option value="{{ key }}" {% if key in active_types %}selected{% endif %}>{{ value }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          {% if search_space %}
+            <div class="col-sm-6 col-md-4">
+              <div class="form-group">
+                <label for="type">Reference space</label>
+                <div>
+                <em>{{ search_space }}</em>
+                <input type="hidden" name="space" value="{{ search_space.id }}" />
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="row-1">
           <div class="col-sm-6 col-md-3">
             <div class="form-group">
               <label for="fields">Search fields</label>
@@ -91,42 +118,10 @@
               <input type="text" class="form-control" id="terms" name="terms" value="{{ request.GET.after }}" placeholder="Enter a search term for row">
             </div>
           </div>
-          
-          <!-- <div class="col-sm-6 col-md-8">
-            <div class="form-group">
-              <label for="type">Restrict by type</label>
-              <select name="type" class="type" multiple>
-                {% for key,value in types %}
-                  <option value="{{ key }}" {% if key in active_types %}selected{% endif %}>{{ value }}</option>
-                {% endfor %}
-              </select>
-            </div>
-          </div>
-          <div class="col-sm-6 col-md-8">
-            <div class="form-group">
-              <label for="author_list">Authors</label>
-              <select name="author_list" class="author_list" multiple>
-                {% for key,value in author_list %}
-                  <option value="{{ key }}" {% if key in active_types %}selected{% endif %}>{{ value }}</option>
-                {% endfor %}
-              </select>
-            </div>
-          </div> -->
-          {% if search_space %}
-            <div class="col-sm-6 col-md-4">
-              <div class="form-group">
-                <label for="type">Reference space</label>
-                <div>
-                <em>{{ search_space }}</em>
-                <input type="hidden" name="space" value="{{ search_space.id }}" />
-                </div>
-              </div>
-            </div>
-          {% endif %}
         </div>
 
         <div class="row-2">
-          <div class="col-sm-6 col-md-1">
+          <div class="col-sm-6 col-md-2">
             <div class="form-group">
               <label for="boolean"></label>
               <select name="boolean" class="boolean">
@@ -136,7 +131,7 @@
               </select>
             </div>
           </div>
-          <div class="col-sm-6 col-md-3">
+          <div class="col-sm-6 col-md-2">
             <div class="form-group">
               <label for="fields"></label>
               <select name="fields" class="fields">  
@@ -146,7 +141,7 @@
               </select>
             </div>
           </div>
-          <div class="col-sm-6 col-md-3">
+          <div class="col-sm-6 col-md-2">
             <div class="form-group">
               <label for="contains"></label>
               <select name="contains" class="contains">
@@ -156,19 +151,38 @@
               </select>
             </div>
           </div>
-          <div class="col-sm-6 col-md-5">
+          <div class="col-sm-6 col-md-4">
             <div class="form-group">
               <label for="terms"></label>
               <input type="text" class="form-control" id="terms" name="terms" value="{{ request.GET.after }}" placeholder="Enter a search term for row">
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-1">
+            <div class="form-group">
+              <label for="delete-row-btn"></label>
+              <button id="delete-row-btn" type="button" class="btn btn-primary">Delete</button>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-1">
+            <div class="form-group">
+              <label for="clear-row-btn"></label>
+              <button id="clear-row-btn" type="button" class="btn btn-primary">Clear</button>
             </div>
           </div>
         </div>
 
         <div class="row-3">
           <div class="col-sm-6 col-md-2">
-            <div class="form-group"></div>
-            <label for="add-row-btn"></label>
-            <button id="add-row-btn" type="button" class="btn btn-primary">ADD A NEW ROW</button>
+            <div class="form-group">
+              <label for="add-row-btn"></label>
+              <button id="add-row-btn" type="button" class="btn btn-primary">ADD NEW ROW</button>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-2">
+            <div class="form-group">
+              <label for="clear-all-btn"></label>
+              <button id="clear-all-btn" type="button" class="btn btn-primary">CLEAR ROWS</button>
+            </div>
           </div>
         </div>
       </section>
@@ -369,44 +383,42 @@
     theme: "bootstrap4",
   });
 
-  // $("select.type").select2({
-  //   theme: "bootstrap4",
-  // });
-
-  // $("select.author_list").select2({
-  //   theme: "bootstrap4",
-  // });
-
-  // $("select.specific_regions").select2({
-  //   theme: "bootstrap4",
-  // });
+  $("select.type").select2({
+    theme: "bootstrap4",
+  });
 
   // Add new form row button
   document.getElementById("add-row-btn").addEventListener("click", function() {
-      // Get all col elements in the last row
-      const lastCol = document.querySelector(".col-sm-6.col-md-1"); // Identify the first column
-      if (lastCol) {
-          const newCols = [];
-          
-          // Clone all columns in the last row and store in array
-          document.querySelectorAll(".col-sm-6.col-md-1").forEach(col => {
-              const newCol = col.cloneNode(true);
+    const firstRow = document.querySelector(".row-2"); 
+    const lastRow = document.querySelector(".row-3");  
 
-              // Reset input/select values
-              newCol.querySelectorAll("input, select").forEach(input => {
-                  if (input.tagName === "INPUT") {
-                      input.value = ""; // Clear input fields
-                  } else {
-                      input.selectedIndex = 0; // Reset dropdowns
-                  }
-              });
+    if (firstRow && lastRow) {
+        const newRow = firstRow.cloneNode(true); // Clone the row
 
-              newCols.push(newCol);
-          });
+        // Remove any Select2-generated DOM elements from the cloned row
+        $(newRow).find("select").each(function () {
+            $(this).next('.select2').remove(); 
+            $(this).removeAttr('data-select2-id'); 
+            $(this).removeClass('select2-hidden-accessible'); 
+        });
 
-          // Insert new set of columns after the last row
-          newCols.forEach(col => lastCol.parentNode.insertBefore(col, lastCol.nextSibling));
-      }
+        // Clear input values in cloned row
+        newRow.querySelectorAll("input, select").forEach(input => {
+            if (input.tagName === "INPUT") {
+                input.value = "";
+            } else {
+                input.selectedIndex = 0;
+            }
+        });
+
+        // Insert cloned row before the last row
+        lastRow.parentNode.insertBefore(newRow, lastRow);
+
+        // Reinitialize Select2 on the newly cloned row
+        $(newRow).find("select.boolean").select2({ theme: "bootstrap4" });
+        $(newRow).find("select.fields").select2({ theme: "bootstrap4" });
+        $(newRow).find("select.contains").select2({ theme: "bootstrap4" });
+    }
   });
 </script>
 {% endblock %}

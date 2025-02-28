@@ -1462,18 +1462,29 @@ body.library.search .select2-container--bootstrap4 .select2-dropdown {
 body.library.search .advanced-options {
   display: none; }
 
+  body.library.search .advanced-options .row-1 {
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -15px;
+    margin-left: -15px;
+  }
+
 body.library.search .advanced-options .row-2 {
   display: flex;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
   margin-right: -15px;
   margin-left: -15px;
+  width: 100%;  /* Ensure the row takes full width */
+  /* padding: 0 15px; Add some padding to prevent elements from touching the edges */
 }
 
 body.library.search .advanced-options .row-3 {
   display: flex;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
+  margin-top: 30px;
   margin-right: -15px;
   margin-left: -15px;
 }

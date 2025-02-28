@@ -44,9 +44,44 @@ def get_all_authors():
         if entry:
             author_names.update(entry.split(", ")) 
 
-    author_choices = tuple((author.lower().replace(" ", "_"), author) for author in sorted(author_names)[:7000]) # get only the first 7000 authors
+    author_choices = tuple((author.lower().replace(" ", "_"), author) for author in sorted(author_names)) 
     
     return author_choices
+
+# helper function to solve a query: (field, contains/contains exact phrase/starts with, query)
+def searchBy(field, contains, query):
+    result = set()
+    if field == 'author/creator':
+        # search by author
+        if contains == 'contains':
+            matching_items = LibraryItem.objects.filter(author_list__icontains=query)
+            for item in matching_items:
+                result.add(item)
+        elif contains == 'starts with':
+            matching_items = LibraryItem.objects.filter(author_list__icontains=query)
+            for item in matching_items:
+                result.add(item)
+
+    elif field == 'title':
+        # search by title of the material
+        if contains == 'contains':
+            matching_items = LibraryItem.objects.filter(title_original_language__icontains=query)
+            for item in matching_items:
+                result.add(item)
+        elif contains == 'starts with':
+            matching_items = LibraryItem.objects.filter(title_original_language__icontains=query)
+            for item in matching_items:
+                result.add(item)
+
+    elif field == 'tag':
+        # search by tag
+        pass
+    elif field == 'isbn':
+        # search by isbn
+        pass
+    elif field == 'any field':
+        # search by any field
+        pass
 
 def index(request):
     project = get_project(request)
@@ -70,30 +105,42 @@ def index(request):
 
     if "find" in request.GET:
         show_results = True
-        if "types" in request.GET and request.GET["types"] == "all":
-            results = LibraryItem.objects.all()
-        elif "type" in request.GET:
-            results = LibraryItem.objects.filter(type__group__in=request.GET.getlist("type"))
-        else:
-            results = LibraryItem.objects.all()
-        if "author_list" in request.GET and request.GET["author_list"] == "all":
-            results = LibraryItem.objects.all()
-        elif "author_list" in request.GET:
-            author_list = request.GET.getlist("author_list")
-            normalized_authors = [author.replace("_", " ").title() for author in author_list]
-            query = Q()
-            for author in normalized_authors:
-                query |= Q(author_list__icontains=author)
-            results = LibraryItem.objects.filter(query)
-        else:
-            results = LibraryItem.objects.all()
-        if not request.GET.get("urban_only"):
-            urban_only = False
-        if urban_only:
-            results = results.filter(tags__id=core_filter)
-        if "space" in request.GET and request.GET["space"]:
-            space = ReferenceSpace.objects.get(pk=request.GET["space"])
-            results = results.filter(spaces=space)
+        # regex matching the query
+        fields = request.GET.getlist('fields')
+        contains = request.GET.getlist('contains')
+        terms = request.GET.getlist('terms')
+        boolean = request.GET.getlist('boolean')
+
+        print("Fields got: ", fields)
+        print("Contains got: ", contains)
+        print("Terms got: ", terms)
+        print("Boolean got: ", boolean)
+
+        
+        # if "types" in request.GET and request.GET["types"] == "all":
+        #     results = LibraryItem.objects.all()
+        # elif "type" in request.GET:
+        #     results = LibraryItem.objects.filter(type__group__in=request.GET.getlist("type"))
+        # else:
+        #     results = LibraryItem.objects.all()
+        # if "author_list" in request.GET and request.GET["author_list"] == "all":
+        #     results = LibraryItem.objects.all()
+        # elif "author_list" in request.GET:
+        #     author_list = request.GET.getlist("author_list")
+        #     normalized_authors = [author.replace("_", " ").title() for author in author_list]
+        #     query = Q()
+        #     for author in normalized_authors:
+        #         query |= Q(author_list__icontains=author)
+        #     results = LibraryItem.objects.filter(query)
+        # else:
+        #     results = LibraryItem.objects.all()
+        # if not request.GET.get("urban_only"):
+        #     urban_only = False
+        # if urban_only:
+        #     results = results.filter(tags__id=core_filter)
+        # if "space" in request.GET and request.GET["space"]:
+        #     space = ReferenceSpace.objects.get(pk=request.GET["space"])
+        #     results = results.filter(spaces=space)
 
     if "search" in request.GET:
         q = request.GET.get("search")
@@ -124,11 +171,10 @@ def index(request):
         "tag": tag,
         "tags": Tag.objects_unfiltered.filter(parent_tag__id__in=tags),
         "types": LibraryItemType.GROUP,
-        "author_list": authors_choices,
         "active_types": request.GET.getlist("type"),
-        "fields": (("any field", "Any field"), ("author/creator", "Author/Creator"), ("title", "Title"), ("tag", "Tag"), ("isbn", "ISBN")),
+        "fields": (("any field", "Any field"), ("author/creator", "Author/Creator"), ("title", "Title"), ("abstract", "Abstract"), ("tag", "Tag"), ("isbn", "ISBN")),
         "active_fields": request.GET.getlist("fields"),
-        "contains": (("contains", "Contains"), ("contains exact phrase", "Contains Exact Phrase"), ("starts with", "Starts With")),
+        "contains": (("contains", "Contains"), ("starts with", "Starts With")),
         "active_contains": request.GET.getlist("contain"),
         "boolean" : (("and", "AND"), ("or", "OR"), ("not", "NOT")),
         "active_boolean": request.GET.getlist("boolean"),
