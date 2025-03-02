@@ -34,54 +34,192 @@ def get_site_tag(request):
         return 219
     else:
         return 11
-    
-# this helper function helps get all the authors across library
-def get_all_authors():
-    all_authors = LibraryItem.objects.values_list("author_list", flat=True)
 
-    author_names = set()  
-    for entry in all_authors:
-        if entry:
-            author_names.update(entry.split(", ")) 
-
-    author_choices = tuple((author.lower().replace(" ", "_"), author) for author in sorted(author_names)) 
-    
-    return author_choices
-
-# helper function to solve a query: (field, contains/contains exact phrase/starts with, query)
-def searchBy(field, contains, query):
+# helper function to solve a query: (field, contains/starts with, query) for advanced search options 
+def searchBy(field: str, contains: str, query: str) -> set:
     result = set()
     if field == 'author/creator':
         # search by author
-        if contains == 'contains':
+        if contains == 'contains' or contains == 'contains exact phrase':
             matching_items = LibraryItem.objects.filter(author_list__icontains=query)
             for item in matching_items:
-                result.add(item)
+                result.add(item.id)
         elif contains == 'starts with':
-            matching_items = LibraryItem.objects.filter(author_list__icontains=query)
+            matching_items = LibraryItem.objects.filter(author_list__istartswith=query)
             for item in matching_items:
-                result.add(item)
+                result.add(item.id)
 
     elif field == 'title':
         # search by title of the material
-        if contains == 'contains':
-            matching_items = LibraryItem.objects.filter(title_original_language__icontains=query)
+        if contains == 'contains' or contains == 'contains exact phrase':
+            matching_items = LibraryItem.objects.filter(name__icontains=query)
             for item in matching_items:
-                result.add(item)
+                result.add(item.id)
         elif contains == 'starts with':
-            matching_items = LibraryItem.objects.filter(title_original_language__icontains=query)
+            matching_items = LibraryItem.objects.filter(name__istartswith=query)
             for item in matching_items:
-                result.add(item)
+                result.add(item.id)
+
+    elif field == 'abstract':
+        # search by abstract
+        if contains == 'contains' or contains == 'contains exact phrase':
+            matching_items = LibraryItem.objects.filter(description__icontains=query)
+            for item in matching_items:
+                result.add(item.id)
+        elif contains == 'starts with':
+            matching_items = LibraryItem.objects.filter(description__istartswith=query)
+            for item in matching_items:
+                result.add(item.id)
 
     elif field == 'tag':
-        # search by tag
-        pass
+        tag = Tag.objects_unfiltered.get(id=query)
+        results = LibraryItem.objects.all()
+        results = results.filter(tags=tag)
+        print("Results: ", results)
+        for item in results:
+            result.add(item.id)
+
     elif field == 'isbn':
         # search by isbn
-        pass
+        if contains == 'contains' or contains == 'contains exact phrase':
+            matching_items = LibraryItem.objects.filter(isbn__icontains=query)
+            for item in matching_items:
+                result.add(item.id)
+        elif contains == 'starts with':
+            matching_items = LibraryItem.objects.filter(isbn__istartswith=query)
+            for item in matching_items:
+                result.add(item.id)
+
     elif field == 'any field':
         # search by any field
         pass
+
+    return result
+
+# helper function to qualify/disqualify the result based on the boolean gates for advanced search options
+def final_results_filter(all_query_one_items: set, booleans_map: dict) -> set:
+    # define the helper regex function to match the "contains exact phrase"
+    def contains_exact_word(library_item_name, query):
+        library_item_name = library_item_name.lower()
+        query = query.lower()
+        return bool(re.search(r'\b' + re.escape(query) + r'\b', library_item_name))
+    
+    # helper function to check if the current library item match the (field, contains, query)
+    def check(library_item: LibraryItem, field: str, contains: str, query: str) -> bool:
+        if field == 'author/creator':
+            if contains == 'contains':
+                authors = [author.strip() for author in library_item.author_list.split(",")] if library_item.author_list else []
+                if any(query.lower() in author.lower() for author in authors):
+                    return True
+            elif contains == 'contains exact phrase':
+                authors = [author.strip() for author in library_item.author_list.split(",")] if library_item.author_list else []
+                for author in authors:
+                    if contains_exact_word(author, query):
+                        return True
+            elif contains == 'starts with':
+                authors = [author.strip() for author in library_item.author_list.split(",")] if library_item.author_list else []
+                if any(author.lower().startswith(query.lower()) for author in authors):
+                    return True 
+                
+        elif field == 'title':
+            if contains == 'contains':
+                if query.lower() in library_item.name.lower():
+                    return True 
+            elif contains == 'contains exact phrase':
+                if contains_exact_word(library_item.name, query):
+                    return True
+            elif contains == 'starts with':
+                if library_item.name.lower().startswith(query.lower()):
+                    return True
+                
+        elif field == 'abstract':
+            if contains == 'contains':
+                abstracts = [abstract.strip() for abstract in library_item.description.split(",")] if library_item.description else []
+                if any(query.lower() in abstract.lower() for abstract in abstracts):
+                    return True
+            elif contains == 'contains exact phrase':
+                abstracts = [abstract.strip() for abstract in library_item.description.split(",")] if library_item.description else []
+                for abstract in abstracts:
+                    if contains_exact_word(abstract, query):
+                        return True
+            elif contains == 'starts with':
+                abstracts = [abstract.strip() for abstract in library_item.description.split(",")] if library_item.description else []
+                if any(abstract.lower().startswith(query.lower()) for abstract in abstracts):
+                    return True
+                
+        elif field == 'tag':
+            tag = Tag.objects_unfiltered.get(id=query)
+            results = LibraryItem.objects.all();
+            results = results.filter(tags=tag)
+            for res in results:
+                if res.id == library_item.id:
+                    return True
+
+        elif field == 'isbn':
+            if contains == 'contains':
+                if query.lower() in library_item.isbn.lower():
+                    return True 
+            elif contains == 'contains exact phrase':
+                if contains_exact_word(library_item.isbn, query):
+                    return True
+            elif contains == 'starts with':
+                if library_item.isbn.lower().startswith(query.lower()):
+                    return True
+
+        elif field == 'any field':
+            pass
+        
+        return False
+
+    final_results = set()
+    for item in all_query_one_items:
+        final_results.add(item)
+    # no need to process the "OR" since the "OR" is just the combination of all the query one items
+    # process the "NOT" first -> more prioritized than "AND" -> any item that match the forbidden field will be disqualified
+    if "not" in booleans_map:
+        for field, contains, query in booleans_map["not"]:
+            for item in all_query_one_items:
+                if item not in final_results:
+                    continue
+                library_item = LibraryItem.objects.get(id=item)
+                flag = check(library_item, field, contains, query)
+                if flag: # this item does not have the forbidden field
+                    final_results.remove(item)
+
+    # process the "AND" -> any item that doesn't contain all the fields in the "AND" will be disqualified
+    if "and" in booleans_map and len(booleans_map["and"])>=2:
+        for item in all_query_one_items:
+            if item not in final_results:
+                continue
+            library_item = LibraryItem.objects.get(id=item)
+            valid = True
+            for field, contains, query in booleans_map["and"]:
+                flag = check(library_item, field, contains, query)
+                if not flag: # this library item does not contain this field
+                    valid = False
+                    break
+            
+            # if this item is valid then add to the final result
+            if not valid:
+                final_results.remove(item)
+
+    # anything in "OR" will be put back to result list
+    if "or" in booleans_map:
+        for item in all_query_one_items:
+            if item in final_results:
+                continue
+            library_item = LibraryItem.objects.get(id=item)
+            valid = False
+            for field, contains, query in booleans_map["or"]:
+                flag = check(library_item, field, contains, query)
+                if flag: # this library item contains this field
+                    valid = True
+                    break
+
+            if valid: # this item contains at least one OR field so it is considered valid
+                final_results.add(item)
+    
+    return final_results
 
 def index(request):
     project = get_project(request)
@@ -93,7 +231,6 @@ def index(request):
     urban_only = True
     core_filter = get_site_tag(request)
     space = None
-    authors_choices = get_all_authors()
     if request.project == THIS_PROJECT:
         title = "Homepage"
     else:
@@ -103,68 +240,99 @@ def index(request):
         # The islands use a 'Themes' subset of tags, which we need to add to the list
         tags.append(944)
 
-    if "find" in request.GET:
+    if not "search" in request.GET and "find" in request.GET: # if using the advanced search
         show_results = True
+
         # regex matching the query
         fields = request.GET.getlist('fields')
         contains = request.GET.getlist('contains')
         terms = request.GET.getlist('terms')
-        boolean = request.GET.getlist('boolean')
+        booleans = request.GET.getlist('boolean')
 
         print("Fields got: ", fields)
         print("Contains got: ", contains)
         print("Terms got: ", terms)
-        print("Boolean got: ", boolean)
+        print("Booleans got: ", booleans)
 
+        length = len(fields)
+        booleans_mp = {} # this map will be responsible for grouping "AND", "OR" and "NOT" together and qualify the final result
+
+        all_query_one_items = set()
         
-        # if "types" in request.GET and request.GET["types"] == "all":
-        #     results = LibraryItem.objects.all()
-        # elif "type" in request.GET:
-        #     results = LibraryItem.objects.filter(type__group__in=request.GET.getlist("type"))
-        # else:
-        #     results = LibraryItem.objects.all()
-        # if "author_list" in request.GET and request.GET["author_list"] == "all":
-        #     results = LibraryItem.objects.all()
-        # elif "author_list" in request.GET:
-        #     author_list = request.GET.getlist("author_list")
-        #     normalized_authors = [author.replace("_", " ").title() for author in author_list]
-        #     query = Q()
-        #     for author in normalized_authors:
-        #         query |= Q(author_list__icontains=author)
-        #     results = LibraryItem.objects.filter(query)
-        # else:
-        #     results = LibraryItem.objects.all()
-        # if not request.GET.get("urban_only"):
-        #     urban_only = False
-        # if urban_only:
-        #     results = results.filter(tags__id=core_filter)
-        # if "space" in request.GET and request.GET["space"]:
-        #     space = ReferenceSpace.objects.get(pk=request.GET["space"])
-        #     results = results.filter(spaces=space)
+        for index in range(length):
+            field = fields[index]
+            contain = contains[index]
+            term = terms[index]
 
-    if "search" in request.GET:
-        q = request.GET.get("search")
-        if q == "_ALL_":
-            results = LibraryItem.objects.filter(tags__id=core_filter)
-            show_results = True
-        else:
-            try:
-                tag = Tag.objects_unfiltered.get(id=q)
-                results = results.filter(tags=tag)
-            except:
-                # Search by open-ended keyword, so let's search for that
-                results = results.filter(Q(name__icontains=q)|Q(description__icontains=q))
+            if term == '':
+                continue
 
-    if "after" in request.GET and request.GET["after"]:
-        results = results.filter(year__gte=request.GET["after"])
-    if "before" in request.GET and request.GET["before"]:
-        results = results.filter(year__lte=request.GET["before"])
+            query_one_item = searchBy(field, contain, term)
+
+            for item in query_one_item:
+                all_query_one_items.add(item)
+            
+            if index >= 1:
+                boolean = booleans[index-1]
+                if boolean not in booleans_mp:
+                    booleans_mp[boolean] = set()
+                booleans_mp[boolean].add((field, contain, term)) 
+            else:
+                booleans_mp["and"] = set()
+                booleans_mp["and"].add((field, contain, term))
+
+        print(all_query_one_items)
+        print(booleans_mp)
+        
+        # qualify/disqualify the query by one results based on the booleans
+        results_id = final_results_filter(all_query_one_items, booleans_mp)
+
+        results = []
+        for id in results_id:
+            library_item = LibraryItem.objects.get(id=id)
+            results.append(library_item)
+        print(results)
+
+    else: # if using the simple search
+        if "find" in request.GET: 
+            show_results = True    
+            if "types" in request.GET and request.GET["types"] == "all":
+                results = LibraryItem.objects.all()
+            elif "type" in request.GET:
+                results = LibraryItem.objects.filter(type__group__in=request.GET.getlist("type"))
+            else:
+                results = LibraryItem.objects.all()
+            if not request.GET.get("urban_only"):
+                urban_only = False
+            if urban_only:
+                results = results.filter(tags__id=core_filter)
+            if "space" in request.GET and request.GET["space"]:
+                space = ReferenceSpace.objects.get(pk=request.GET["space"])
+                results = results.filter(spaces=space)
+
+        if "search" in request.GET:  
+            q = request.GET.get("search")
+            if q == "_ALL_":
+                results = LibraryItem.objects.filter(tags__id=core_filter)
+                show_results = True
+            else:
+                try:
+                    tag = Tag.objects_unfiltered.get(id=q)
+                    results = results.filter(tags=tag)
+                except:
+                    # Search by open-ended keyword, so let's search for that
+                    results = results.filter(Q(name__icontains=q)|Q(description__icontains=q))
+
+    # if "after" in request.GET and request.GET["after"]:
+    #     results = results.filter(year__gte=request.GET["after"])
+    # if "before" in request.GET and request.GET["before"]:
+    #     results = results.filter(year__lte=request.GET["before"])
 
     if project.slug == "water":
         results = available_library_items(request).all()
 
-    if results:
-        results = results.select_related("type")
+    # if results:
+    #     results = results.select_related("type")
 
     context = {
         "show_project_design": True,
@@ -174,7 +342,7 @@ def index(request):
         "active_types": request.GET.getlist("type"),
         "fields": (("any field", "Any field"), ("author/creator", "Author/Creator"), ("title", "Title"), ("abstract", "Abstract"), ("tag", "Tag"), ("isbn", "ISBN")),
         "active_fields": request.GET.getlist("fields"),
-        "contains": (("contains", "Contains"), ("starts with", "Starts With")),
+        "contains": (("contains", "Contains"), ("contains exact phrase", "Contains exact phrase"), ("starts with", "Starts With")),
         "active_contains": request.GET.getlist("contain"),
         "boolean" : (("and", "AND"), ("or", "OR"), ("not", "NOT")),
         "active_boolean": request.GET.getlist("boolean"),

@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1.3.2/dist/select2-bootstrap4.min.css"/>
   <link rel="stylesheet" href="{% static 'css/main.css' %}">
-  {% if request.GET.before or request.GET.after or request.GET.type or request.GET.specific_regions or request.GET.space %}
+  {% if request.GET.before or request.GET.after or request.GET.type or request.GET.space or request.GET.fields %}
     <style type="text/css">
       body.library.search .advanced-options {
         display:block;
@@ -92,7 +92,7 @@
         </div>
 
         <div class="row-1">
-          <div class="col-sm-6 col-md-3">
+          <div class="col-sm-6 col-md-2">
             <div class="form-group">
               <label for="fields">Search fields</label>
               <select name="fields" class="fields">  
@@ -112,12 +112,24 @@
               </select>
             </div>
           </div>
-          <div class="col-sm-6 col-md-6">
+          <div class="col-sm-6 col-md-5">
             <div class="form-group">
               <label for="terms">Enter a search term for row</label>
               <input type="text" class="form-control" id="terms" name="terms" value="{{ request.GET.after }}" placeholder="Enter a search term for row">
             </div>
           </div>
+          <div class="col-sm-6 col-md-1">
+            <div class="form-group">
+              <label for="clear-row-btn-1"></label>
+              <button type="button" class="btn btn-primary clear-row-btn-1">Clear</button>
+            </div>
+          </div>
+          <style>
+            .clear-row-btn-1 {
+              margin-left: 4.25rem; 
+              margin-top: 0.5rem;
+            }
+          </style>
         </div>
 
         <div class="row-2">
@@ -160,13 +172,13 @@
           <div class="col-sm-6 col-md-1">
             <div class="form-group">
               <label for="delete-row-btn"></label>
-              <button id="delete-row-btn" type="button" class="btn btn-primary">Delete</button>
+              <button type="button" class="btn btn-primary delete-row-btn">Delete</button>
             </div>
           </div>
           <div class="col-sm-6 col-md-1">
             <div class="form-group">
               <label for="clear-row-btn"></label>
-              <button id="clear-row-btn" type="button" class="btn btn-primary">Clear</button>
+              <button type="button" class="btn btn-primary clear-row-btn">Clear</button>
             </div>
           </div>
         </div>
@@ -182,6 +194,12 @@
             <div class="form-group">
               <label for="clear-all-btn"></label>
               <button id="clear-all-btn" type="button" class="btn btn-primary">CLEAR ROWS</button>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-2">
+            <div class="form-group">
+              <label for="search-advanced-btn"></label>
+              <button id="search-advanced-btn" type="button" class="btn btn-primary">SEARCH</button>
             </div>
           </div>
         </div>
@@ -389,36 +407,205 @@
 
   // Add new form row button
   document.getElementById("add-row-btn").addEventListener("click", function() {
-    const firstRow = document.querySelector(".row-2"); 
-    const lastRow = document.querySelector(".row-3");  
+    const firstRow = document.querySelector(".row-2"); // Base row for cloning
+    const lastRow = document.querySelector(".row-3");  // Reference for inserting new rows
 
     if (firstRow && lastRow) {
-        const newRow = firstRow.cloneNode(true); // Clone the row
+        // Clone the row
+        const newRow = firstRow.cloneNode(true);
 
-        // Remove any Select2-generated DOM elements from the cloned row
-        $(newRow).find("select").each(function () {
-            $(this).next('.select2').remove(); 
-            $(this).removeAttr('data-select2-id'); 
-            $(this).removeClass('select2-hidden-accessible'); 
-        });
-
-        // Clear input values in cloned row
-        newRow.querySelectorAll("input, select").forEach(input => {
-            if (input.tagName === "INPUT") {
-                input.value = "";
+        // Clear values in cloned row
+        $(newRow).find("input, select").each(function () {
+            if ($(this).is("input")) {
+                $(this).val(""); // Clear input fields
             } else {
-                input.selectedIndex = 0;
+                $(this).prop("selectedIndex", 0); // Reset selects to first option
             }
         });
 
-        // Insert cloned row before the last row
-        lastRow.parentNode.insertBefore(newRow, lastRow);
+        // Remove any Select2-generated elements before reinserting into DOM
+        $(newRow).find("select").each(function () {
+            let $this = $(this);
 
-        // Reinitialize Select2 on the newly cloned row
+            // Destroy Select2 safely (only if initialized)
+            if ($this.data('select2')) {
+                $this.select2('destroy');
+            }
+
+            // Remove any Select2-related attributes
+            $this.removeAttr('data-select2-id');
+            $this.removeClass('select2-hidden-accessible');
+            $this.next('.select2-container').remove();
+        });
+
+        // Replace the terms field with a fresh input
+        const termsField = $(newRow).find(".terms"); // Assuming .terms is the class
+        if (termsField.is("select")) {
+          const inputField = $("<input>", {
+            id: termsField.attr("id"),
+            type: "text",
+            name: termsField.attr("name"),
+            class: "terms form-control",
+            placeholder: "Enter a search term for row",
+            value: termsField.attr("value"),
+          });
+          termsField.replaceWith(inputField);
+        }
+
+        // Insert cloned row before the last row
+        $(lastRow).before(newRow);
+
+        // Reinitialize Select2 AFTER adding newRow to DOM
         $(newRow).find("select.boolean").select2({ theme: "bootstrap4" });
         $(newRow).find("select.fields").select2({ theme: "bootstrap4" });
         $(newRow).find("select.contains").select2({ theme: "bootstrap4" });
+
+        // Restore Select2 on the original row
+        $(firstRow).find("select.boolean").select2({ theme: "bootstrap4" });
+        $(firstRow).find("select.fields").select2({ theme: "bootstrap4" });
+        $(firstRow).find("select.contains").select2({ theme: "bootstrap4" });
+
+        console.log("New row added and Select2 reinitialized.");
     }
   });
+
+  $(document).on("select2:select", ".fields", function(e) {
+    let selectedValue = $(this).val();
+    let rowContainer = $(this).closest(".row-1, .row-2"); // Handles both row-1 and row-2
+    let termsContainer = rowContainer.find(".form-group input[name='terms'], .form-group select.terms");
+
+    console.log("Selected field:", selectedValue);
+
+    if (selectedValue === "tag") {
+        console.log("Switching input to dropdown");
+
+        // Replace input with a Bootstrap-styled select dropdown
+        let selectDropdown = `
+            <select name="terms" class="form-control terms">
+                {% for each in tags %}
+                  <option value="{{ each.id }}" {% if each == tag %}selected {% endif %}>{{ each }}</option>
+                {% endfor %}
+            </select>
+        `;
+        termsContainer.replaceWith(selectDropdown);
+    } else {
+        console.log("Keeping normal input");
+
+        // Replace dropdown with a Bootstrap-styled text input if not "tag"
+        if (termsContainer.is("select")) {
+            let textInput = `<input type="text" class="form-control" name="terms" placeholder="Enter a search term for row">`;
+            termsContainer.replaceWith(textInput);
+        }
+    }
+});
+$(document).ready(function () {
+    let firstRow = $(".row-2").first();
+    
+    // Hide delete button for the first row
+    firstRow.find(".delete-row-btn").hide();
+
+    // Delete only the corresponding .row-2 when delete button is clicked
+    $(document).on("click", ".delete-row-btn", function () {
+        $(this).closest(".row-2").remove();
+    });
+
+    // Clear input/select fields and reset select elements to default values for row-1
+    $(document).on("click", ".clear-row-btn-1", function () {
+        let row = $(this).closest(".row-1");
+        
+        row.find("input").val(""); // Clear all input fields
+
+        // Reset selects and trigger change event for Select2
+        row.find(".fields").val(row.find(".fields option:first").val()).trigger("change");
+        row.find(".contains").val(row.find(".contains option:first").val()).trigger("change");
+
+        // Reset the terms field back to input if it was changed to a select
+        let termsField = row.find(".terms");
+        if (termsField.is("select")) {
+            let textInput = $("<input>", {
+                type: "text",
+                class: "form-control terms",
+                name: "terms",
+                placeholder: "Enter a search term for row"
+            });
+            termsField.replaceWith(textInput);
+        }
+    });
+
+    // Clear input/select fields and reset select elements to default values for row-2
+    $(document).on("click", ".clear-row-btn", function () {
+        let row = $(this).closest(".row-2");
+        
+        row.find("input").val(""); // Clear all input fields
+
+        // Reset selects and trigger change event for Select2
+        row.find(".boolean").val(row.find(".boolean option:first").val()).trigger("change");
+        row.find(".fields").val(row.find(".fields option:first").val()).trigger("change");
+        row.find(".contains").val(row.find(".contains option:first").val()).trigger("change");
+
+        // Reset the terms field back to input if it was changed to a select
+        let termsField = row.find(".terms");
+        if (termsField.is("select")) {
+            let textInput = $("<input>", {
+                type: "text",
+                class: "form-control terms",
+                name: "terms",
+                placeholder: "Enter a search term for row"
+            });
+            termsField.replaceWith(textInput);
+        }
+    });
+
+    $(document).on("click", "#clear-all-btn", function () {
+      // Delete all cloned .row-2 elements, leaving only the first .row-2 and .row-1
+      $(".row-2").not(":first").remove(); // Remove all cloned .row-2 except the first
+
+      // Now target the remaining .row-1 and the first .row-2
+      let firstRow = $(".row-1");
+      let firstRow2 = $(".row-2").first();
+
+      // Clear input fields in both .row-1 and the first .row-2 row
+      firstRow.find("input").val("");
+      firstRow2.find("input").val(""); // Clear .row-2 inputs
+
+      // Reset selects and trigger change event for Select2 in .row-1 and .row-2
+      firstRow.find(".boolean").val(firstRow.find(".boolean option:first").val()).trigger("change");
+      firstRow.find(".fields").val(firstRow.find(".fields option:first").val()).trigger("change");
+      firstRow.find(".contains").val(firstRow.find(".contains option:first").val()).trigger("change");
+
+      firstRow2.find(".boolean").val(firstRow2.find(".boolean option:first").val()).trigger("change");
+      firstRow2.find(".fields").val(firstRow2.find(".fields option:first").val()).trigger("change");
+      firstRow2.find(".contains").val(firstRow2.find(".contains option:first").val()).trigger("change");
+
+      // Reset the terms field back to input if it was changed to a select (in both rows)
+      let termsField1 = firstRow.find(".terms");
+      if (termsField1.is("select")) {
+          let textInput1 = $("<input>", {
+              type: "text",
+              class: "form-control terms",
+              name: "terms",
+              placeholder: "Enter a search term for row"
+          });
+          termsField1.replaceWith(textInput1);
+      }
+
+      let termsField2 = firstRow2.find(".terms");
+      if (termsField2.is("select")) {
+          let textInput2 = $("<input>", {
+              type: "text",
+              class: "form-control terms",
+              name: "terms",
+              placeholder: "Enter a search term for row"
+          });
+          termsField2.replaceWith(textInput2);
+      }
+    });
+
+    // When a new row is added, ensure its delete button is visible
+    $("#add-row-btn").on("click", function () {
+        let newRow = $(".row-2").last();
+        newRow.find(".delete-row-btn").show(); // Ensure delete button is shown
+    });
+});
 </script>
 {% endblock %}
