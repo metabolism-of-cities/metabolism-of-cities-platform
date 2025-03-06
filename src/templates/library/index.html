@@ -13,9 +13,6 @@
       body.library.search .advanced-options {
         display:block;
       }
-      .btn-advanced {
-        display:none;
-      }
     </style>
   {% endif %}
 {% endblock %}
@@ -44,7 +41,7 @@
               Only show work on {{ SYSTEM_NAME_PLURAL }}
             </label>
           </div>
-          <div class="btn btn-primary-basic btn-advanced mt-2"><i class="far fa-tools"></i> Show advanced options</div>
+          <div class="btn btn-primary-basic btn-advanced mt-2"><i class="far fa-tools"></i> Advanced search</div>
         </div>
       {% endspaceless %}
 
@@ -78,6 +75,16 @@
               </select>
             </div>
           </div>
+          <!-- <div class="col-sm-6 col-md-8">
+            <div class="form-group">
+              <label for="language">Restrict by language</label>
+              <select name="language" class="language" multiple>
+                {% for key,value in languages %}
+                  <option value="{{ key }}" {% if key in active_languages %}selected{% endif %}>{{ value }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div> -->
           {% if search_space %}
             <div class="col-sm-6 col-md-4">
               <div class="form-group">
@@ -91,13 +98,17 @@
           {% endif %}
         </div>
 
+        {% with active_fields_count=active_fields|length active_contains_count=active_contains|length active_boolean_count=active_boolean|length active_terms_count=active_terms|length %}
+
         <div class="row-1">
           <div class="col-sm-6 col-md-2">
             <div class="form-group">
               <label for="fields">Search fields</label>
               <select name="fields" class="fields">  
-                {% for key,value in fields %} 
-                  <option value="{{ key }}" {% if key in active_fields %}selected{% endif %}>{{ value }}</option>
+                {% for key, value in fields %}
+                  <option value="{{ key }}" {% if active_fields_count > 0 and key == active_fields.0 %}selected{% endif %}>
+                    {{ value }}
+                  </option>
                 {% endfor %}
               </select>
             </div>
@@ -106,8 +117,10 @@
             <div class="form-group">
               <label for="contains">Contains</label>
               <select name="contains" class="contains">
-                {% for key,value in contains %}
-                  <option value="{{ key }}" {% if key in active_contains %}selected{% endif %}>{{ value }}</option>
+                {% for key, value in contains %}
+                  <option value="{{ key }}" {% if active_contains_count > 0 and key == active_contains.0 %}selected{% endif %}>
+                    {{ value }}
+                  </option>
                 {% endfor %}
               </select>
             </div>
@@ -115,7 +128,9 @@
           <div class="col-sm-6 col-md-5">
             <div class="form-group">
               <label for="terms">Enter a search term for row</label>
-              <input type="text" class="form-control" id="terms" name="terms" value="{{ request.GET.after }}" placeholder="Enter a search term for row">
+              <input type="text" class="form-control" id="terms" name="terms"
+              value="{% if active_terms_count > 0 %}{{ active_terms.0 }}{% else %}{{ request.GET.after }}{% endif %}"
+              placeholder="Enter a search term for row">
             </div>
           </div>
           <div class="col-sm-6 col-md-1">
@@ -137,9 +152,11 @@
             <div class="form-group">
               <label for="boolean"></label>
               <select name="boolean" class="boolean">
-                {% for key,value in boolean %}
-                  <option value="{{ key }}" {% if key in active_boolean %}selected{% endif %}>{{ value }}</option>
-                {% endfor %}
+                {% for key, value in boolean %}
+                <option value="{{ key }}" {% if active_boolean_count > 0 and key == active_boolean.0 %}selected{% endif %}>
+                  {{ value }} 
+                </option>
+              {% endfor %}
               </select>
             </div>
           </div>
@@ -147,8 +164,10 @@
             <div class="form-group">
               <label for="fields"></label>
               <select name="fields" class="fields">  
-                {% for key,value in fields %} 
-                  <option value="{{ key }}" {% if key in active_fields %}selected{% endif %}>{{ value }}</option>
+                {% for key, value in fields %}
+                  <option value="{{ key }}" {% if active_fields_count > 1 and key == active_fields.1 %}selected{% endif %}>
+                    {{ value }}
+                  </option>
                 {% endfor %}
               </select>
             </div>
@@ -157,8 +176,10 @@
             <div class="form-group">
               <label for="contains"></label>
               <select name="contains" class="contains">
-                {% for key,value in contains %}
-                  <option value="{{ key }}" {% if key in active_contains %}selected{% endif %}>{{ value }}</option>
+                {% for key, value in contains %}
+                  <option value="{{ key }}" {% if active_contains_count > 1 and key == active_contains.1 %}selected{% endif %}>
+                    {{ value }}
+                  </option>
                 {% endfor %}
               </select>
             </div>
@@ -166,7 +187,9 @@
           <div class="col-sm-6 col-md-4">
             <div class="form-group">
               <label for="terms"></label>
-              <input type="text" class="form-control" id="terms" name="terms" value="{{ request.GET.after }}" placeholder="Enter a search term for row">
+              <input type="text" class="form-control" id="terms" name="terms"
+              value="{% if active_terms_count > 1 %}{{ active_terms.1 }}{% else %}{{ request.GET.after }}{% endif %}"
+              placeholder="Enter a search term for row">
             </div>
           </div>
           <div class="col-sm-6 col-md-1">
@@ -182,6 +205,70 @@
             </div>
           </div>
         </div>
+        
+        {% load custom_filters %}
+        {% for i in active_fields|slice:"2:" %}
+        {% with forloop.counter0|add:2 as index %}
+          <div class="row-2">
+            <div class="col-sm-6 col-md-2">
+              <div class="form-group">
+                <label for="boolean"></label>
+                <select name="boolean" class="boolean">
+                  {% for key, value in boolean %}
+                    <option value="{{ key }}" {% if key == active_boolean|slice:"2:"|default_if_none:''|get_item:forloop.counter0 %}selected{% endif %}>
+                      {{ value }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="col-sm-6 col-md-2">
+              <div class="form-group">
+                <label for="fields"></label>
+                <select name="fields" class="fields">
+                  {% for key, value in fields %}
+                    <option value="{{ key }}" {% if key == active_fields|slice:"2:"|get_item:forloop.counter0 %}selected{% endif %}>
+                      {{ value }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="col-sm-6 col-md-2">
+              <div class="form-group">
+                <label for="contains"></label>
+                <select name="contains" class="contains">
+                  {% for key, value in contains %}
+                    <option value="{{ key }}" {% if key == active_contains|slice:"2:"|default_if_none:''|get_item:forloop.counter0 %}selected{% endif %}>
+                      {{ value }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="col-sm-6 col-md-4">
+              <div class="form-group">
+                <label for="terms"></label>
+                <input type="text" class="form-control" name="terms"
+                    value="{{ active_terms|slice:"2:"|default_if_none:''|get_item:forloop.counter0 }}"
+                    placeholder="Enter a search term for row">
+              </div>
+            </div>
+            <div class="col-sm-6 col-md-1">
+              <div class="form-group">
+                <label for="delete-row-btn"></label>
+                <button type="button" class="btn btn-primary delete-row-btn">Delete</button>
+              </div>
+            </div>
+            <div class="col-sm-6 col-md-1">
+              <div class="form-group">
+                <label for="clear-row-btn"></label>
+                <button type="button" class="btn btn-primary clear-row-btn">Clear</button>
+              </div>
+            </div>
+          </div>
+        {% endwith %}
+      {% endfor %}
 
         <div class="row-3">
           <div class="col-sm-6 col-md-2">
@@ -196,13 +283,20 @@
               <button id="clear-all-btn" type="button" class="btn btn-primary">CLEAR ROWS</button>
             </div>
           </div>
+          <style>
+            #advanced-search-submit {
+              margin-top: -12px;
+              margin-left: 30rem;
+            }
+          </style>
           <div class="col-sm-6 col-md-2">
             <div class="form-group">
-              <label for="search-advanced-btn"></label>
-              <button id="search-advanced-btn" type="button" class="btn btn-primary">SEARCH</button>
+              <button id="advanced-search-submit" class="btn btn-primary-advanced-search" name="find" value="true" type="submit" form="search"><i class="fas fa-search"></i> Search</button>
             </div>
           </div>
         </div>
+
+        {% endwith %}
       </section>
     </form>
   </section>
@@ -381,7 +475,17 @@
 <script>
   $(".btn-advanced").click(function() {
     $("section.advanced-options").show();
-    $(this).hide();
+
+    // Toggle the button text between "ADVANCED SEARCH" and "SIMPLE SEARCH"
+    if ($(this).text().trim() === "Advanced search") {
+      $(this).html('<i class="far fa-tools"></i> Simple search');
+      $("div.search-select").children().not(".btn-advanced").hide(); // Hide all elements except the advanced search button
+      $("section.advanced-options").show(); // Show the advanced options
+    } else {
+      $(this).html('<i class="far fa-tools"></i> Advanced search');
+      $("div.search-select").children().not(".btn-advanced").show(); // Show all elements
+      $("section.advanced-options").hide(); // Hide the advanced options
+    }
   })
 
   $("select.search").select2({
@@ -402,6 +506,10 @@
   });
 
   $("select.type").select2({
+    theme: "bootstrap4",
+  });
+
+  $("select.language").select2({
     theme: "bootstrap4",
   });
 

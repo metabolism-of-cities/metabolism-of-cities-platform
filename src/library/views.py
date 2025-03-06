@@ -27,6 +27,7 @@ import math
 # To send mail
 from django.core.mail import EmailMultiAlternatives
 
+
 THIS_PROJECT = PROJECT_ID["library"]
 
 def get_site_tag(request):
@@ -219,6 +220,7 @@ def final_results_filter(all_query_one_items: set, booleans_map: dict) -> set:
             if valid: # this item contains at least one OR field so it is considered valid
                 final_results.add(item)
     
+    # print("Final result got: ", final_results)
     return final_results
 
 def index(request):
@@ -280,18 +282,42 @@ def index(request):
             else:
                 booleans_mp["and"] = set()
                 booleans_mp["and"].add((field, contain, term))
-
+        
         print(all_query_one_items)
         print(booleans_mp)
         
         # qualify/disqualify the query by one results based on the booleans
         results_id = final_results_filter(all_query_one_items, booleans_mp)
-
-        results = []
+        results = set()
         for id in results_id:
             library_item = LibraryItem.objects.get(id=id)
-            results.append(library_item)
+            print("item type: ", library_item.type.name)
+            if "type" in request.GET:
+                types = request.GET.getlist("type") 
+                library_item_type = library_item.type.name.lower()
+                if library_item_type == 'report':
+                    library_item_type+='s'
+                if library_item_type not in types: 
+                    continue
+            if "after" in request.GET and request.GET["after"]:
+                if library_item.year < int(request.GET["after"]):
+                    continue
+            if "before" in request.GET and request.GET["before"]:
+                if library_item.year > int(request.GET["before"]):
+                    continue 
+            results.add(library_item)
+        
         print(results)
+
+        if len(results) == 0:
+            if "type" in request.GET:
+                type_results = LibraryItem.objects.filter(type__group__in=request.GET.getlist("type"))
+                print(request.GET.getlist("type"))
+                print("Here")
+                print(len(type_results))
+            
+                for item in type_results:
+                    results.add(item)
 
     else: # if using the simple search
         if "find" in request.GET: 
@@ -323,16 +349,23 @@ def index(request):
                     # Search by open-ended keyword, so let's search for that
                     results = results.filter(Q(name__icontains=q)|Q(description__icontains=q))
 
-    # if "after" in request.GET and request.GET["after"]:
-    #     results = results.filter(year__gte=request.GET["after"])
-    # if "before" in request.GET and request.GET["before"]:
-    #     results = results.filter(year__lte=request.GET["before"])
-
     if project.slug == "water":
         results = available_library_items(request).all()
 
     # if results:
     #     results = results.select_related("type")
+
+    active_fields = request.GET.getlist("fields")
+    field_rows = list(zip(active_fields, range(len(active_fields))))
+
+    active_boolean = request.GET.getlist("boolean")
+    boolean_rows = list(zip(active_boolean, range(len(active_boolean))))
+
+    active_contains = request.GET.getlist("contains")
+    contains_rows = list(zip(active_contains, range(len(active_contains))))
+
+    active_terms = request.GET.getlist("terms")
+    input_rows = list(zip(active_terms, range(len(active_terms))))
 
     context = {
         "show_project_design": True,
@@ -340,12 +373,13 @@ def index(request):
         "tags": Tag.objects_unfiltered.filter(parent_tag__id__in=tags),
         "types": LibraryItemType.GROUP,
         "active_types": request.GET.getlist("type"),
-        "fields": (("any field", "Any field"), ("author/creator", "Author/Creator"), ("title", "Title"), ("abstract", "Abstract"), ("tag", "Tag"), ("isbn", "ISBN")),
-        "active_fields": request.GET.getlist("fields"),
+        "fields": (("author/creator", "Author/Creator"), ("title", "Title"), ("abstract", "Abstract"), ("tag", "Tag"), ("isbn", "ISBN")),
+        "active_fields": active_fields,
         "contains": (("contains", "Contains"), ("contains exact phrase", "Contains exact phrase"), ("starts with", "Starts With")),
-        "active_contains": request.GET.getlist("contain"),
+        "active_contains": active_contains,
         "boolean" : (("and", "AND"), ("or", "OR"), ("not", "NOT")),
-        "active_boolean": request.GET.getlist("boolean"),
+        "active_boolean": active_boolean,
+        "active_terms": active_terms,
         "items": results,
         "search_space": space,
         "show_tags": True if space else False,
