@@ -11,6 +11,7 @@ src/logs/*
 src/multiplicity/static/moc/css-preprocessors/*
 src/ie/settings.py
 src/templates/stats/*
+src/Python-3.9.18
 config/*production*
 .idea/*
 sync*
