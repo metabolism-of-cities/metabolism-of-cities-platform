@@ -1489,6 +1489,95 @@ body.library.search .advanced-options .row-3 {
   margin-left: -15px;
 }
 
+/* General Styling */
+body.library.search .advanced-options .row-4 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px; /* Space between words */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  line-height: 1.6;
+}
+
+body.library.search .advanced-options .row-4 > div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  background-color: transparent;
+  box-shadow: none;
+  opacity: 0; /* Initially hidden */
+  transform: translateY(10px); /* Initially moved down slightly */
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+/* When the row has the show class */
+body.library.search .advanced-options .row-4 > div.show {
+  opacity: 1; /* Fade in */
+  transform: translateY(0); /* Move to original position */
+}
+
+/* Make spans behave like inline text */
+body.library.search .advanced-options .row-4 span {
+  display: inline-block;
+  transition: color 0.3s ease-in-out;
+}
+
+/* Boolean Span (e.g., AND/OR) */
+body.library.search .advanced-options .row-4 #boolean-span {
+  font-weight: bold;
+  color: #007bff;
+  transition: color 0.3s ease-in-out;
+}
+
+/* Field Span (e.g., Author/Creator) */
+body.library.search .advanced-options .row-4 #field-span {
+  font-weight: bold;
+  color: #333;
+}
+
+/* Contains Span (e.g., contains, equals, etc.) */
+body.library.search .advanced-options .row-4 #contains-span {
+  font-style: italic;
+  color: #666;
+}
+
+/* Search term span */
+body.library.search .advanced-options .row-4 #term-span {
+  font-weight: normal;
+  color: #555;
+  padding: 2px 6px;
+  background-color: #eee;
+  border-radius: 4px;
+}
+
+/* Underline effect when changing */
+body.library.search .advanced-options .row-4 #boolean-span.changing,
+body.library.search .advanced-options .row-4 #field-span.changing,
+body.library.search .advanced-options .row-4 #contains-span.changing,
+body.library.search .advanced-options .row-4 #term-span.changing {
+  color: #ff4500; /* Highlight color */
+  position: relative;
+}
+
+/* Add animated underline when changing */
+body.library.search .advanced-options .row-4 #boolean-span.changing::after,
+body.library.search .advanced-options .row-4 #field-span.changing::after,
+body.library.search .advanced-options .row-4 #contains-span.changing::after,
+body.library.search .advanced-options .row-4 #term-span.changing::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 2px;
+  background-color: #ff4500;
+  transform: scaleX(1);
+  transition: background-color 0.3s ease-in-out;
+}
+
 body.library.search .large-icon-box .statistic {
   font-size: 1rem; }
 
@@ -1845,8 +1934,8 @@ body.volunteer.portal.latest th.date {
 
 .resource-list th.title,
 .resource-list td.title {
-  width: 200px !important;
-  max-width: 250px; }
+  width: 400px !important;
+  max-width: 500px; }
 
 .resource-list th:not(.title),
 .resource-list td:not(.title) {

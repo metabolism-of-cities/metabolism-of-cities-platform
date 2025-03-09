@@ -34,7 +34,7 @@
             <a href="{% if relative_url %}{{ each.id }}/{% else %}{% url URLS.LIBRARY_ITEM each.id %}{% endif %}">
               {{ each }}
             </a>
-          </td>
+          </td>        
           <td class="type">
             {% if each.meta_data.processed %}
               <i class="fal fa-{% if each.type.id == 10 %}chart-bar{% else %}map{% endif %} fa-fw mr-1"></i>
