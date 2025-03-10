@@ -1459,16 +1459,31 @@ body.library.search .select2-container--bootstrap4 .select2-dropdown {
   box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
   border: none; }
 
+/* Styling for the expand-advanced-search-bar */
+body.library.search .expand-advanced-search-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
 body.library.search .advanced-options {
   display: none; }
 
-  body.library.search .advanced-options .row-1 {
-    display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-    margin-right: -15px;
-    margin-left: -15px;
-  }
+body.library.search .advanced-options .row-1 {
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-right: -15px;
+  margin-left: -15px;
+}
 
 body.library.search .advanced-options .row-2 {
   display: flex;
@@ -1493,7 +1508,7 @@ body.library.search .advanced-options .row-3 {
 body.library.search .advanced-options .row-4 {
   display: flex;
   flex-wrap: wrap;
-  gap: 5px; /* Space between words */
+  gap: 10px; /* Space between words */
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 8px;
@@ -1505,7 +1520,7 @@ body.library.search .advanced-options .row-4 > div {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 5px;
+  gap: 10px;
   background-color: transparent;
   box-shadow: none;
   opacity: 0; /* Initially hidden */

@@ -2940,6 +2940,7 @@ class ZoteroItem(models.Model):
 
     def import_to_library(self):
         info = self.find_match()
+        print("Got past info, update the entry now: ", info)
         if not info:
             info = LibraryItem()
         info.name = self.title

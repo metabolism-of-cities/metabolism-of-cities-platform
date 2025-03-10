@@ -242,7 +242,8 @@ def index(request):
         # The islands use a 'Themes' subset of tags, which we need to add to the list
         tags.append(944)
 
-    if not "search" in request.GET and "find" in request.GET: # if using the advanced search
+    
+    if "terms" in request.GET and "find" in request.GET and len(request.GET.getlist('terms')[0])>0: # if using the advanced search
         show_results = True
 
         # regex matching the query
@@ -355,17 +356,19 @@ def index(request):
     # if results:
     #     results = results.select_related("type")
 
+    def is_number(s):
+        return bool(re.match(r"^-?\d+(\.\d+)?$", s))
+
     active_fields = request.GET.getlist("fields")
-    field_rows = list(zip(active_fields, range(len(active_fields))))
-
     active_boolean = request.GET.getlist("boolean")
-    boolean_rows = list(zip(active_boolean, range(len(active_boolean))))
-
+    active_boolean.insert(0, "and")
     active_contains = request.GET.getlist("contains")
-    contains_rows = list(zip(active_contains, range(len(active_contains))))
-
     active_terms = request.GET.getlist("terms")
-    input_rows = list(zip(active_terms, range(len(active_terms))))
+
+    print(active_fields)
+    print(active_boolean)
+    print(active_contains)
+    print(active_terms)
 
     context = {
         "show_project_design": True,
