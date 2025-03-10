@@ -207,58 +207,58 @@ class ZoteroImport(CronJobBase):
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
     code = "core.ZoteroImport" # Unique code for logging purposes
 
-    def do(self):
-        from pyzotero import zotero
-        collections = ZoteroCollection.objects.all()
-        for collection in collections:
-        
-            api = collection.api
-            zotero_id = collection.zotero_id
-
-            zot = zotero.Zotero(zotero_id, "group", api)
-            #publication_list = zot.top(limit=5)
-            publication_list = zot.everything(zot.top())
-
-            for each in publication_list:
-                try:
-                    info = ZoteroItem.objects.get(key=each["data"].get("key"))
-                    info.data = each["data"]
-                    info.save()
-                except:
-                    title = each["data"].get("title")
-                    info = ZoteroItem.objects.create(
-                        title = title if title else "No title",
-                        key = each["data"].get("key"),
-                        data = each["data"],
-                        collection = collection,
-                    )
-                if collection.uid == 3 or collection.uid == 4:
-                    info.import_to_library()
-
-    # playing around with my own Zotero API
     # def do(self):
     #     from pyzotero import zotero
-    #     try:
-    #         print("Sync from Zotero now!!!")
-    #         zot = zotero.Zotero("16624925", "user", "mCWggKRkSo1jZZ3YjOmIH8zH")
-    #         items = zot.top(limit=5)
-    #         print(f"Fetched {len(items)} items")
+    #     collections = ZoteroCollection.objects.all()
+    #     for collection in collections:
+        
+    #         api = collection.api
+    #         zotero_id = collection.zotero_id
 
-    #         for item in items:
-    #             print(f'Item Type: {item["data"]["itemType"]} | Key: {item["data"]["key"]} | Title: {item["data"]["title"]}')
-    #             title = item["data"].get("title")
-    #             info = ZoteroItem.objects.create(
-    #                 title = title if title else "No title",
-    #                 key = item["data"].get("key"),
-    #                 data = item["data"],
-    #                 # collection = collection,
-    #             )
-    #             info.import_to_library()
+    #         zot = zotero.Zotero(zotero_id, "group", api)
+    #         #publication_list = zot.top(limit=5)
+    #         publication_list = zot.everything(zot.top())
 
-    #     except Exception as e:
-    #         import traceback
-    #         print("Error in ZoteroImport:")
-    #         print(traceback.format_exc())  # Print full traceback for debugging
+    #         for each in publication_list:
+    #             try:
+    #                 info = ZoteroItem.objects.get(key=each["data"].get("key"))
+    #                 info.data = each["data"]
+    #                 info.save()
+    #             except:
+    #                 title = each["data"].get("title")
+    #                 info = ZoteroItem.objects.create(
+    #                     title = title if title else "No title",
+    #                     key = each["data"].get("key"),
+    #                     data = each["data"],
+    #                     collection = collection,
+    #                 )
+    #             if collection.uid == 3 or collection.uid == 4:
+    #                 info.import_to_library()
+
+    # playing around with my own Zotero API
+    def do(self):
+        from pyzotero import zotero
+        try:
+            print("Sync from Zotero now!!!")
+            zot = zotero.Zotero("16624925", "user", "mCWggKRkSo1jZZ3YjOmIH8zH")
+            items = zot.top(limit=5)
+            print(f"Fetched {len(items)} items")
+
+            for item in items:
+                print(f'Item Type: {item["data"]["itemType"]} | Key: {item["data"]["key"]} | Title: {item["data"]["title"]}')
+                # title = item["data"].get("title")
+                # info = ZoteroItem.objects.create(
+                #     title = title if title else "No title",
+                #     key = item["data"].get("key"),
+                #     data = item["data"],
+                #     # collection = collection,
+                # )
+                # info.import_to_library()
+
+        except Exception as e:
+            import traceback
+            print("Error in ZoteroImport:")
+            print(traceback.format_exc())  # Print full traceback for debugging
 
 '''
 This job is designed to clean up all the entries with THE SAME TITLE inside the library. 
@@ -295,7 +295,7 @@ class CleanUpLibrary(CronJobBase):
                 latest_item = duplicates.order_by("-year").first()  
 
                 # Delete older duplicates (excluding the latest one)
-                # duplicates.exclude(id=latest_item.id).delete()
+                duplicates.exclude(id=latest_item.id).delete()
                 print(f"Deleted {duplicates.count() - 1} duplicates for title: {item.name}")
 
             # Mark this title as processed
