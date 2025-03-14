@@ -226,8 +226,10 @@ class ZoteroImport(CronJobBase):
                     info.save()
                 except:
                     title = each["data"].get("title")
+                    # Truncate the title to make sure the title length does not exceed 255 characters
+                    truncated_title = title[:255]  
                     info = ZoteroItem.objects.create(
-                        title = title if title else "No title",
+                        title = truncated_title if truncated_title else "No title",
                         key = each["data"].get("key"),
                         data = each["data"],
                         collection = collection,
