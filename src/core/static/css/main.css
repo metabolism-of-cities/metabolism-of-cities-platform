@@ -500,7 +500,7 @@ blockquote {
   background-color: #144d58;
   border-color: #144d58; }
 
-.card.icon-card {
+/* .card.icon-card {
   height: 100%;
   border: none; }
   .card.icon-card .icon {
@@ -516,7 +516,58 @@ blockquote {
   .card.icon-card .card-body {
     background-color: #efefef;
     border-bottom-left-radius: .25rem;
-    border-bottom-right-radius: .25rem; }
+    border-bottom-right-radius: .25rem; } */
+
+.card.icon-card {
+  height: 100%;
+  border: none;
+  transition: background-color 0.5s ease-in-out, transform 0.5s ease-in-out;
+  cursor: pointer;
+}
+
+.card.icon-card .icon {
+  height: 128px;
+  font-size: 4rem;
+  text-align: center;
+  padding: 1rem 0;
+  background-color: rgba(20, 77, 88, 0.25);
+  border-top-left-radius: .25rem;
+  border-top-right-radius: .25rem;
+  transition: background-color 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+.card.icon-card .card-header {
+  text-align: center;
+  transition: background-color 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+.card.icon-card .card-body {
+  background-color: #efefef;
+  border-bottom-left-radius: .25rem;
+  border-bottom-right-radius: .25rem;
+  transition: background-color 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+/* Hover Effect */
+.card.icon-card:hover {
+  transform: scale(1.05) !important; /* Slight zoom effect */
+}
+
+.card.icon-card:hover .icon,
+.card.icon-card:hover .card-header {
+  background-color: #fbfbfb !important;
+  color: #144d58 !important;
+}
+
+.card.icon-card:hover .card-body {
+  background-color: #144d58;
+  color: white;
+}
+
+.card.icon-card:hover .icon i {
+  color: #144d58 !important; /* Change the icon color on hover */
+  transform: scale(1.2) !important;
+}
 
 .card-table table {
   margin-bottom: 0;
