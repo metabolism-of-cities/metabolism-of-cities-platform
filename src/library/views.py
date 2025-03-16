@@ -1391,6 +1391,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         "menu": "library_item_form",
         "view_processing": view_processing,
     }
+    print("Context here: ", context)
     return render(request, "library/form.html", context)
 
 # Control panel sections
