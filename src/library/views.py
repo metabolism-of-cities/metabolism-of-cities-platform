@@ -1304,7 +1304,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                         related_to = info,
                         name = name,
                     )
-                    message = Message.objects.create(posted_by_id=AUTO_BOT, parent=work, name="Task created", description="This task was created by the system")
+                    # message = Message.objects.create(posted_by_id=AUTO_BOT, parent=work, name="Task created", description="This task was created by the system")
 
                 if view_processing and "process" in request.POST:
                     work = Work.objects.get(pk=work.id)
