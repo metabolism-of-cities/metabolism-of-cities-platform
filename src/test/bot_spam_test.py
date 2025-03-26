@@ -8,8 +8,7 @@ chrome_options.add_argument("--headless")
 chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
 
-# Specify the relative path to the chromedriver (assuming it's in the same folder as your script)
-chromedriver_path = './chromedriver'  # If your chromedriver is in the same folder
+chromedriver_path = './chromedriver'  
 
 # Set up the service and webdriver
 service = Service(chromedriver_path)

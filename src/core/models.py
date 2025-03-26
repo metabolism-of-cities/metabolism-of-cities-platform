@@ -399,6 +399,8 @@ class Record(models.Model):
             elif "country_name" in self.meta_data:
                 del(self.meta_data["country_name"])
 
+        print("Meta data: ", self.meta_data)
+
         super().save(*args, **kwargs)
 
     objects = PublicActiveRecordManager()
@@ -2109,7 +2111,7 @@ class LibraryItem(Record):
             try:
                 url = self.doi
                 if url[:4] == "http":
-                    self.doi = url.rsplit("/", 1)[-1]
+                    self.doi = url.split("doi.org/")[-1]
             except:
                 pass
         if self.type_id == 40:

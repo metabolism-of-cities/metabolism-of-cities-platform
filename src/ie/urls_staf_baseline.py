@@ -192,6 +192,7 @@ baseline_staf_urlpatterns = [
 
     path("sankeybuilder/", staf.sankeybuilder, name="sankeybuilder"),
     path("controlpanel/shapefiles/", staf.controlpanel_shapefiles, name="controlpanel_shapefiles"),
+    path("controlpanel/publications/", staf.controlpanel_publications, name="controlpanel_publications"),
 
     path("dashboards/<slug:space>/food/", staf.food, name="food"),
     path("dashboards/<slug:space>/food/upload/", staf.food_upload, name="food_upload"),

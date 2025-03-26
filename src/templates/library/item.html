@@ -220,7 +220,7 @@
             </li>
           {% endif %}
 
-          {% if PROJECT.slug != "ascus2024" %}
+          {% if PROJECT.slug != "ascus2024" and info.type.name != "Publications" %}
           <li class="list-group-item hide-water">
             <i class="fal fa-fw fa-quote-right mb-1 mr-1" aria-hidden="true"></i> Citation
             <br>
@@ -986,6 +986,68 @@
           </div>
         </div>
       </section>
+      <!-- If this is a request publication, allow curators to accept or reject it -->
+      {% if info.type.name == "Publications" and curator %}
+      <div class="contentblock">
+        <div class="label-container">
+          <label>Please note:</label>
+          <label>✅ Accept will automatically add this item to the your Zotero.</label>
+          <label>❌ Reject will remove this item from the request list.</label>
+        </div>
+        <div class="button-container">
+          <button id="accept-btn" class="btn-request accept">✅ Accept Request</button>
+          <button id="reject-btn" class="btn-request reject">❌ Reject Request</button>
+        </div>
+      </div>
+      <style>
+        .button-container {
+          display: flex;
+          margin-top: 50px;
+          gap: 100px; /* Space between buttons */
+          justify-content: center;
+          align-items: center;
+          flex-wrap: nowrap; /* Ensures buttons stay in one line */
+        }
+  
+        .btn-request {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 14px 30px;
+          font-size: 18px;
+          font-weight: bold;
+          border: none;
+          border-radius: 10px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          color: white;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+          gap: 10px;
+          min-width: 270px; /* Ensures equal button width */
+        }
+  
+        .accept {
+          background: #008000; /* Dark Green */
+        }
+  
+        .reject {
+          background: #d9534f; /* Red */
+        }
+  
+        .btn-request:hover {
+          filter: brightness(1.2);
+          transform: translateY(-3px);
+          box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+        }
+  
+        .btn-request:active {
+          transform: scale(0.95);
+          box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+        }
+      </style>
+      {% endif %}
       {% endif %}
 
       {% if PROJECT.slug == "ascus" or PROJECT.slug == "ascus2021" or PROJECT.slug == "ascus2024" %}
@@ -1000,6 +1062,54 @@
 {% endblock %}
 
 {% block footer %}
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const acceptButton = document.getElementById("accept-btn");
+      console.log(`Accept button found: ${acceptButton}`);
+      if(acceptButton) {
+        acceptButton.addEventListener("click", function() {
+          // add the item to the current curator zotero
+          fetch("add-to-zotero/", {
+            method: "POST",
+            headers: { 
+              "Content-Type": "application/json",
+              "X-CSRFToken": "{{ csrf_token }}",
+            }
+          })
+          .then(response => response.json())
+          .then(data => {
+            alert(data.message || data.error);
+            // Extract the number (ID) from the current URL
+            const currentUrl = window.location.pathname;
+            const itemId = currentUrl.split('/')[3]; // assuming the ID is always at position 4 in the URL
+
+            // Construct the new URL with the delete and return parameters
+            const redirectUrl = `${window.location.origin}${currentUrl}?delete&return=/islands/library/${itemId}/`;
+
+            // Redirect to the new URL
+            window.location.href = redirectUrl;
+          })
+          .catch(error => console.error("Error adding item into Zotero Library: ", error));
+        });
+      }
+
+      const rejectButton = document.getElementById("reject-btn");
+      if(rejectButton) {
+        rejectButton.addEventListener("click", function() {
+          alert("Are you sure to reject this item?");
+          // Extract the number (ID) from the current URL
+          const currentUrl = window.location.pathname;
+          const itemId = currentUrl.split('/')[3]; // assuming the ID is always at position 4 in the URL
+
+          // Construct the new URL with the delete and return parameters
+          const redirectUrl = `${window.location.origin}${currentUrl}?delete&return=/islands/library/${itemId}/`;
+
+          // Redirect to the new URL
+          window.location.href = redirectUrl;
+        })
+      }
+    });
+  </script>
   {% if data_count %}
     <script>
       let unit = "{{ unit.unit__name|default:'various units' }}";
@@ -1084,6 +1194,5 @@
         }
       });
     {% endif %}
-
   </script>
 {% endblock %}

@@ -362,7 +362,12 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         if "delete" in request.GET:
             info.is_deleted = True
             info.save()
-            messages.success(request, "This item was deleted")
+            back_url = "publications" if info.type.name == "Publications" else "shapefiles"
+            messages.success(
+                request,
+                f'This item was deleted successfully. <a href="/islands/controlpanel/{back_url}/" style="padding: 5px 10px; background: #006400; color: #fff; text-decoration: none; border-radius: 5px;">Go Back</a>',
+                extra_tags="safe",
+            )
 
         if "create_shapefile_plot" in request.GET:
             info.create_shapefile_plot()
@@ -454,6 +459,9 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
     data_layout = False
     if info.type.name == "Dataset":
         data_layout = True if project.slug == "water" or "data-layout" in request.GET else False
+
+    if info.type.name == "Publications":
+        info.tags.set({}) # no need for tags when requesting the publications
 
     context = {
         "info": info,
@@ -578,6 +586,165 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
             context["get_materials"] = request.GET.getlist("materials")
         
     return render(request, "library/item.html", context)
+
+'''
+    Function to add the item into the Zotero (for curator only)
+'''
+import requests
+from django.http import JsonResponse
+from django.conf import settings
+ZOTERO_API_URL = "https://api.zotero.org/users/{userId}/items"
+@login_required
+def add_to_zotero(request, id):
+    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
+        unauthorized_access(request)
+
+    if request.method == "POST":
+        userId = request.user.zotero_user_id
+        api_key = request.user.zotero_api_key
+
+        if not userId or not api_key:
+            return JsonResponse({
+                "error": "Missing Zotero credentials"
+            }, status=400)
+        
+        # we use the Zotero Web API Write Requests to let the curator add the item into their Zotero
+
+        # get the item from the library
+        info = LibraryItem.objects.get(id=id)
+
+        def get_authors(author_list):
+
+            creators = []
+
+            for author in author_list:
+                # Strip leading/trailing spaces and split the name into first and last name
+                author_name = author.strip().split(" ", 1)  # Split into first and last name
+                if len(author_name) == 2:
+                    first_name, last_name = author_name
+                    creators.append({
+                        "creatorType": "author",
+                        "firstName": first_name,
+                        "lastName": last_name
+                    })
+                else:
+                    # If there's no space or only one name part, treat it as a single name
+                    creators.append({
+                        "creatorType": "author",
+                        "name": author.strip()
+                    })
+
+            return creators
+        
+        author_list = info.author_list
+        input_authors = author_list.split(",")
+        input_authors = get_authors(author_list=input_authors)
+
+        doi = info.doi
+
+        # Fetch metadata using Crossref API (we use this crossref API to get the metadata perfectly from the DOI)
+        crossref_url = f"https://api.crossref.org/works/{doi}"
+        response = requests.get(crossref_url)
+
+        if response.status_code == 200:
+            crossref_metadata = response.json()["message"]
+            # Extracting the title
+            title = crossref_metadata.get("title", [""])[0]
+
+            def get_short_title(title):
+                return title.split(":")[0].split("-")[0].strip()
+
+            # get the short title from the title
+            short_title = get_short_title(title)
+
+            # Mapping CrossRef item type to Zotero item type
+            crossref_item_type = crossref_metadata.get("type", "")
+            zotero_item_type_mapping = {
+                "journal-article": "journalArticle",
+                "book": "book",
+                "book-chapter": "bookSection",
+                "conference-paper": "conferencePaper",
+            }
+
+            item_type = zotero_item_type_mapping.get(crossref_item_type, "journalArticle")
+
+            publication_title = crossref_metadata["container-title"][0]
+            volume = crossref_metadata.get("volume", "")
+            issue = crossref_metadata.get("issue", "")
+            pages = crossref_metadata.get("page", "")
+            year = crossref_metadata.get("published", {}).get("date-parts", [[None]])[0][0]  # Year
+            language = crossref_metadata.get("language", "")
+            issn = crossref_metadata.get("ISSN", [""])[0]
+            abstract = crossref_metadata.get("abstract", "")
+            
+            # Extracting the publisher (used as library catalog)
+            publisher = crossref_metadata.get("publisher", "")
+
+            # Extract Rights (License)
+            rights = ""
+            if "license" in crossref_metadata and crossref_metadata["license"]:
+                rights = crossref_metadata["license"][0].get("URL", "")
+            
+            # Extracting the author list
+            authors = []
+            for author in crossref_metadata.get("author", []):
+                given_name = author.get("given", "")
+                family_name = author.get("family", "")
+                full_name = f"{given_name} {family_name}".strip()
+                authors.append(full_name)
+
+            authors = get_authors(author_list=authors)
+            print("Authors got from scraping: ", authors)
+        else:
+            print(f"Error fetching metadata: {response.status_code}")
+
+
+        data = [{
+            "itemType": item_type,
+            "title": title,
+            "creators": authors, # if the user did not input the authors name we can use the authors from the scraping
+            "publicationTitle": publication_title,  
+            "volume": volume,  
+            "issue": issue,
+            "pages": pages, 
+            "date": year, 
+            "language": language,  
+            "doi": info.doi,
+            "issn": issn,  
+            "shortTitle": short_title,  
+            "url": info.url,
+            "libraryCatalog": publisher,
+            "rights": rights,  
+            "abstractNote": abstract,  
+            "tags": [],
+            "collections": [],
+            "relations": {}
+        }]
+
+        headers = {
+            "Zotero-API-Key": api_key,
+            "Content-Type": "application/json",
+        }
+
+        response = requests.post(ZOTERO_API_URL.format(userId=userId), headers=headers, json=data)
+
+        print("Response: ", response.text)
+
+        if response.status_code == 200 or response.status_code == 201:
+            return JsonResponse({"message": "Item successfully added to Zotero!"})
+        
+        # Handle the case where the response is not 200 or 201
+        try:
+            # Attempt to parse the response as JSON
+            response_data = response.json()
+        except requests.exceptions.JSONDecodeError:
+            # If JSON decoding fails, handle it and return the response text
+            response_data = response.text
+
+        return JsonResponse({
+            "error": "Failed to add item",
+            "details": response_data,
+        }, status=400)
 
 # We use this function to return the data in the right json object format
 # This might already be stored in cache, so in that case we just retrieve it
@@ -882,7 +1049,12 @@ def search_spaces_ajax(request):
             r["results"].append({"id": each.id, "text": s})
     return JsonResponse(r, safe=False)
 
+from django_recaptcha.fields import ReCaptchaField
+from django_recaptcha.widgets import ReCaptchaV2Checkbox
+from django_ratelimit.decorators import ratelimit
+
 @login_required
+@ratelimit(key='ip', rate='3/m', method='POST')
 def form(request, id=None, project_name="library", type=None, slug=None, tag=None, space=None, referencespace_photo=None):
 
     # Slug is only there because one of the subsites has it in the URL; it does not do anything
@@ -1038,12 +1210,19 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         if "inventory" in request.GET:
             files = True
 
-        if type.name == "Journal Article" or type.name == "Thesis" or type.name == "Conference Paper":
+        if type.name == "Journal Article" or type.name == "Thesis" or type.name == "Conference Paper" or type.name == "Publications":
             labels["description"] = "Abstract"
             if type.name == "Journal Article":
                 if "doi" not in fields:
                     fields.append("doi")
                 journals = Organization.objects.filter(type="journal")
+            if type.name == "Publications":
+                if "doi" not in fields:
+                    fields.append("doi")
+                fields.remove("tags")
+                fields.remove("license")
+                fields.remove("materials")
+                files = False
 
         elif type.name == "Data visualisation" or type.name == "Image":
             files = False
@@ -1205,6 +1384,53 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                 info.position = position
             if not id:
                 info.part_of_project_id = request.project
+            
+            # Allow the admin to see who requested this library resource
+            if type.name == "Publications":
+                # Check if DOI is provided, if not, invalidate the form
+                if not info.doi:
+                    form.add_error('doi', 'DOI is required for publications.')
+                    context = {
+                        "info": info,
+                        "hide_search_box": hide_search_box,
+                        "form": form,
+                        "load_select2": True,
+                        "type": type,
+                        "title": f"Edit: {info}" if info else f"Adding: {str(type)}",
+                        "publishers": publishers,
+                        "journals": journals,
+                        "tag": tag,
+                        "space_name": space,
+                        "files": files,
+                        "menu": "library_item_form",
+                        "view_processing": view_processing,
+                    }
+                    return render(request, 'library/form.html', context)
+                
+                if not info.url:
+                    form.add_error('url', 'URL is required for publications.')
+                    context = {
+                        "info": info,
+                        "hide_search_box": hide_search_box,
+                        "form": form,
+                        "load_select2": True,
+                        "type": type,
+                        "title": f"Edit: {info}" if info else f"Adding: {str(type)}",
+                        "publishers": publishers,
+                        "journals": journals,
+                        "tag": tag,
+                        "space_name": space,
+                        "files": files,
+                        "menu": "library_item_form",
+                        "view_processing": view_processing,
+                    }
+                    return render(request, 'library/form.html', context)
+                
+                if not info.meta_data:
+                    info.meta_data = {}
+                info.meta_data["assigned_to"] = "TestAdmin"
+                info.meta_data["uploader"] = request.user.username
+    
             info.save()
             form.save_m2m()
 
@@ -1376,6 +1602,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         else:
             messages.error(request, "We could not save your form, please fill out all fields")
 
+
     context = {
         "info": info,
         "hide_search_box": hide_search_box,
@@ -1391,7 +1618,6 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         "menu": "library_item_form",
         "view_processing": view_processing,
     }
-    print("Context here: ", context)
     return render(request, "library/form.html", context)
 
 # Control panel sections

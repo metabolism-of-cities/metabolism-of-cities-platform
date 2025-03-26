@@ -113,7 +113,7 @@
 </section>
 
 <section class="resources">
-  <h2>{{ SYSTEM_NAME_SINGULAR|title }} Library</h2>
+  <h2>{{ SYSTEM_NAME_SINGULAR|title }} Existing Resources</h2>
   <div class="row">
     <div class="col-xl-3 col-md-6">
       <a class="btn-icon" href="{% url URLS.LIBRARY_OVERVIEW space.slug 'datasets' %}">
@@ -142,7 +142,46 @@
   </div>
 </section>
 
-<section class="progress-section">
+<section class="contribution">
+    <h2>{{ SYSTEM_NAME_SINGULAR|title }} Contribution</h2>
+    <div class="row">
+      <div class="col-xl-3 col-md-6">
+        <a class="btn-icon" href="hub/harvesting/896/form/?inventory=true&amp;type=10&amp;mfa=true&amp;next={{ request.get_full_path }}hub/harvesting/">
+          <div class="title"><i class="fal fa-chart-area fa-fw"></i> Datasets </div>
+          <div class="text">Contribute to datasets on material flows, stocks, consumption, and more</div>
+        </a>
+      </div>
+      <div class="col-xl-3 col-md-6">
+        <a class="btn-icon" href="hub/harvesting/900/form/?inventory=true&amp;type=42&amp;mfa=true&amp;next={{ request.get_full_path }}hub/harvesting/">
+          <div class="title"><i class="fal fa-books fa-fw"></i> Publications
+          </div>
+          <div class="text">
+            Contribute to Academic literature, reports, and publications published in peer-reviewed journals
+          </div>
+        </a>
+      </div>
+      <div class="col-xl-3 col-md-6">
+        <a class="btn-icon" href="hub/harvesting/900/form/?inventory=true&amp;type=20&amp;mfa=true&amp;next={{ request.get_full_path }}hub/harvesting/">
+          <div class="title"><i class="fal fa-globe-africa fa-fw"></i> Maps
+          </div>
+          <div class="text">
+            Contribute to boundaries, micro-territorial unites, infrastructure maps, and more
+          </div>
+        </a>
+      </div>
+      <div class="col-xl-3 col-md-6">
+        <a class="btn-icon" href="hub/harvesting/0/form/?inventory=true&amp;type=38&amp;next={{ request.get_full_path }}hub/harvesting/&amp;hide_tags=true">
+          <div class="title"><i class="fal fa-photo-video fa-fw"></i> Multimedia
+          </div>
+          <div class="text"> Contribute to Photos, videos and data visualisations, and more
+          </div>
+        </a>
+      </div>
+    </div>
+</section>
+
+<!-- Get rid of the progress section -->
+<!-- <section class="progress-section">
   <h2>Progress</h2>
   <div class="row">
     {% for each in layers %}
@@ -198,7 +237,7 @@
       </a>
     </div>
   </div>
-</section>
+</section> -->
 
 <section class="community">
   <h2>Community portal</h2>

