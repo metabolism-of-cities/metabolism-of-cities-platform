@@ -156,6 +156,18 @@
               </li>
             {% endif %}
 
+            <!-- {% if data_type %}
+              <li class="list-group-item hide-water">
+                <i class="fal fa-fw fa-tag mb-1 mr-1" aria-hidden="true"></i> {% if PROJECT.slug == "peeide" %}Keywords{% else %}Data Type{% endif %}
+                <br>
+                {% for each in data_type %}
+                  {% if not each.hidden %}
+                    <a class="btn btn-sm btn-primary-outline mt-1" href="{% url URLS.LIBRARY %}?find=true&amp;search={{ each.id }}&amp;types=all">{{ each }}</a>
+                  {% endif %}
+                {% endfor %}
+              </li>
+            {% endif %} -->
+
             {% if info.language and not info.type.name == "Image" %}
             <li class="list-group-item table-item hide-water">
               <div><i class="fal fa-fw fa-language mr-1"></i> Language</div>
@@ -167,6 +179,28 @@
               <li class="list-group-item table-item">
                 <div><i class="fal fa-fw fa-universal-access mr-1"></i> License</div>
                 <div>{{ info.license }}</div>
+              </li>
+            {% endif %}
+
+            {% if info.data_type %}
+              <li class="list-group-item table-item">
+                <div>
+                  {% if info.data_type.name == "Material flows" %}
+                      <i class="fal fa-fw fa-recycle mr-1"></i>
+                  {% elif info.data_type.name == "Energy flows" %}
+                      <i class="fal fa-fw fa-bolt mr-1"></i>
+                  {% elif info.data_type.name == "Water" %}
+                      <i class="fal fa-fw fa-tint mr-1"></i>
+                  {% elif info.data_type.name == "Material Stocks/Infrastructure" %}
+                      <i class="fal fa-fw fa-building mr-1"></i>
+                  {% elif info.data_type.name == "Spatial Data" %}
+                      <i class="fal fa-fw fa-map-marked-alt mr-1"></i>
+                  {% else %}
+                      <i class="fal fa-fw fa-database mr-1"></i> {# Default icon #}
+                  {% endif %}
+                  Data Type
+                </div>
+                <div>{{ info.data_type }}</div>
               </li>
             {% endif %}
 

@@ -1054,7 +1054,7 @@ from django_recaptcha.widgets import ReCaptchaV2Checkbox
 from django_ratelimit.decorators import ratelimit
 
 @login_required
-@ratelimit(key='ip', rate='3/m', method='POST')
+# @ratelimit(key='ip', rate='3/m', method='POST')
 def form(request, id=None, project_name="library", type=None, slug=None, tag=None, space=None, referencespace_photo=None):
 
     # Slug is only there because one of the subsites has it in the URL; it does not do anything
@@ -1095,16 +1095,20 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
     if has_permission(request, project.id, ["curator", "dataprocessor"]):
         curator = True
 
+    proceed = False
     if not type:
         type = request.GET.get("type")
         if request.method == "POST":
             type = request.POST.get("type")
+            proceed = request.POST.get("proceed")
 
     if id and curator:
         info = get_item
         type = info.type
     else:
         type = LibraryItemType.objects.get(pk=type)
+
+    print("Down here!!!!!")
 
     if project.is_data_project:
         data_management = True
@@ -1245,6 +1249,9 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
             fields.remove("language")
             fields.remove("url")
 
+        elif type.name == "Dataset":
+            fields.append("data_type")
+
         if project.slug == "water":
             # For the water project we always activate ALL of the spaces in the list
             initial["spaces"] = ReferenceSpace.objects.filter(activated__part_of_project=project)
@@ -1361,6 +1368,8 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
     if type.name == "Shapefile" or type.name == "Dataset" or type.name == "GPS Coordinates":
         files = True
 
+    warning_message = False
+
     if request.method == "POST":
         if form.is_valid():
             info = form.save(commit=False)
@@ -1383,20 +1392,21 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                     position = None
                 info.position = position
             if not id:
-                info.part_of_project_id = request.project
-            
+                info.part_of_project_id = request.project            
             # Allow the admin to see who requested this library resource
             if type.name == "Publications":
-                # Check if DOI is provided, if not, invalidate the form
-                if not info.doi:
+                # Check if DOI or URL is provided, if not, invalidate the form
+                if not info.doi and not info.url:
                     form.add_error('doi', 'DOI is required for publications.')
+                    form.add_error('url', 'URL is required for publications.')
+                    warning_message = True,
                     context = {
                         "info": info,
                         "hide_search_box": hide_search_box,
                         "form": form,
                         "load_select2": True,
                         "type": type,
-                        "title": f"Edit: {info}" if info else f"Adding: {str(type)}",
+                        "title": f"Adding: {str(type)}",
                         "publishers": publishers,
                         "journals": journals,
                         "tag": tag,
@@ -1404,27 +1414,37 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                         "files": files,
                         "menu": "library_item_form",
                         "view_processing": view_processing,
+                        "warning_message": warning_message,  # Add warning message flag
                     }
                     return render(request, 'library/form.html', context)
                 
-                if not info.url:
-                    form.add_error('url', 'URL is required for publications.')
-                    context = {
-                        "info": info,
-                        "hide_search_box": hide_search_box,
-                        "form": form,
-                        "load_select2": True,
-                        "type": type,
-                        "title": f"Edit: {info}" if info else f"Adding: {str(type)}",
-                        "publishers": publishers,
-                        "journals": journals,
-                        "tag": tag,
-                        "space_name": space,
-                        "files": files,
-                        "menu": "library_item_form",
-                        "view_processing": view_processing,
-                    }
-                    return render(request, 'library/form.html', context)
+                # warn the user if there already an entry in the LibraryItem with the same title, url or doi
+                query = Q(name=info.name)
+                if info.url:
+                    query |= Q(url=info.url)
+                if info.doi:
+                    query |= Q(doi=info.doi)
+                
+                if LibraryItem.objects.filter(query).exists():
+                    if not proceed:  # If user hasn't confirmed yet, show warning
+                        warning_message = True
+                        context = {
+                            "info": info,
+                            "hide_search_box": hide_search_box,
+                            "form": form,
+                            "load_select2": True,
+                            "type": type,
+                            "title": f"Adding: {str(type)}",
+                            "publishers": publishers,
+                            "journals": journals,
+                            "tag": tag,
+                            "space_name": space,
+                            "files": files,
+                            "menu": "library_item_form",
+                            "view_processing": view_processing,
+                            "warning_message": warning_message,  # Add warning message flag
+                        }
+                        return render(request, "library/form.html", context)
                 
                 if not info.meta_data:
                     info.meta_data = {}
@@ -1617,6 +1637,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         "files": files,
         "menu": "library_item_form",
         "view_processing": view_processing,
+        "warning_message": warning_message,
     }
     return render(request, "library/form.html", context)
 
