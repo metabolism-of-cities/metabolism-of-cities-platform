@@ -588,59 +588,69 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
     return render(request, "library/item.html", context)
 
 '''
-    Function to add the item into the Zotero (for curator only)
+    Function to add the item into the Simron's Zotero after the user upload a publication
 '''
 import requests
 from django.http import JsonResponse
 from django.conf import settings
-ZOTERO_API_URL = "https://api.zotero.org/users/{userId}/items"
-@login_required
-def add_to_zotero(request, id):
-    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
-        unauthorized_access(request)
+ZOTERO_API_URL = "https://api.zotero.org/groups/{groupId}/items"
+def add_to_zotero(info: LibraryItem, journal):
+    groupId = settings.ZOTERO_GROUP_ID
+    api_key = settings.ZOTERO_API_KEY
 
-    if request.method == "POST":
-        userId = request.user.zotero_user_id
-        api_key = request.user.zotero_api_key
+    if not groupId or not api_key:
+        return JsonResponse({
+            "error": "Missing Zotero credentials"
+        }, status=400)
+    
+    # we use the Zotero Web API Write Requests to let the curator add the item into their Zotero
 
-        if not userId or not api_key:
-            return JsonResponse({
-                "error": "Missing Zotero credentials"
-            }, status=400)
-        
-        # we use the Zotero Web API Write Requests to let the curator add the item into their Zotero
+    def get_authors(author_list):
 
-        # get the item from the library
-        info = LibraryItem.objects.get(id=id)
+        creators = []
 
-        def get_authors(author_list):
+        for author in author_list:
+            # Strip leading/trailing spaces and split the name into first and last name
+            author_name = author.strip().split(" ", 1)  # Split into first and last name
+            if len(author_name) == 2:
+                first_name, last_name = author_name
+                creators.append({
+                    "creatorType": "author",
+                    "firstName": first_name,
+                    "lastName": last_name
+                })
+            else:
+                # If there's no space or only one name part, treat it as a single name
+                creators.append({
+                    "creatorType": "author",
+                    "name": author.strip()
+                })
 
-            creators = []
+        return creators
+    
+    def get_short_title(title):
+        return title.split(":")[0].split("-")[0].strip()
+    
+    # get the tags from the user's form
+    tags = [tag.name for tag in info.tags.all()]
 
-            for author in author_list:
-                # Strip leading/trailing spaces and split the name into first and last name
-                author_name = author.strip().split(" ", 1)  # Split into first and last name
-                if len(author_name) == 2:
-                    first_name, last_name = author_name
-                    creators.append({
-                        "creatorType": "author",
-                        "firstName": first_name,
-                        "lastName": last_name
-                    })
-                else:
-                    # If there's no space or only one name part, treat it as a single name
-                    creators.append({
-                        "creatorType": "author",
-                        "name": author.strip()
-                    })
+    # map the type to the zotero item type
+    zotero_item_type_mapping = {
+        "journal-article": "journalArticle",
+        "Journal Article": "journalArticle",
+        "Book": "book",
+        "Book Section": "bookSection",
+        "Conference Paper": "conferencePaper",
+        "Poster": "presentation",
+        "Presentation": "presentation",
+        "Report": "report",
+        "Thesis": "thesis",
+        "Webpage": "webpage",
+    }
 
-            return creators
-        
-        author_list = info.author_list
-        input_authors = author_list.split(",")
-        input_authors = get_authors(author_list=input_authors)
+    doi = info.doi
 
-        doi = info.doi
+    if doi:
 
         # Fetch metadata using Crossref API (we use this crossref API to get the metadata perfectly from the DOI)
         crossref_url = f"https://api.crossref.org/works/{doi}"
@@ -651,20 +661,12 @@ def add_to_zotero(request, id):
             # Extracting the title
             title = crossref_metadata.get("title", [""])[0]
 
-            def get_short_title(title):
-                return title.split(":")[0].split("-")[0].strip()
 
             # get the short title from the title
             short_title = get_short_title(title)
 
             # Mapping CrossRef item type to Zotero item type
             crossref_item_type = crossref_metadata.get("type", "")
-            zotero_item_type_mapping = {
-                "journal-article": "journalArticle",
-                "book": "book",
-                "book-chapter": "bookSection",
-                "conference-paper": "conferencePaper",
-            }
 
             item_type = zotero_item_type_mapping.get(crossref_item_type, "journalArticle")
 
@@ -716,35 +718,61 @@ def add_to_zotero(request, id):
             "libraryCatalog": publisher,
             "rights": rights,  
             "abstractNote": abstract,  
-            "tags": [],
+            "tags": info.tags,
             "collections": [],
             "relations": {}
         }]
 
-        headers = {
-            "Zotero-API-Key": api_key,
-            "Content-Type": "application/json",
-        }
+    else:
+        # if no doi found then use the data from the user upload form
+        author_list = info.author_list
+        input_authors = author_list.split(",")
+        input_authors = get_authors(author_list=input_authors)
 
-        response = requests.post(ZOTERO_API_URL.format(userId=userId), headers=headers, json=data)
+        # get the short title from the title
+        short_title = get_short_title(info.name)
 
-        print("Response: ", response.text)
+        print("Journal got: ", journal)
 
-        if response.status_code == 200 or response.status_code == 201:
-            return JsonResponse({"message": "Item successfully added to Zotero!"})
-        
-        # Handle the case where the response is not 200 or 201
-        try:
-            # Attempt to parse the response as JSON
-            response_data = response.json()
-        except requests.exceptions.JSONDecodeError:
-            # If JSON decoding fails, handle it and return the response text
-            response_data = response.text
+        data = [{
+            "itemType": zotero_item_type_mapping[info.type.name],
+            "title": info.name,
+            "creators": input_authors if input_authors else None,
+            "publicationTitle": journal,  
+            "date": info.year if info.year else None,
+            "language": info.language if info.language else None,
+            "shortTitle": short_title,
+            "url": info.url if info.url else None,
+            "abstractNote": info.description if info.description else None,
+            "tags": tags,
+            "collections": [],
+            "relations": {}
+        }]
 
-        return JsonResponse({
-            "error": "Failed to add item",
-            "details": response_data,
-        }, status=400)
+    headers = {
+        "Zotero-API-Key": api_key,
+        "Content-Type": "application/json",
+    }
+
+    response = requests.post(ZOTERO_API_URL.format(groupId=groupId), headers=headers, json=data)
+
+    print("Response: ", response.text)
+
+    if response.status_code == 200 or response.status_code == 201:
+        return JsonResponse({"message": "Item successfully added to Zotero!"})
+    
+    # Handle the case where the response is not 200 or 201
+    try:
+        # Attempt to parse the response as JSON
+        response_data = response.json()
+    except requests.exceptions.JSONDecodeError:
+        # If JSON decoding fails, handle it and return the response text
+        response_data = response.text
+
+    return JsonResponse({
+        "error": "Failed to add item",
+        "details": response_data,
+    }, status=400)
 
 # We use this function to return the data in the right json object format
 # This might already be stored in cache, so in that case we just retrieve it
@@ -1108,7 +1136,6 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
     else:
         type = LibraryItemType.objects.get(pk=type)
 
-    print("Down here!!!!!")
 
     if project.is_data_project:
         data_management = True
@@ -1214,19 +1241,12 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         if "inventory" in request.GET:
             files = True
 
-        if type.name == "Journal Article" or type.name == "Thesis" or type.name == "Conference Paper" or type.name == "Publications":
+        if type.name == "Journal Article" or type.name == "Thesis" or type.name == "Conference Paper":
             labels["description"] = "Abstract"
             if type.name == "Journal Article":
                 if "doi" not in fields:
                     fields.append("doi")
                 journals = Organization.objects.filter(type="journal")
-            if type.name == "Publications":
-                if "doi" not in fields:
-                    fields.append("doi")
-                fields.remove("tags")
-                fields.remove("license")
-                fields.remove("materials")
-                files = False
 
         elif type.name == "Data visualisation" or type.name == "Image":
             files = False
@@ -1251,6 +1271,11 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
 
         elif type.name == "Dataset":
             fields.append("data_type")
+
+        library_forms = ["Book", "Book Section", "Conference Paper", "Journal Article", "Poster", "Presentation", "Report", "Thesis", "Webpage"]
+
+        if type.name in library_forms:
+            fields.append("contact_email") # allow the uploader to be contacted through their email regarding their upload  
 
         if project.slug == "water":
             # For the water project we always activate ALL of the spaces in the list
@@ -1344,6 +1369,11 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
     if "materials" in fields:
         form.fields["materials"].queryset = Material.objects.filter(catalog_id=18998, parent__isnull=False)
 
+    if "contact_email" in fields:
+        form.fields["contact_email"].widget = forms.EmailInput(attrs={
+            "placeholder": "Please provide your email if you wish to be contacted by those interested in your research"
+        })
+
     if type.name == "Dataset" and curator and False:
         form.fields["activities"].queryset = Activity.objects.filter(catalog_id=3655)
         form.fields["materials"].queryset = Material.objects.filter(Q(catalog_id=19001)|Q(catalog_id=18998)|Q(catalog_id=32553))
@@ -1368,8 +1398,6 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
     if type.name == "Shapefile" or type.name == "Dataset" or type.name == "GPS Coordinates":
         files = True
 
-    warning_message = False
-
     if request.method == "POST":
         if form.is_valid():
             info = form.save(commit=False)
@@ -1393,66 +1421,11 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                 info.position = position
             if not id:
                 info.part_of_project_id = request.project            
-            # Allow the admin to see who requested this library resource
-            if type.name == "Publications":
-                # Check if DOI or URL is provided, if not, invalidate the form
-                if not info.doi and not info.url:
-                    form.add_error('doi', 'DOI is required for publications.')
-                    form.add_error('url', 'URL is required for publications.')
-                    warning_message = True,
-                    context = {
-                        "info": info,
-                        "hide_search_box": hide_search_box,
-                        "form": form,
-                        "load_select2": True,
-                        "type": type,
-                        "title": f"Adding: {str(type)}",
-                        "publishers": publishers,
-                        "journals": journals,
-                        "tag": tag,
-                        "space_name": space,
-                        "files": files,
-                        "menu": "library_item_form",
-                        "view_processing": view_processing,
-                        "warning_message": warning_message,  # Add warning message flag
-                    }
-                    return render(request, 'library/form.html', context)
-                
-                # warn the user if there already an entry in the LibraryItem with the same title, url or doi
-                query = Q(name=info.name)
-                if info.url:
-                    query |= Q(url=info.url)
-                if info.doi:
-                    query |= Q(doi=info.doi)
-                
-                if LibraryItem.objects.filter(query).exists():
-                    if not proceed:  # If user hasn't confirmed yet, show warning
-                        warning_message = True
-                        context = {
-                            "info": info,
-                            "hide_search_box": hide_search_box,
-                            "form": form,
-                            "load_select2": True,
-                            "type": type,
-                            "title": f"Adding: {str(type)}",
-                            "publishers": publishers,
-                            "journals": journals,
-                            "tag": tag,
-                            "space_name": space,
-                            "files": files,
-                            "menu": "library_item_form",
-                            "view_processing": view_processing,
-                            "warning_message": warning_message,  # Add warning message flag
-                        }
-                        return render(request, "library/form.html", context)
-                
-                if not info.meta_data:
-                    info.meta_data = {}
-                info.meta_data["assigned_to"] = "TestAdmin"
-                info.meta_data["uploader"] = request.user.username
     
             info.save()
             form.save_m2m()
+
+            journalPublisher = None # in case the user choose the journal
 
             if tag:
                 info.tags.add(tag)
@@ -1480,6 +1453,7 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                     publisher = request.POST.get("journal")
                 else:
                     publisher = request.POST.get("publisher")
+                journalPublisher = publisher
                 if info:
                     check = RecordRelationship.objects.filter(record_child=info, relationship_id=RELATIONSHIP_ID["publisher"])
                     if check:
@@ -1595,6 +1569,11 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
                 msg = "The item was saved. It is indexed for review and once this is done it will be added to our site. Thanks for your contribution! <a href='"+info.get_absolute_url()+"'>View item</a>"
             else:
                 msg = "The item was saved. It is indexed for review and once this is done it will be added to our site. Thanks for your contribution!"
+
+            # if the form is one of the library form
+            if type.name in library_forms:
+                add_to_zotero(info=info, journal=journalPublisher) # add the requested publication to Simron's Zotero
+
             messages.success(request, msg)
 
             if view_processing and "process" in request.POST:
@@ -1637,7 +1616,6 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         "files": files,
         "menu": "library_item_form",
         "view_processing": view_processing,
-        "warning_message": warning_message,
     }
     return render(request, "library/form.html", context)
 

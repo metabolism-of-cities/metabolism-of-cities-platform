@@ -3768,14 +3768,3 @@ def controlpanel_shapefiles(request):
     }
     return render(request, "controlpanel/shapefiles.html", context)
 
-@login_required
-def controlpanel_publications(request):
-    if not has_permission(request, request.project, ["curator", "admin", "publisher"]):
-        unauthorized_access(request)
-
-    context = {
-        "items": LibraryItem.objects.filter(type__name="Publications"),
-        "load_datatables": True,
-    }
-    return render(request, "controlpanel/publications.html", context)
-

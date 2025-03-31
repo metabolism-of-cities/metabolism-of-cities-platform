@@ -1192,6 +1192,8 @@ class LibraryItem(Record):
 
     data_type = models.ForeignKey(DatasetType, on_delete=models.CASCADE, null=True, blank=True)
 
+    contact_email = models.EmailField(max_length=255, null=True, blank=True) # this is a method for the MOI to contact the uploader directly regarding their publications upload
+
     STATUS = (
         ("pending", "Pending"),
         ("active", "Active"),

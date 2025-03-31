@@ -111,7 +111,6 @@ baseline_urlpatterns = [
     path("library/<int:id>/", library.item, { "show_export": False }, name="library_item"),
     path("library/<int:id>/report/", library.report_error, name="report_error"),
     path("library/<int:id>/data/json/", library.data_json, name="library_data_json"),
-    path("library/<int:id>/add-to-zotero/", library.add_to_zotero, name="add-to-zotero"),
     path("library/<int:id>/download/<int:document>/", library.document_download, name="document_download"),
     path("download/<int:document>/", library.document_download, name="document_download"),
 

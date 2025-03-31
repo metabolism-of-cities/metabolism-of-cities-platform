@@ -146,26 +146,17 @@
     <h2>Contribute</h2>
     <div class="row">
       <div class="col-xl-3 col-md-6">
-        <a class="btn-icon" href="hub/harvesting/896/form/?inventory=true&amp;type=10&amp;mfa=true&amp;next={{ request.get_full_path }}hub/harvesting/">
+        <a class="btn-icon" href="hub/harvesting/">
           <div class="title"><i class="fal fa-chart-area fa-fw"></i> Datasets </div>
           <div class="text">Contribute to datasets on material flows, stocks, consumption, and more</div>
         </a>
       </div>
       <div class="col-xl-3 col-md-6">
-        <a class="btn-icon" href="hub/harvesting/900/form/?inventory=true&amp;type=42&amp;mfa=true&amp;next={{ request.get_full_path }}hub/harvesting/">
+        <a class="btn-icon" href="{% url "library:upload" %}">
           <div class="title"><i class="fal fa-books fa-fw"></i> Publications
           </div>
           <div class="text">
             Contribute to Academic literature, reports, and publications published in peer-reviewed journals
-          </div>
-        </a>
-      </div>
-      <div class="col-xl-3 col-md-6">
-        <a class="btn-icon" href="hub/harvesting/900/form/?inventory=true&amp;type=20&amp;mfa=true&amp;next={{ request.get_full_path }}hub/harvesting/">
-          <div class="title"><i class="fal fa-globe-africa fa-fw"></i> Maps
-          </div>
-          <div class="text">
-            Contribute to boundaries, micro-territorial unites, infrastructure maps, and more
           </div>
         </a>
       </div>
