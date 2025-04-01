@@ -908,14 +908,7 @@ def hub_selector(request):
 # user's saved library item search
 @login_required
 def hub_bookmark_items(request):
-    user = request.user
-    saved_items_id = set()
-    if user in globals.test_map:
-        saved_items_id = globals.test_map[user]
-    saved_items = set()
-    for item_id in saved_items_id:
-        libraryItem = LibraryItem.objects.get(id=item_id)
-        saved_items.add(libraryItem)
+    saved_items = LibraryItem.objects.filter(saved_by_users=request.user)
     
     context = {
         "items" : saved_items,

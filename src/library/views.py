@@ -29,8 +29,6 @@ import math
 # To send mail
 from django.core.mail import EmailMultiAlternatives
 
-import globals
-
 
 THIS_PROJECT = PROJECT_ID["library"]
 
@@ -348,7 +346,6 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
             pass
 
     is_saved = False # check if the user had saved this item or not
-    print("Globals map: ", globals.test_map)
     if request.user.is_authenticated:
         if has_permission(request, request.project, ["curator", "dataprocessor"]) or request.user.people == info.uploader or request.user.people == info.author:
             curator = True
@@ -359,45 +356,27 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
             elif info.type.id == 10:
                 url_processing = project.slug + ":hub_processing_dataset"
 
-        print(info.id)
-        if request.user in globals.test_map and str(info.id) in globals.test_map[request.user]:
+
+        if(LibraryItem.objects.filter(id=id, saved_by_users=request.user.id).exists()):
             is_saved = True
 
         # if user want to bookmark this item
         if request.method == "POST":
-            # try:
-                # Decode the request body from bytes to a string
-            body = request.body.decode('utf-8')
-            data = json_module.loads(body)
-            item_id = data["item_id"]
-
-            # library_item = LibraryItem.objects.get(id=item_id)
+            try:
+                library_item = LibraryItem.objects.get(id=id)
             
-            # print("Got library item: ", library_item)
-            # for field in LibraryItem._meta.fields:
-            #     print(f"{field.name}: {field.get_internal_type()}")
-            # Add or remove the item from the user's saved items (toggle behavior)
-            # if library_item.saved_by.filter(id=request.user.id).exists():
-            #     library_item.saved_by.remove(request.user)
-            #     action = "removed"
-            # else:
-            #     library_item.saved_by.add(request.user)
-            #     action = "added"
+                # Add or remove the item from the user's saved items (toggle behavior)
+                if library_item.saved_by_users.filter(id=request.user.id).exists():
+                    library_item.saved_by_users.remove(request.user.id)
+                    action = "removed"
+                else:
+                    library_item.saved_by_users.add(request.user.id)
+                    action = "added"
 
-            if request.user not in globals.test_map:
-                globals.test_map[request.user] = set()
-            if item_id in globals.test_map[request.user]:
-                globals.test_map[request.user].remove(item_id)
-                action = "removed"
-            else:
-                globals.test_map[request.user].add(item_id)
-                action = "added"
-            print("Globals map: ", globals.test_map)
-            return JsonResponse({"success": True, "action": action})
-            # except LibraryItem.DoesNotExist:
-            #     return JsonResponse({"success": False, "error": "Item not found"}, status=404)
-            # except Exception as e:
-            #     return JsonResponse({"success": False, "error": str(e)}, status=400)
+                return JsonResponse({"success": True, "action": action})
+            
+            except Exception as e:
+                return JsonResponse({"success": False, "error": str(e)}, status=400)
 
     if info.type.group == "multimedia":
         section = "multimedia_library"

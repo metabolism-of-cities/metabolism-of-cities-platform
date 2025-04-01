@@ -1124,7 +1124,6 @@
                   "Content-Type": "application/json",
                   "X-CSRFToken": "{{ csrf_token }}"
               },
-              body: JSON.stringify({ item_id: itemId })
           })
           .then(response => response.json())
           .then(data => {
