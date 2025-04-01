@@ -54,8 +54,6 @@ import facebook
 
 from .mocfunctions import *
 
-import globals
-
 THIS_PROJECT = PROJECT_ID["core"]
 
 def user_register(request, project="core", section=None):
