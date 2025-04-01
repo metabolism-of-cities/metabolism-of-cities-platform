@@ -10,6 +10,99 @@
   <!-- When we have fully figured all this out we can consider getting it indexed. Ensure there is a canonical link as this page is generated with various URLs -->
   <meta name="robots" content="noindex">
 
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Share Popup</title>
+  <script crossorigin="anonymous"></script>
+  <style>
+      /* Overlay */
+      .overlay {
+          display: none;
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.6);
+          z-index: 999;
+      }
+
+      /* Share popup container */
+      .share-popup {
+          display: none;
+          position: fixed;
+          bottom: -100%;
+          left: 50%;
+          transform: translateX(-50%);
+          background: white;
+          padding: 30px;
+          box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+          border-radius: 10px;
+          text-align: center;
+          width: 90%;
+          max-width: 450px;
+          z-index: 1000;
+          transition: bottom 0.3s ease-in-out;
+      }
+
+      /* Show animation */
+      .share-popup.show {
+          bottom: 20px;
+      }
+
+      /* Share popup heading */
+      .share-popup h3 {
+          margin: 10px 0;
+          color: #333;
+          font-size: 18px;
+      }
+
+      /* Share icons container */
+      .share-icons {
+          display: flex;
+          justify-content: space-around;
+          padding: 10px 0;
+      }
+
+      /* Share buttons */
+      .share-icons a {
+          text-decoration: none;
+          font-size: 24px;
+          width: 50px;
+          height: 50px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          color: white;
+          transition: transform 0.2s ease-in-out;
+      }
+
+      /* Hover effect */
+      .share-icons a:hover {
+          transform: scale(1.1);
+      }
+
+      /* Individual colors */
+      .email { background: #D44638; } /* Gmail red */
+      .outlook { background: #1da1f2; } /* Outlook blue */
+      .facebook { background: #3b5998; }
+      .twitter { background: #1da1f2; }
+      .linkedin { background: #0077b5; }
+      .reddit { background: #ff4500; }
+
+      /* Close button */
+      .close-btn {
+          display: inline-block;
+          background: #dc3545;
+          color: white;
+          padding: 8px 20px;
+          border-radius: 5px;
+          cursor: pointer;
+          margin-top: 10px;
+          font-size: 14px;
+      }
+  </style>
 {% endblock %}
 
 {% block css %}
@@ -113,6 +206,103 @@
             </div>
             <div>{{ info.type }}</div>
           </li>
+
+          <li class="list-group-item table-item">
+            <div>
+              <i class="fal fa-fw fa-share-square"></i>
+              Share
+            </div>
+            <div><i class="fal fa-fw fa-share share-button" onclick="openSharePopup()"></i></div>
+          </li>
+
+          <style>
+            .share-button {
+              transition: transform 0.3s ease-in-out;
+            }
+
+            .share-button:hover {
+              transform: scale(1.2);
+              cursor: pointer;
+            }
+          </style>
+
+          <!-- Overlay -->
+          <div class="overlay" id="overlay" onclick="closeSharePopup()"></div>
+
+          <!-- Share Popup -->
+          <div class="share-popup" id="sharePopup">
+              <h3>Share This Item</h3>
+              <div class="share-icons">
+                <a href="#" class="email" onclick="shareEmail()"><i class="fab fa-google"></i></a>
+                <a href="#" class="outlook" onclick="shareOutlook()"><i class="fal fa-envelope"></i></a>
+                <a href="#" class="facebook" onclick="shareFacebook()"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="twitter" onclick="shareTwitter()"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="linkedin" onclick="shareLinkedIn()"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" class="reddit" onclick="shareReddit()"><i class="fab fa-reddit-alien"></i></a>
+            </div>
+            <div class="close-btn" onclick="closeSharePopup()">Close</div>
+          </div>
+
+          <script>
+              // Function to open the popup
+              function openSharePopup() {
+                  document.getElementById("sharePopup").style.display = "block";
+                  document.getElementById("overlay").style.display = "block";
+
+                  // Add animation class after a small delay
+                  setTimeout(() => {
+                      document.getElementById("sharePopup").classList.add("show");
+                  }, 100);
+              }
+
+              // Function to close the popup
+              function closeSharePopup() {
+                  document.getElementById("sharePopup").classList.remove("show");
+
+                  // Hide the popup after animation
+                  setTimeout(() => {
+                      document.getElementById("sharePopup").style.display = "none";
+                      document.getElementById("overlay").style.display = "none";
+                  }, 300);
+              }
+
+              // URL to be shared
+              const shareURL = window.location.href;
+
+              // Share via Email
+              function shareEmail() {
+                const subject = encodeURIComponent("Check this out!");
+                const body = encodeURIComponent(`I found this interesting: ${shareURL}`);
+                window.open(`https://mail.google.com/mail/?view=cm&fs=1&su=${subject}&body=${body}`, "_blank");
+              }
+
+              // Share via Outlook
+              function shareOutlook() {
+                const subject = encodeURIComponent("Check this out!");
+                const body = encodeURIComponent(`I found this interesting: ${shareURL}`);
+                window.open(`https://outlook.live.com/mail/deeplink/compose?subject=${subject}&body=${body}`, "_blank");
+              }
+
+              // Share via Facebook
+              function shareFacebook() {
+                window.open(`https://www.facebook.com/sharer/sharer.php?u=${shareURL}`, "_blank");
+              }
+
+              // Share via Twitter (X)
+              function shareTwitter() {
+                  window.open(`https://twitter.com/intent/tweet?url=${shareURL}&text=Check this out!`, "_blank");
+              }
+
+              // Share via LinkedIn
+              function shareLinkedIn() {
+                  window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${shareURL}`, "_blank");
+              }
+
+              // Share via Reddit
+              function shareReddit() {
+                  window.open(`https://www.reddit.com/submit?url=${shareURL}&title=Check this out!`, "_blank");
+              }
+          </script>
 
           {% if publisher %}
             <li class="list-group-item table-item">
