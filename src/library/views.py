@@ -1572,8 +1572,11 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
 
             # if the form is one of the library form
             if type.name in library_forms:
-                input_journal = Organization.objects.filter(id=int(journalPublisher)).first()
-                add_to_zotero(info=info, journal=input_journal.slug) # add the requested publication to Simron's Zotero
+                if journalPublisher is None:
+                    add_to_zotero(info=info,journal=None)
+                else:
+                    input_journal = Organization.objects.filter(id=int(journalPublisher)).first()
+                    add_to_zotero(info=info, journal=input_journal.slug) # add the requested publication to Simron's Zotero
 
             messages.success(request, msg)
 
