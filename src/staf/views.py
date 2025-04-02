@@ -2223,6 +2223,7 @@ def hub_processing_dataset_classify(request, id, space=None):
             completed = True
             return redirect("../save/")
         try:
+            print("Info meta data processing error: ", info.meta_data["processing_error"])
             if "processing_error" in info.meta_data:
                 del info.meta_data["processing_error"]
                 info.save()
@@ -2231,6 +2232,7 @@ def hub_processing_dataset_classify(request, id, space=None):
                 completed = True
         except:
             completed = False
+        print("Completed here: ", completed)
         if completed:
             return redirect("../save/")
         else:

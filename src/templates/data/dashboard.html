@@ -113,7 +113,7 @@
 </section>
 
 <section class="resources">
-  <h2>Existing Resources</h2>
+  <h2>Existing Resources <i class="fal fa-folder fa-fw"></i></h2>
   <div class="row">
     <div class="col-xl-3 col-md-6">
       <a class="btn-icon" href="{% url URLS.LIBRARY_OVERVIEW space.slug 'datasets' %}">
@@ -142,33 +142,74 @@
   </div>
 </section>
 
-<section class="contribution">
-    <h2>Contribute</h2>
-    <div class="row">
-      <div class="col-xl-3 col-md-6">
-        <a class="btn-icon" href="hub/harvesting/">
-          <div class="title"><i class="fal fa-chart-area fa-fw"></i> Datasets </div>
-          <div class="text">Contribute to datasets on material flows, stocks, consumption, and more</div>
-        </a>
-      </div>
-      <div class="col-xl-3 col-md-6">
-        <a class="btn-icon" href="{% url "library:upload" %}">
-          <div class="title"><i class="fal fa-books fa-fw"></i> Publications
-          </div>
-          <div class="text">
-            Contribute to Academic literature, reports, and publications published in peer-reviewed journals
-          </div>
-        </a>
-      </div>
-      <div class="col-xl-3 col-md-6">
-        <a class="btn-icon" href="hub/harvesting/0/form/?inventory=true&amp;type=38&amp;next={{ request.get_full_path }}hub/harvesting/&amp;hide_tags=true">
-          <div class="title"><i class="fal fa-photo-video fa-fw"></i> Multimedia
-          </div>
-          <div class="text"> Contribute to Photos, videos and data visualisations, and more
-          </div>
-        </a>
-      </div>
+<section class="Videos">
+  <h2>Video Tutorials <i class="fal fa-video fa-fw"></i></h2>
+  <div class="row">
+    <div class="col-xl-3 col-md-6">
+      <a class="btn-icon" href="https://multimedia.metabolismofcities.org/videos/collection/754/">
+        <div class="title"><i class="fal fa-video fa-fw"></i> Data</div>
+        <div class="text">Check out our instruction videos on how to upload any data for this island</div>
+      </a>
     </div>
+    <div class="col-xl-3 col-md-6">
+      <a class="btn-icon" href="">
+        <div class="title"><i class="fal fa-video fa-fw"></i> Publications
+        </div>
+        <div class="text">
+          Check out our instruction videos on how to upload a library publication for this island
+        </div>
+      </a>
+    </div>
+    <div class="col-xl-3 col-md-6">
+      <a class="btn-icon" href="https://multimedia.metabolismofcities.org/videos/collection/966/">
+        <div class="title"><i class="fal fa-video fa-fw"></i> Processing</div>
+        <div class="text">
+          Check out our instruction videos on how to process dataset, shapefiles, geospatial spreadsheets, and many more.
+        </div>
+      </a>
+    </div>
+    <!-- <div class="col-xl-3 col-md-6">
+      <a class="btn-icon" href="https://multimedia.metabolismofcities.org/videos/collection/966/">
+        <div class="title"><i class="fal fa-video fa-fw"></i> Article</div>
+        <div class="text">
+          Check out our instruction videos on how to write and publish an article on our website
+        </div>
+      </a>
+    </div> -->
+  </div>
+</section>
+
+<section class="contribution">
+  <h2>Contribute <i class="fal fa-upload fa-fw"></i></h2>
+  <div class="row">
+    <div class="col-xl-3 col-md-6">
+      <a class="btn-icon" href="hub/harvesting/">
+        <div class="title"><i class="fal fa-database fa-fw"></i> Data collection</div>
+        <div class="text">Indexing and uploading of datasets, reports, photos, and more.</div>
+      </a>
+    </div>
+    <div class="col-xl-3 col-md-6">
+      <a class="btn-icon" href="{% url "library:upload" %}">
+        <div class="title"><i class="fal fa-books fa-fw"></i> Publications
+        </div>
+        <div class="text">
+          Contribute to Academic literature, reports, and publications published in peer-reviewed journals
+        </div>
+      </a>
+    </div>
+    <div class="col-xl-3 col-md-6">
+      <a class="btn-icon" href="hub/processing/">
+        <div class="title"><i class="fal fa-cog fa-fw"></i> Processing</div>
+        <div class="text">Data are standardised and loaded into a single dataset.</div>
+      </a>
+    </div>
+    <!-- <div class="col-xl-3 col-md-6">
+      <a class="btn-icon" href="hub/processing/">
+        <div class="title"><i class="fal fa-newspaper fa-fw"></i> Article</div>
+        <div class="text">Contribute to</div>
+      </a>
+    </div> -->
+  </div>
 </section>
 
 <!-- Get rid of the progress section -->
@@ -230,7 +271,7 @@
   </div>
 </section> -->
 
-<section class="community">
+<!-- <section class="community">
   <h2>Community portal</h2>
 
   <div class="row">
@@ -261,7 +302,7 @@
       </div>
     </div>
   </div>
-</section>
+</section> -->
 
 {% endblock %}
 

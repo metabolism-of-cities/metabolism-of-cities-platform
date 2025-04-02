@@ -47,6 +47,46 @@
 
   <form method="post" enctype="multipart/form-data">
 
+    <!-- Attach the video for dataset, image upload -->
+    {% if type.name == "Dataset" or type.name == "Image"  %} 
+      <div class="alert alert-warning">
+        <i class="fa fa-fw fa-info-circle"></i>
+        Instructions: make sure you watch the video tutorial on how to upload the {{ type.name }}
+        <br>
+        <a id="instructionLink" href="" class="btn btn-primary mt-3">
+          <i class="fa fa-video"></i> Instruction video on how to upload <span id="typeName">{{ type.name }}</span>
+        </a>
+        <script>
+          // Get the link and text elements
+          var linkElement = document.getElementById("instructionLink");
+          var typeNameElement = document.getElementById("typeName").innerHTML;
+
+          console.log(`Type name: ${typeNameElement}`)
+
+          // Define different URLs based on type.name
+          var tutorialLinks = {
+            "Dataset": "https://multimedia.metabolismofcities.org/videos/33030/",
+            "Image": "https://multimedia.metabolismofcities.org/videos/36548/",
+          };
+
+          // Set href dynamically based on type.name
+          linkElement.href = tutorialLinks[typeNameElement] || "https://example.com/default-tutorial";
+        </script>
+      </div>
+    {% endif %}
+
+    <!-- Attach the link to the sample data visualisation for the user to has some reviews on the previous work -->
+    {% if type.name == "Data visualisation" %} 
+    <div class="alert alert-warning">
+      <i class="fa fa-fw fa-info-circle"></i>
+      Check out some of our previous data visualisation work here: 
+      <br>
+      <a href="https://multimedia.metabolismofcities.org/datavisualizations/" class="btn btn-primary mt-3">
+        <i class="fa fa-link"></i> Our previous data visualisations work</span> 
+      </a>
+    </div>
+  {% endif %}
+
     {% if not info and not request.GET.parent and not hide_search_box and not request.GET.inventory %}
       <div class="alert alert-warning">
         <p>

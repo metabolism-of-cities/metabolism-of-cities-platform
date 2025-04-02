@@ -1718,6 +1718,7 @@ class LibraryItem(Record):
                             start = start.strftime("%Y-%m-%d")
                             end = None
                             period = str(start)
+                            print("ERROR: ", error)
                     except Exception as e:
                         error = f"We had an issue formatting your date(s) - this error came back: {e}"
 
@@ -1750,7 +1751,7 @@ class LibraryItem(Record):
                     Data.objects.bulk_create(items)
                 except Exception as e:
                     error = f"We were unable to save the records - this is the error that came back: {e}"
-
+        
         self.meta_data["ready_for_processing"] = False
         if error:
             self.meta_data["processing_error"] = error

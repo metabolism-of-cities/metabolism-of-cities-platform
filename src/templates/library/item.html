@@ -479,6 +479,15 @@
           </li>
           {% endif %}
 
+          {% if info.contact_email %}
+          <li class="list-group-item table-item hide-water">
+            <div><i class="fal fa-fw fa-envelope"></i> Contact</div>
+            <div>
+              {{ info.contact_email }}
+            </div>
+          </li>
+          {% endif %}
+
           {% if info.processor %}
           <li class="list-group-item table-item hide-water">
             <div><i class="fal fa-fw fa-user mr-1"></i> Processed by</div>

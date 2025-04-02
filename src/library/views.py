@@ -732,8 +732,6 @@ def add_to_zotero(info: LibraryItem, journal):
         # get the short title from the title
         short_title = get_short_title(info.name)
 
-        print("Journal got: ", journal)
-
         data = [{
             "itemType": zotero_item_type_mapping[info.type.name],
             "title": info.name,
@@ -755,8 +753,6 @@ def add_to_zotero(info: LibraryItem, journal):
     }
 
     response = requests.post(ZOTERO_API_URL.format(groupId=groupId), headers=headers, json=data)
-
-    print("Response: ", response.text)
 
     if response.status_code == 200 or response.status_code == 201:
         return JsonResponse({"message": "Item successfully added to Zotero!"})

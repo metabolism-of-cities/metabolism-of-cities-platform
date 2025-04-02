@@ -36,6 +36,13 @@ def strip_first_slash(string):
 def get_list(dictionary, key):
     return dictionary.getlist(key)
 
+@register.filter
+def split_by_comma(value):
+    """Splits a string by commas."""
+    if isinstance(value, str):
+        return value.split(",")
+    return []
+
 
 #### TEMP FOR MAP CONVERSION #####
 @register.filter
