@@ -234,7 +234,7 @@
               <h3>Share This Item</h3>
               <div class="share-icons">
                 <a href="#" class="email" onclick="shareEmail()"><i class="fab fa-google"></i></a>
-                <a href="#" class="outlook" onclick="shareOutlook()"><i class="fal fa-envelope"></i></a>
+                <a target="_top" href="#" class="outlook" onclick="shareOutlook()"><i class="fal fa-envelope"></i></a>
                 <a href="#" class="facebook" onclick="shareFacebook()"><i class="fab fa-facebook-f"></i></a>
                 <a href="#" class="twitter" onclick="shareTwitter()"><i class="fab fa-twitter"></i></a>
                 <a href="#" class="linkedin" onclick="shareLinkedIn()"><i class="fab fa-linkedin-in"></i></a>
@@ -280,7 +280,7 @@
               function shareOutlook() {
                 const subject = encodeURIComponent("Check this out!");
                 const body = encodeURIComponent(`I found this interesting: ${shareURL}`);
-                window.open(`https://outlook.live.com/mail/deeplink/compose?subject=${subject}&body=${body}`, "_blank");
+                window.location.href = `mailto:?subject=${subject}&body=${body}`;
               }
 
               // Share via Facebook
@@ -295,8 +295,8 @@
 
               // Share via LinkedIn
               function shareLinkedIn() {
-                  window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${shareURL}`, "_blank");
-              }
+                window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${shareURL}`, "_blank");
+              } 
 
               // Share via Reddit
               function shareReddit() {
