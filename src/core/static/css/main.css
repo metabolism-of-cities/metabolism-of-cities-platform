@@ -500,7 +500,7 @@ blockquote {
   background-color: #144d58;
   border-color: #144d58; }
 
-.card.icon-card {
+/* .card.icon-card {
   height: 100%;
   border: none; }
   .card.icon-card .icon {
@@ -516,7 +516,548 @@ blockquote {
   .card.icon-card .card-body {
     background-color: #efefef;
     border-bottom-left-radius: .25rem;
-    border-bottom-right-radius: .25rem; }
+    border-bottom-right-radius: .25rem; } */
+
+.card.icon-card {
+  height: 100%;
+  border: none;
+  transition: background-color 0.5s ease-in-out, transform 0.5s ease-in-out;
+  cursor: pointer;
+}
+
+.card.icon-card .icon {
+  height: 128px;
+  font-size: 4rem;
+  text-align: center;
+  padding: 1rem 0;
+  background-color: rgba(20, 77, 88, 0.25);
+  border-top-left-radius: .25rem;
+  border-top-right-radius: .25rem;
+  transition: background-color 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+.card.icon-card .card-header {
+  text-align: center;
+  transition: background-color 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+.card.icon-card .card-body {
+  background-color: #efefef;
+  border-bottom-left-radius: .25rem;
+  border-bottom-right-radius: .25rem;
+  transition: background-color 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+/* Hover Effect */
+.card.icon-card:hover {
+  transform: scale(1.05) !important; /* Slight zoom effect */
+}
+
+.card.icon-card:hover .icon,
+.card.icon-card:hover .card-header {
+  background-color: #fbfbfb !important;
+  color: #144d58 !important;
+}
+
+.card.icon-card:hover .card-body {
+  background-color: #144d58;
+  color: white;
+}
+
+.card.icon-card:hover .icon i {
+  color: #144d58 !important; /* Change the icon color on hover */
+  transform: scale(1.2) !important;
+}
+
+/* Dataset upload form style */
+/* Override Bootstrap h5 styling */
+h1.h5 {
+  font-size: 2.5rem; /* Slightly larger than default h5 */
+  font-weight: 700; /* Make it bolder */
+  text-transform: uppercase; /* Optional: makes text uppercase */
+  letter-spacing: 1.5px; /* Slightly increases spacing */
+  text-align: center;
+  display: block;
+
+  /* Gradient Effect */
+  background: linear-gradient(90deg, #144d58, #00a896); /* Dark blue-green to teal */
+  -webkit-background-clip: text; /* Clip background to text */
+  background-clip: text;
+  color: transparent; /* Makes the text itself transparent so gradient shows */
+}
+
+/* Style for label */
+label {
+  font-size: 1.2rem; /* Smaller font size */
+  font-weight: 600; /* Medium-bold */
+  display: block; /* Ensures proper alignment */
+  margin: 0.5rem auto; /* Adjusted margin for spacing */
+
+  /* Gradient Effect */
+  background: linear-gradient(90deg, #144d58, #00a896); /* Dark blue-green to teal */
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Ensure it adapts well on smaller screens */
+@media (max-width: 768px) {
+  h1.h5 {
+    font-size: 1.25rem; /* Slightly smaller for mobile */
+  }
+  label {
+    font-size: 0.5rem;
+  }
+}
+
+.form-control {
+  display: block;
+  width: 100%;
+  height: 50px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.5;
+  color: #2C3E50; /* Dark blue-gray */
+  background: #F8F9FA; /* Light background */
+  border: 2px solid #CED4DA; /* Default border color */
+  border-radius: 8px;
+  transition: all 0.3s ease-in-out;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Hover Effect */
+.form-control:hover {
+  border-color: #388E3C; /* Darker green on hover */
+  background: #F1F8E9;
+}
+
+/* Focus Effect */
+.form-control:focus {
+  border-color: #4CAF50; /* Green border when focused */
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+  background: white;
+  outline: none;
+}
+
+/* Placeholder Styling */
+.form-control::placeholder {
+  color: #A0A0A0;
+  opacity: 0.8;
+}
+
+/* Disabled State */
+.form-control:disabled {
+  background-color: #E0E0E0;
+  border-color: #BDBDBD;
+  cursor: not-allowed;
+}
+
+/* Invalid State */
+.form-control.is-invalid {
+  border-color: #E74C3C;
+  background: #FDEDEC;
+  color: #C0392B;
+}
+
+/* Valid State */
+.form-control.is-valid {
+  border-color: #27AE60;
+  background: #E9F7EF;
+  color: #1E8449;
+}
+
+/* Wrapper for the custom select */
+.custom-select-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+/* Wrapper for the custom select */
+.custom-select-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+/* Custom Select */
+.custom-select {
+  display: inline-block;
+  width: 100%;
+  height: 45px;
+  padding: 0.5rem 2rem 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.5;
+  color: #2C5F2D; /* Dark green text */
+  background: #fff; /* White background */
+  border: 2px solid #ced4da; /* Neutral gray border */
+  border-radius: 8px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Focus Effect */
+.custom-select:focus {
+  border-color: #2E7D32; /* Darkest green */
+  box-shadow: 0 0 8px rgba(46, 125, 50, 0.5);
+  outline: none;
+}
+
+/* Disabled State */
+.custom-select:disabled {
+  background-color: #E0E0E0;
+  border-color: #BDBDBD;
+  cursor: not-allowed;
+}
+
+/* Dropdown Arrow */
+.custom-select::after {
+  content: "▼"; /* Default down arrow */
+  font-size: 0.75rem;
+  color: #6c757d;
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  transition: transform 0.3s ease;
+}
+
+/* When Dropdown is Open, Rotate the Arrow Upward */
+.custom-select:focus::after {
+  content: "▲"; /* Change to upward arrow */
+}
+
+/*
+  Select2 Bootstrap Overriding Style
+*/
+
+/* Base Select2 Styling */
+.select2-container--bootstrap4 .select2-selection {
+  background-color: #ffffff;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  padding: 0.35rem 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Dropdown Arrow */
+.select2-container--bootstrap4 .select2-selection::after {
+  content: "▼"; /* Default down arrow */
+  font-size: 0.75rem;
+  color: #6c757d;
+  position: absolute;
+  right: 12px;
+  pointer-events: none;
+  transition: transform 0.3s ease;
+}
+
+/* When Dropdown is Open, Rotate the Arrow Upward */
+.select2-container--open .select2-selection::after {
+  content: "▲"; /* Change to upward arrow */
+}
+
+/* Focus Effect */
+.select2-container--bootstrap4 .select2-selection:focus,
+.select2-container--bootstrap4 .select2-selection.select2-container--focus {
+  border-color: #388E3C;
+  box-shadow: 0 0 6px rgba(76, 175, 80, 0.4);
+  outline: none;
+}
+
+/* Hover Effect */
+.select2-container--bootstrap4 .select2-selection:hover {
+  border-color: #a0a0a0;
+}
+
+/* Multiple Selection Styling */
+.select2-container--bootstrap4 .select2-selection--multiple {
+  min-height: 2rem;
+  padding: 0.35rem 1rem;
+}
+
+/* Dropdown Style */
+.select2-container .select2-dropdown {
+  border-radius: 6px;
+  border: 1px solid #ced4da;
+  background-color: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  padding: 0.5rem 0;
+  max-height: 280px;
+  overflow-y: auto;
+}
+
+/* Option Styling */
+.select2-container .select2-results__option {
+  padding: 0.6rem 1rem;
+  font-size: 0.875rem;
+  background-color: lightgrey !important;
+  transition: background-color 0.2s ease;
+}
+
+/* Option Hover Effect */
+.select2-container .select2-results__option:hover {
+  background-color: #e0e0e0 !important;
+  cursor: pointer;
+}
+
+/* Selected Option */
+.select2-container .select2-results__option[aria-selected='true'] {
+  background-color: darkgray !important; 
+  color: black; 
+}
+
+/* Placeholder Styling */
+.select2-container .select2-selection__rendered {
+  color: #6c757d;
+}
+
+/* Disabled State */
+.select2-container--bootstrap4 .select2-selection:disabled {
+  background-color: #f8f9fa;
+  border-color: #ced4da;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Adjust dropdown width */
+.select2-container--bootstrap4 .select2-selection {
+  width: 100%;
+}
+
+/* Active Option */
+.select2-container .select2-results__option[aria-selected='true']:hover {
+  background-color: #388E3C !important;
+  color: #ffffff !important;
+}
+
+/* Improved Styling for Selected Choices */
+.select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice {
+  background-color: #f0f4f8; /* Light grayish-blue background */
+  color: #333; /* Dark text for readability */
+  border: 1px solid #bdc6d0; /* Subtle border */
+  border-radius: 15px; /* Rounded pills */
+  padding: 4px 10px;
+  font-size: 0.875rem; /* Slightly smaller font */
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  gap: 8px; /* Space between text & close button */
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  margin-top: 0.3rem;
+  margin-right: 6px;
+}
+
+/* Hover effect for selected choices */
+.select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice:hover {
+  background-color: #e3ebf3; /* Slightly darker blue-gray on hover */
+  border-color: #a0b4c8;
+}
+
+/* Close button inside selection choices */
+.select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice__remove {
+  color: #666; /* Darker gray for visibility */
+  font-weight: bold;
+  font-size: 1rem;
+  padding-left: 5px;
+  transition: color 0.2s ease;
+}
+
+/* Close button hover effect */
+.select2-container--bootstrap4 .select2-selection--multiple .select2-selection__choice__remove:hover {
+  color: #d9534f; /* Red color for clear deletion action */
+  cursor: pointer;
+}
+
+/* Wrapper for file upload (styled like form-control) */
+.file-upload-wrapper {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  border: 2px dashed #4CAF50; /* Green border */
+  border-radius: 8px;
+  text-align: center;
+  background: #F8F9FA; /* Light background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.3s ease-in-out, background 0.3s ease-in-out;
+}
+
+/* Wrapper for file upload (styled like form-control) */
+.file-upload-wrapper {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  border: 2px dashed #4CAF50; /* Green border */
+  border-radius: 8px;
+  text-align: center;
+  background: #F8F9FA; /* Light background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.3s ease-in-out, background 0.3s ease-in-out;
+}
+
+/* Hide default file input */
+.file-input {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Custom label inside the wrapper */
+.file-upload-label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #2C3E50;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* File upload icon */
+.file-upload-icon {
+  font-size: 1.5rem;
+}
+
+/* Drag & Drop hover effect */
+.file-upload-wrapper:hover,
+.file-upload-wrapper.drag-over {
+  border-color: #388E3C;
+  background: #F1F8E9;
+}
+
+/* File list styling */
+#file-list {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  color: #2C3E50;
+}
+
+/* File item styling */
+.file-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+  font-size: 1rem;
+  color: #2C3E50;
+}
+
+/* Delete button styling */
+.delete-btn {
+  background-color: #E74C3C;
+  border: none;
+  color: white;
+  font-size: 0.8rem;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.delete-btn:hover {
+  background-color: #C0392B;
+}
+
+/*
+  Image file upload
+*/
+
+/* Styling for the file input to make it look better */
+.form-control-file {
+  display: block;
+  width: 100%;
+  height: 120px;
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #2C3E50;
+  background: #F8F9FA; /* Light background */
+  border: 2px dashed #4CAF50; /* Green dashed border */
+  border-radius: 8px;
+  transition: all 0.3s ease-in-out;
+  text-align: center;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+/* Add hover and focus effects */
+.form-control-file:hover {
+  border-color: #388E3C; /* Darker green border on hover */
+  background-color: #E8F5E9;
+}
+
+.form-control-file:focus {
+  border-color: #4CAF50; /* Green border on focus */
+  background-color: #ffffff;
+  outline: none;
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.5);
+}
+
+/* Placeholder Text inside the File Input */
+.form-control-file::before {
+  content: "Drag & Drop your files here or click to browse";
+  font-size: 1rem;
+  font-weight: 500;
+  color: #6C757D;
+  display: block;
+  padding-bottom: 1rem;
+  font-style: italic;
+}
+
+/* Styling for Drag-and-Drop area */
+.form-control-file.dragover {
+  border-color: #388E3C; /* Darker green border when dragging over */
+  background-color: #DFF5DA;
+}
+
+/* Styling for the file list that appears after uploading */
+.file-list {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: #2C5F2D;
+}
+
+/* Button to remove file */
+.remove-file-btn {
+  background-color: #E74C3C; /* Red button for removing file */
+  color: white;
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.remove-file-btn:hover {
+  background-color: #C0392B;
+}
+
+/* Disabled File Input */
+.form-control-file:disabled {
+  background-color: #E0E0E0;
+  border-color: #BDBDBD;
+  cursor: not-allowed;
+}
+
 
 .card-table table {
   margin-bottom: 0;

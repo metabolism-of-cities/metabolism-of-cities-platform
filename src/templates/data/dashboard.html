@@ -113,7 +113,7 @@
 </section>
 
 <section class="resources">
-  <h2>{{ SYSTEM_NAME_SINGULAR|title }} Library</h2>
+  <h2>Existing Resources <i class="fal fa-folder fa-fw"></i></h2>
   <div class="row">
     <div class="col-xl-3 col-md-6">
       <a class="btn-icon" href="{% url URLS.LIBRARY_OVERVIEW space.slug 'datasets' %}">
@@ -142,7 +142,79 @@
   </div>
 </section>
 
-<section class="progress-section">
+<section class="contribution">
+  <h2>Contribute <i class="fal fa-upload fa-fw"></i></h2>
+  <div class="row">
+    <div class="col-xl-3 col-md-6">
+      <a class="btn-icon" href="hub/harvesting/">
+        <div class="title"><i class="fal fa-database fa-fw"></i> Data collection</div>
+        <div class="text">Indexing and uploading of datasets, reports, photos, and more.</div>
+      </a>
+    </div>
+    <div class="col-xl-3 col-md-6">
+      <a class="btn-icon" href="{% url "library:upload" %}">
+        <div class="title"><i class="fal fa-books fa-fw"></i> Publications
+        </div>
+        <div class="text">
+          Contribute to Academic literature, reports, and publications published in peer-reviewed journals
+        </div>
+      </a>
+    </div>
+    <div class="col-xl-3 col-md-6">
+      <a class="btn-icon" href="hub/processing/">
+        <div class="title"><i class="fal fa-cog fa-fw"></i> Processing</div>
+        <div class="text">Data are standardised and loaded into a single dataset.</div>
+      </a>
+    </div>
+    <div class="col-xl-3 col-md-6">
+      <div class="coming-soon badge badge-primary p-2"><h5 class="mb-0">Coming soon...</h5></div>
+      <div class="btn-icon disabled">
+        <div class="title"><i class="fal fa-file-spreadsheet fa-fw"></i> Data articles</div>
+        <div class="text">Photos, podcasts, videos, data visualisations, and more</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="Videos">
+  <h2>"How To" Tutorials <i class="fal fa-video fa-fw"></i></h2>
+  <div class="row">
+    <div class="col-xl-3 col-md-6">
+      <a class="btn-icon" href="https://multimedia.metabolismofcities.org/videos/collection/754/">
+        <div class="title"><i class="fal fa-video fa-fw"></i> Data</div>
+        <div class="text">Check out our instruction videos on how to upload any data for this island</div>
+      </a>
+    </div>
+    <div class="col-xl-3 col-md-6">
+      <a class="btn-icon" href="">
+        <div class="title"><i class="fal fa-video fa-fw"></i> Publications
+        </div>
+        <div class="text">
+          Check out our instruction videos on how to upload a library publication for this island
+        </div>
+      </a>
+    </div>
+    <div class="col-xl-3 col-md-6">
+      <a class="btn-icon" href="https://multimedia.metabolismofcities.org/videos/collection/966/">
+        <div class="title"><i class="fal fa-video fa-fw"></i> Processing</div>
+        <div class="text">
+          Check out our instruction videos on how to process dataset, shapefiles, geospatial spreadsheets, and many more.
+        </div>
+      </a>
+    </div>
+    <div class="col-xl-3 col-md-6">
+      <a class="btn-icon" href="https://education.metabolismofcities.org/courses/">
+        <div class="title"><i class="fal fa-chalkboard-teacher"></i> Online courses</div>
+        <div class="text">
+          Check out our online courses on how to upload your data and how we process and help you visualise your data.
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Get rid of the progress section -->
+<!-- <section class="progress-section">
   <h2>Progress</h2>
   <div class="row">
     {% for each in layers %}
@@ -198,9 +270,9 @@
       </a>
     </div>
   </div>
-</section>
+</section> -->
 
-<section class="community">
+<!-- <section class="community">
   <h2>Community portal</h2>
 
   <div class="row">
@@ -231,7 +303,7 @@
       </div>
     </div>
   </div>
-</section>
+</section> -->
 
 {% endblock %}
 

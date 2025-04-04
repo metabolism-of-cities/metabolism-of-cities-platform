@@ -20,6 +20,75 @@
     {{ tag.get_description }}
   </section>
 
+  {% load moc_extras %}
+  <section>
+    <h4>Tutorial Videos</h4>
+    <div class="alert alert-warning">
+      <i class="fa fa-fw fa-info-circle"></i>
+      Watch this video to understand more about {{ tag }}
+      <br>
+      {% if tag.parent_tag and tag.parent_tag|stringformat:"s" == "Layer 3: Infrastructure" or tag.parent_tag and tag.parent_tag|stringformat:"s" == "Layer 4: Stocks and flows" %}
+        <a id="instructionLink2" href="" class="btn btn-primary mt-3">
+          <i class="fa fa-video"></i> Instruction video about <span id="typeName2">{{ tag.parent_tag }}</span>
+        </a>
+        <script>
+          // Get the link and text elements
+          var linkElement = document.getElementById("instructionLink2");
+          var typeNameElement = document.getElementById("typeName2").innerHTML;
+  
+          // Define different URLs based on type.name
+          var tutorialLinks = {
+            "Layer 3: Infrastructure": "https://multimedia.metabolismofcities.org/videos/34666/",
+            "Layer 4: Stocks and flows": "https://multimedia.metabolismofcities.org/videos/39160/",
+          };
+  
+          // Set href dynamically based on type.name
+          linkElement.href = tutorialLinks[typeNameElement] || "https://example.com/default-tutorial";
+        </script>
+        <br>
+      {% endif %}
+      {% with "4.01,4.02,4.03,4.04,4.05,4.06,3.01,3.03,3.04,3.07,3.09,3.31,2.1,2.2,2.3,2.4,2.5,2.6,2.7,1.6" as allowed_tags %}
+        {% if tag|split_tag in allowed_tags|split_by_comma %}  
+          <a id="instructionLink" href="" class="btn btn-primary mt-3">
+            <i class="fa fa-video"></i> Instruction video about <span id="typeName">{{ tag }}</span>
+          </a>
+          <script>
+            // Get the link and text elements
+            var linkElement = document.getElementById("instructionLink");
+            var typeNameElement = document.getElementById("typeName").innerHTML;
+
+            // Define different URLs based on type.name
+            var tutorialLinks = {
+              "1.6. Actors": "https://multimedia.metabolismofcities.org/videos/50429/",
+              "2.3. Biodiversity": "https://multimedia.metabolismofcities.org/videos/34422/",
+              "2.4. Bodies of water": "https://multimedia.metabolismofcities.org/videos/34445/",
+              "2.7. Mineral deposits": "https://multimedia.metabolismofcities.org/videos/35354/",
+              "2.5. Average temperatures": "https://multimedia.metabolismofcities.org/videos/34672/",
+              "2.6. Rainfall": "https://multimedia.metabolismofcities.org/videos/34672/",
+              "2.1. Soil type and composition": "https://multimedia.metabolismofcities.org/videos/34385/",
+              "2.2. Trees": "https://multimedia.metabolismofcities.org/videos/34411/",
+              "3.01. Agriculture": "https://multimedia.metabolismofcities.org/videos/35912/",
+              "3.03. Electricity generation": "https://multimedia.metabolismofcities.org/videos/35925/",
+              "3.04. Electricity transmission and distribution": "https://multimedia.metabolismofcities.org/videos/35925/",
+              "3.07. Fishing": "https://multimedia.metabolismofcities.org/videos/35912/",
+              "3.09. Forestry": "https://multimedia.metabolismofcities.org/videos/35912/",
+              "3.31. Water and sanitation": "https://multimedia.metabolismofcities.org/videos/41150/",
+              "4.01. Extraction: Fishing": "https://multimedia.metabolismofcities.org/videos/39179/",
+              "4.02. Extraction: Agriculture": "https://multimedia.metabolismofcities.org/videos/39179/",
+              "4.03. Extraction: Forestry": "https://multimedia.metabolismofcities.org/videos/39179/",
+              "4.04. Extraction: Mining": "https://multimedia.metabolismofcities.org/videos/39179/",
+              "4.06. Flows: Consumption": "https://multimedia.metabolismofcities.org/videos/39478/",
+              "4.05. Production Flows: Manufacturing": "https://multimedia.metabolismofcities.org/videos/39293/",
+            };
+
+            // Set href dynamically based on type.name
+            linkElement.href = tutorialLinks[typeNameElement] || "https://example.com/default-tutorial";
+          </script>
+        {% endif %}
+      {% endwith %}
+    </div>
+  </section>
+
   <section>
     <h4>Inventory</h4>
     {% if items %}
