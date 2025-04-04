@@ -10,14 +10,6 @@ RUN apt-get update -y && apt-get install --no-install-recommends -y \
 # Verify GDAL installation
 RUN gdalinfo --version
 
-RUN pip install django-recaptcha
-
-RUN pip install selenium
-
-RUN pip install webdriver-manager
-
-RUN pip install django_ratelimit
-
 # Set environment variables for GDAL inside the container
 ENV CPLUS_INCLUDE_PATH=/usr/include/gdal
 ENV C_INCLUDE_PATH=/usr/include/gdal
