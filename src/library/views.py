@@ -258,6 +258,7 @@ def index(request):
         print("Booleans got: ", booleans)
 
         length = len(fields)
+
         booleans_mp = {} # this map will be responsible for grouping "AND", "OR" and "NOT" together and qualify the final result
 
         all_query_one_items = set()
@@ -283,42 +284,24 @@ def index(request):
             else:
                 booleans_mp["and"] = set()
                 booleans_mp["and"].add((field, contain, term))
-        
-        print(all_query_one_items)
-        print(booleans_mp)
-        
+            
+            print(all_query_one_items)
+            print(booleans_mp)
+            
         # qualify/disqualify the query by one results based on the booleans
         results_id = final_results_filter(all_query_one_items, booleans_mp)
-        results = set()
-        for id in results_id:
-            library_item = LibraryItem.objects.get(id=id)
-            print("item type: ", library_item.type.name)
-            if "type" in request.GET:
-                types = request.GET.getlist("type") 
-                library_item_type = library_item.type.name.lower()
-                if library_item_type == 'report':
-                    library_item_type+='s'
-                if library_item_type not in types: 
-                    continue
-            if "after" in request.GET and request.GET["after"]:
-                if library_item.year < int(request.GET["after"]):
-                    continue
-            if "before" in request.GET and request.GET["before"]:
-                if library_item.year > int(request.GET["before"]):
-                    continue 
-            results.add(library_item)
-        
-        print(results)
+        results = LibraryItem.objects.filter(id__in=results_id)
 
-        if len(results) == 0:
-            if "type" in request.GET:
-                type_results = LibraryItem.objects.filter(type__group__in=request.GET.getlist("type"))
-                print(request.GET.getlist("type"))
-                print("Here")
-                print(len(type_results))
-            
-                for item in type_results:
-                    results.add(item)
+        if "type" in request.GET:
+            results = results.filter(type__group__in=request.GET.getlist("type"))
+
+        if not request.GET.get("urban_only"):
+                urban_only = False
+        if urban_only:
+            results = results.filter(tags__id=core_filter)
+        if "space" in request.GET and request.GET["space"]:
+            space = ReferenceSpace.objects.get(pk=request.GET["space"])
+            results = results.filter(spaces=space)
 
     else: # if using the simple search
         if "find" in request.GET: 
@@ -350,6 +333,11 @@ def index(request):
                     # Search by open-ended keyword, so let's search for that
                     results = results.filter(Q(name__icontains=q)|Q(description__icontains=q))
 
+    if "after" in request.GET and request.GET["after"]:
+        results = results.filter(year__gte=request.GET["after"])
+    if "before" in request.GET and request.GET["before"]:
+        results = results.filter(year__lte=request.GET["before"])
+
     if project.slug == "water":
         results = available_library_items(request).all()
 
@@ -365,10 +353,6 @@ def index(request):
     active_contains = request.GET.getlist("contains")
     active_terms = request.GET.getlist("terms")
 
-    print(active_fields)
-    print(active_boolean)
-    print(active_contains)
-    print(active_terms)
 
     context = {
         "show_project_design": True,

@@ -235,51 +235,6 @@ class ZoteroImport(CronJobBase):
                 if collection.uid == 3 or collection.uid == 4:
                     info.import_to_library()
 
-'''
-This job is designed to clean up all the entries with THE SAME TITLE inside the library. 
-It is used to clean up the library in case of the find_match() function when importing
-the zotero item into the library failed to check for the existed same title
-'''
-class CleanUpLibrary(CronJobBase):
-    RUN_EVERY_MINS = 60*12
-    schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
-    code = "core.CleanUpLibrary" # Unique code for logging purposes
-
-    def do(self):
-        """
-        Iterates through all LibraryItem entries, finds duplicates with the same title (case-insensitive),
-        and deletes the older ones, keeping only the latest one based on the year.
-        """
-        start_time = time.time()
-        print("Running CleanUpLibrary Cron Job...")
-    
-        processed_titles = set()  # To avoid redundant checks
-
-        for item in LibraryItem.objects_include_deleted.all():
-            title = item.name.strip().lower()  # Normalize title (case-insensitive)
-
-            # Skip if already processed
-            if title in processed_titles:
-                continue
-
-            # Find all items with the same title (case-insensitive)
-            duplicates = LibraryItem.objects_include_deleted.filter(name__iexact=item.name)
-
-            if duplicates.count() > 1:
-                # Keep the item with the latest year, remove the rest
-                latest_item = duplicates.order_by("-year").first()  
-
-                # Delete older duplicates (excluding the latest one)
-                duplicates.exclude(id=latest_item.id).delete()
-                print(f"Deleted {duplicates.count() - 1} duplicates for title: {item.name}")
-
-            # Mark this title as processed
-            processed_titles.add(title)
-
-        end_time = time.time() 
-        elapsed_time = end_time - start_time 
-        print(f"CleanUpLibrary Cron Job Completed! Time elapsed: {elapsed_time:.2f} seconds")
-
 class EmailNotifications(CronJobBase):
     RUN_EVERY_MINS = 60*12
     schedule = Schedule(run_every_mins=RUN_EVERY_MINS)
