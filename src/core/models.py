@@ -1146,14 +1146,6 @@ class LibraryItemType(models.Model):
     class Meta:
         ordering = ["name"]
 
-class DatasetType(models.Model):
-    name = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.name
-    class Meta:
-        ordering = ["name"]
-
 class LibraryItem(Record):
     LANGUAGES = (
         ("EN", "English"),
@@ -1189,8 +1181,6 @@ class LibraryItem(Record):
     license = models.ForeignKey(License, on_delete=models.CASCADE, null=True, blank=True)
     geocodes = models.ManyToManyField("Geocode", blank=True)
     part_of_project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True, related_name="library_items")
-
-    data_type = models.ForeignKey(DatasetType, on_delete=models.CASCADE, null=True, blank=True)
 
     contact_email = models.EmailField(max_length=255, null=True, blank=True) # this is a method for the MOI to contact the uploader directly regarding their publications upload
 

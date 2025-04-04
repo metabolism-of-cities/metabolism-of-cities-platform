@@ -1119,12 +1119,10 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
     if has_permission(request, project.id, ["curator", "dataprocessor"]):
         curator = True
 
-    proceed = False
     if not type:
         type = request.GET.get("type")
         if request.method == "POST":
             type = request.POST.get("type")
-            proceed = request.POST.get("proceed")
 
     if id and curator:
         info = get_item
@@ -1264,9 +1262,6 @@ def form(request, id=None, project_name="library", type=None, slug=None, tag=Non
         elif type.name == "GPS Coordinates":
             fields.remove("language")
             fields.remove("url")
-
-        elif type.name == "Dataset":
-            fields.append("data_type")
 
         library_forms = ["Book", "Book Section", "Conference Paper", "Journal Article", "Poster", "Presentation", "Report", "Thesis", "Webpage"]
 
