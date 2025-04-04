@@ -4,44 +4,6 @@
 
 {% block header %}
     <link rel="stylesheet" href="{% static 'css/main.css' %}">
-{% endblock %}
-
-{% block content %}
-    <h1 class="fade-in"><strong>Data Visualisations</strong> <i class="fal fa-chart-bar fa-fw mr-1"></i></h1>
-    <br>
-    <section class="fade-in">
-        <h5>In October-December 2016, Metabolism of Islands ran a project around data visualisations. The goal was to explore ways in which information can be illustrated, take stock of work in this field, host online discussions and publish blog posts.</h5>
-    </section>
-    <section class="fade-in">
-        <h4>
-            <strong>
-                Why visualise urban metabolism data <i class="fal fa-question"></i>
-            </strong>   
-        </h4>
-        <br>
-        <h5>
-            When we think about urban metabolism and other urban environmental assessments, we often think about numbers, data analysis, formulas and tables. While we may be very familiar with our own case study, it is often very difficult to share the relevance of our results with other researchers or with the general public and to synthesise all this amount of knowledge into something easy to grasp. This is one of the main reasons why researchers use visualisation techniques. Visualising data can not only enable to summarise big amounts of numbers, but it can also make it easier to share them and use them as policy instruments.
-        </h5>
-    </section>
-    <section class="fade-in">
-        <h2><strong>Wonder how your data might look like on our website?</strong> <i class="fal fa-chart-area fa-fw"></i></h2>
-    
-        <!-- Carousel container -->
-        <div class="carousel">
-            <!-- Carousel images -->
-            <div class="carousel-images">
-                <img src="{% static "img/bar-data.png" %}" alt="Bar Chart">
-                <img src="{% static "img/column-data.png" %}" alt="Column Chart">
-                <img src="{% static "img/line-data.png" %}" alt="Line Chart">
-                <img src="{% static "img/pie-data.png" %}" alt="Pie Chart">
-            </div>
-    
-            <!-- Carousel controls -->
-            <button class="prev">&#10094;</button>
-            <button class="next">&#10095;</button>
-        </div>
-    </section>
-
     <style>
         /* Carousel Container */
         .carousel {
@@ -87,30 +49,73 @@
         .carousel:hover .carousel-images {
             animation-play-state: paused;
         }
+        .video-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .video-container iframe {
+            width: 100%;
+            height: 600px;
+        }
+        @media (max-width: 768px) {
+            .video-container iframe {
+                width: 100%;
+                height: 300px;
+            }
+        }
+
+        /* Smooth fade-in and slide-up effect */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        /* Make elements visible when they enter the viewport */
+        .fade-in.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
+{% endblock %}
+
+{% block content %}
+    <h1 class="fade-in"><strong>Data Visualisations</strong> <i class="fal fa-chart-bar fa-fw mr-1"></i></h1>
+    <br>
+    <section class="fade-in">
+        <h5>In October-December 2016, Metabolism of Islands ran a project around data visualisations. The goal was to explore ways in which information can be illustrated, take stock of work in this field, host online discussions and publish blog posts.</h5>
+    </section>
+    <section class="fade-in">
+        <h4>
+            <strong>
+                Why visualise urban metabolism data <i class="fal fa-question"></i>
+            </strong>   
+        </h4>
+        <br>
+        <h5>
+            When we think about urban metabolism and other urban environmental assessments, we often think about numbers, data analysis, formulas and tables. While we may be very familiar with our own case study, it is often very difficult to share the relevance of our results with other researchers or with the general public and to synthesise all this amount of knowledge into something easy to grasp. This is one of the main reasons why researchers use visualisation techniques. Visualising data can not only enable to summarise big amounts of numbers, but it can also make it easier to share them and use them as policy instruments.
+        </h5>
+    </section>
+    <section class="fade-in">
+        <h2><strong>Wonder how your data might look like on our website?</strong> <i class="fal fa-chart-area fa-fw"></i></h2>
     
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const track = document.querySelector(".carousel-images");
+        <!-- Carousel container -->
+        <div class="carousel">
+            <!-- Carousel images -->
+            <div class="carousel-images">
+                <img src="{% static "img/bar-data.png" %}" alt="Bar Chart">
+                <img src="{% static "img/column-data.png" %}" alt="Column Chart">
+                <img src="{% static "img/line-data.png" %}" alt="Line Chart">
+                <img src="{% static "img/pie-data.png" %}" alt="Pie Chart">
+            </div>
     
-            // Clone images for seamless looping
-            const images = [...track.children];
-            images.forEach(img => {
-                let clone = img.cloneNode(true);
-                track.appendChild(clone);
-            });
-    
-            // Pause animation on hover
-            document.querySelector(".carousel").addEventListener("mouseenter", () => {
-                track.style.animationPlayState = "paused";
-            });
-    
-            // Resume animation when mouse leaves
-            document.querySelector(".carousel").addEventListener("mouseleave", () => {
-                track.style.animationPlayState = "running";
-            });
-        });
-    </script>    
+            <!-- Carousel controls -->
+            <button class="prev">&#10094;</button>
+            <button class="next">&#10095;</button>
+        </div>
+    </section>    
 
     <section class="fade-in">
         <h2><strong>Try our interactive data visualisation</strong> <i class="fas fa-hand-pointer"></i></h2>
@@ -166,44 +171,32 @@
             </a>
         </div>
     </section>
+{% endblock %}
 
-    {% block css %}
-        <style>
-            .video-container {
-                display: flex;
-                gap: 20px;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-            .video-container iframe {
-                width: 100%;
-                height: 600px;
-            }
-            @media (max-width: 768px) {
-                .video-container iframe {
-                    width: 100%;
-                    height: 300px;
-                }
-            }
-        </style>
-    {% endblock %}
-
-    <style>
-        /* Smooth fade-in and slide-up effect */
-        .fade-in {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
-        }
-
-        /* Make elements visible when they enter the viewport */
-        .fade-in.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    </style>
-
+{% block footer %}
     <script>
+        let unit = "{{ each.unit__name|default:'various units' }}";
+        document.addEventListener("DOMContentLoaded", function () {
+            const track = document.querySelector(".carousel-images");
+    
+            // Clone images for seamless looping
+            const images = [...track.children];
+            images.forEach(img => {
+                let clone = img.cloneNode(true);
+                track.appendChild(clone);
+            });
+    
+            // Pause animation on hover
+            document.querySelector(".carousel").addEventListener("mouseenter", () => {
+                track.style.animationPlayState = "paused";
+            });
+    
+            // Resume animation when mouse leaves
+            document.querySelector(".carousel").addEventListener("mouseleave", () => {
+                track.style.animationPlayState = "running";
+            });
+        });
+
         document.addEventListener("DOMContentLoaded", function () {
             const sections = document.querySelectorAll(".fade-in");
 
@@ -221,12 +214,6 @@
             window.addEventListener("scroll", revealOnScroll);
             revealOnScroll(); // Run on page load
         });
-    </script>
-{% endblock %}
-
-{% block footer %}
-    <script>
-        let unit = "{{ each.unit__name|default:'various units' }}";
     </script>
     {% include "_chart.footer.html" %}
 {% endblock %}

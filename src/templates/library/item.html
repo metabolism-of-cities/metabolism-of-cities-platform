@@ -243,66 +243,6 @@
             <div class="close-btn" onclick="closeSharePopup()">Close</div>
           </div>
 
-          <script>
-              // Function to open the popup
-              function openSharePopup() {
-                  document.getElementById("sharePopup").style.display = "block";
-                  document.getElementById("overlay").style.display = "block";
-
-                  // Add animation class after a small delay
-                  setTimeout(() => {
-                      document.getElementById("sharePopup").classList.add("show");
-                  }, 100);
-              }
-
-              // Function to close the popup
-              function closeSharePopup() {
-                  document.getElementById("sharePopup").classList.remove("show");
-
-                  // Hide the popup after animation
-                  setTimeout(() => {
-                      document.getElementById("sharePopup").style.display = "none";
-                      document.getElementById("overlay").style.display = "none";
-                  }, 300);
-              }
-
-              // URL to be shared
-              const shareURL = window.location.href;
-
-              // Share via Email
-              function shareEmail() {
-                const subject = encodeURIComponent("Check this out!");
-                const body = encodeURIComponent(`I found this interesting: ${shareURL}`);
-                window.open(`https://mail.google.com/mail/?view=cm&fs=1&su=${subject}&body=${body}`, "_blank");
-              }
-
-              // Share via Outlook
-              function shareOutlook() {
-                const subject = encodeURIComponent("Check this out!");
-                const body = encodeURIComponent(`I found this interesting: ${shareURL}`);
-                window.location.href = `mailto:?subject=${subject}&body=${body}`;
-              }
-
-              // Share via Facebook
-              function shareFacebook() {
-                window.open(`https://www.facebook.com/sharer/sharer.php?u=${shareURL}`, "_blank");
-              }
-
-              // Share via Twitter (X)
-              function shareTwitter() {
-                  window.open(`https://twitter.com/intent/tweet?url=${shareURL}&text=Check this out!`, "_blank");
-              }
-
-              // Share via LinkedIn
-              function shareLinkedIn() {
-                window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${shareURL}`, "_blank");
-              } 
-
-              // Share via Reddit
-              function shareReddit() {
-                  window.open(`https://www.reddit.com/submit?url=${shareURL}&title=Check this out!`, "_blank");
-              }
-          </script>
 
           {% if publisher %}
             <li class="list-group-item table-item">
@@ -1427,5 +1367,64 @@
         }
       });
     {% endif %}
+
+    // Function to open the popup
+    function openSharePopup() {
+        document.getElementById("sharePopup").style.display = "block";
+        document.getElementById("overlay").style.display = "block";
+
+        // Add animation class after a small delay
+        setTimeout(() => {
+            document.getElementById("sharePopup").classList.add("show");
+        }, 100);
+    }
+
+    // Function to close the popup
+    function closeSharePopup() {
+        document.getElementById("sharePopup").classList.remove("show");
+
+        // Hide the popup after animation
+        setTimeout(() => {
+            document.getElementById("sharePopup").style.display = "none";
+            document.getElementById("overlay").style.display = "none";
+        }, 300);
+    }
+
+    // URL to be shared
+    const shareURL = window.location.href;
+
+    // Share via Email
+    function shareEmail() {
+      const subject = encodeURIComponent("Check this out!");
+      const body = encodeURIComponent(`I found this interesting: ${shareURL}`);
+      window.open(`https://mail.google.com/mail/?view=cm&fs=1&su=${subject}&body=${body}`, "_blank");
+    }
+
+    // Share via Outlook
+    function shareOutlook() {
+      const subject = encodeURIComponent("Check this out!");
+      const body = encodeURIComponent(`I found this interesting: ${shareURL}`);
+      window.location.href = `mailto:?subject=${subject}&body=${body}`;
+    }
+
+    // Share via Facebook
+    function shareFacebook() {
+      window.open(`https://www.facebook.com/sharer/sharer.php?u=${shareURL}`, "_blank");
+    }
+
+    // Share via Twitter (X)
+    function shareTwitter() {
+        window.open(`https://twitter.com/intent/tweet?url=${shareURL}&text=Check this out!`, "_blank");
+    }
+
+    // Share via LinkedIn
+    function shareLinkedIn() {
+      window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${shareURL}`, "_blank");
+    } 
+
+    // Share via Reddit
+    function shareReddit() {
+        window.open(`https://www.reddit.com/submit?url=${shareURL}&title=Check this out!`, "_blank");
+    }
   </script>
 {% endblock %}
