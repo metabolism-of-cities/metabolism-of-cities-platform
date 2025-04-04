@@ -48,7 +48,7 @@
         <br>
       {% endif %}
       {% with "4.01,4.02,4.03,4.04,4.05,4.06,3.01,3.03,3.04,3.07,3.09,3.31,2.1,2.2,2.3,2.4,2.5,2.6,2.7,1.6" as allowed_tags %}
-        {% if tag|slice:":4" in allowed_tags|split_by_comma %}
+        {% if tag|split_tag in allowed_tags|split_by_comma %}  
           <a id="instructionLink" href="" class="btn btn-primary mt-3">
             <i class="fa fa-video"></i> Instruction video about <span id="typeName">{{ tag }}</span>
           </a>

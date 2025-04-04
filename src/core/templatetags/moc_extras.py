@@ -43,6 +43,11 @@ def split_by_comma(value):
         return value.split(",")
     return []
 
+@register.filter
+def split_tag(value):
+    value = str(value)
+    return value.split('.')[0] + '.' + value.split('.')[1]
+
 
 #### TEMP FOR MAP CONVERSION #####
 @register.filter
