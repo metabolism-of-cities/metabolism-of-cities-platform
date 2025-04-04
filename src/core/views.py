@@ -903,6 +903,22 @@ def hub_selector(request):
     }
     return render(request, "hub/selector.html", context)
 
+# user's saved library item search
+@login_required
+def hub_bookmark_items(request):
+    saved_items = LibraryItem.objects.filter(saved_by_users=request.user)
+    
+    context = {
+        "items" : saved_items,
+        "show_tags" : True,
+        "show_creation" : True,
+        "load_datatables" : True,
+        "show_spaces" : True,
+        "menu": "bookmark", 
+    }
+    
+    return render(request, "hub/bookmark_item.html", context)
+
 # Control panel and general contribution components
 
 @login_required

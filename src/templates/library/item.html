@@ -10,6 +10,16 @@
   <!-- When we have fully figured all this out we can consider getting it indexed. Ensure there is a canonical link as this page is generated with various URLs -->
   <meta name="robots" content="noindex">
 
+  <style>
+    .bookmark-icon {
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .bookmark-icon:hover {
+        transform: scale(1.2);
+    }
+  </style>
+
 {% endblock %}
 
 {% block css %}
@@ -106,6 +116,24 @@
 
       <div class="border rounded bg-white my-4">
         <ul class="list-group list-group-flush">
+          <!-- bookmark item -->
+          {% if request.user.is_authenticated %}
+            <li class="list-group-item table-item">
+              <div><i class="fal fa-fw fa-bookmark mr-1"></i>
+                Bookmark
+              </div>
+              <div>
+                <span class="bookmark-btn" data-item-id="{{ info.id }}" role="button" tabindex="0" 
+                  style="cursor: pointer; color: inherit; background: none; border: none; padding: 0; font: inherit; display: inline-flex; align-items: center;">
+                  {% if is_saved %}
+                      <i class="fas fa-fw fa-bookmark bookmark-icon" style="margin-right: 5px; color: gold;"></i> Remove
+                  {% else %}
+                      <i class="fal fa-fw fa-bookmark bookmark-icon" style="margin-right: 5px;"></i> Save
+                  {% endif %}
+                </span>
+              </div>
+            </li>
+          {% endif %}
           <li class="list-group-item table-item">
             <div><i class="fal fa-fw fa-{{ info.type.icon }} mr-1"></i>
               {% if PROJECT.slug == "peeide" %}Reference{% endif %}
@@ -352,7 +380,6 @@
       {% else %}
 
         {% if request.user.is_authenticated %}
-
           <div class="list-group mb-4">
             {% if curator or request.user.people == info.uploader %}
               <a href="?edit&amp;return={{ request.get_full_path }}" class="list-group-item list-group-item-action list-group-item-primary">
@@ -1085,5 +1112,40 @@
       });
     {% endif %}
 
+    {% if user.is_authenticated %}
+    
+    // Handle bookmark library item
+    $(document).ready(function() {
+      $(".bookmark-btn").on("click", function() {
+        let itemId = $(this).data("item-id");
+        let button = $(this);
+        let saveURL = window.location.href;
+
+        $.ajax({
+          url: saveURL,
+          method: "POST",
+          contentType: "application/json",
+          headers: {
+            "X-CSRFToken": "{{ csrf_token }}"
+          },
+          data: JSON.stringify({ item_id: itemId })
+        })
+        .done(function (data) {
+          if (data.success) {
+            if (data.action === "added") {
+              button.html('<i class="fas fa-fw fa-bookmark bookmark-icon" style="margin-right: 5px; color: gold;"></i>');
+            } else {
+              button.html('<i class="fal fa-fw fa-bookmark bookmark-icon" style="margin-right: 5px;"></i>');
+            }
+          } else {
+            alert("Something went wrong: " + data.error);
+          }
+        })
+        .fail(function (xhr, status, error) {
+          alert("Request failed: " + error + "\nPlease try again or refresh the page.");
+        });
+      });
+    });
+    {% endif %}
   </script>
 {% endblock %}

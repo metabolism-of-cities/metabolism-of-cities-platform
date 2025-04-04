@@ -59,6 +59,10 @@
         <li class="nav-item">
           <a class="nav-link {% if menu == 'profile' %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/profile/">My profile</a>
         </li>
+        <!-- add bookmark search -->
+        <li class="nav-item">
+          <a class="nav-link {% if menu == 'bookmark' %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/bookmark_items/">Bookmark items</a>
+        </li>
       {% else %}
         <li class="nav-item">
           <a class="nav-link {% if menu == 'join' %}active{% endif %}" href="{% if DEBUG and PROJECT.id != 1 %}/{{ PROJECT.slug }}{% endif %}/hub/join/?next={{ request.get_full_path }}">Join</a>

@@ -1,3 +1,18 @@
+{% block head %}
+<style>
+  .list {
+    display: flex;
+    flex-wrap: wrap; /* Enable wrapping */
+    gap: 6px; /* Optional: add spacing between tags */
+    padding-left: 0; /* Since we use list-unstyled */
+    margin: 0;
+  }
+
+  .list li {
+    margin: 0;
+  }
+</style>
+{% endblock %}
 <div class="resource-list">
   <table class="table bg-white {% if load_datatables %}datatable datatable-card{% else %}border{% endif %}">
     <thead>
@@ -7,11 +22,11 @@
         {% endif %}
         <th class="title">Title</th>
         <th class="type">Type</th>
-        {% if show_spaces %}
-          <th class="spaces">Spaces</th>
-        {% endif %}
         {% if show_tags %}
           <th class="tags">Tag(s)</th>
+        {% endif %}
+        {% if show_spaces %}
+          <th class="spaces">Spaces</th>
         {% endif %}
         <th class="author">Author(s)</th>
         {% if not "hide_year" in request.GET %}
@@ -46,7 +61,7 @@
           </td>
           {% if show_tags %}
             <td class="tags">
-              <ul class="list-unstyled">
+              <ul class="list-unstyled list">
               {% for tag in each.tags.all %}
                 <li><span class="badge badge-light">{{ tag }}</span></li>
               {% endfor %}
@@ -55,9 +70,11 @@
           {% endif %}
           {% if show_spaces %}
             <td class="spaces">
-              {% for space in each.spaces.all %}
-                <span class="badge badge-dark">{{ space }}</span>
-              {% endfor %}
+              <ul class="list-unstyled list">
+                {% for space in each.spaces.all %}
+                  <span class="badge badge-dark">{{ space }}</span>
+                {% endfor %}
+              </ul>
             </td>
           {% endif %}
           <td class="author">
