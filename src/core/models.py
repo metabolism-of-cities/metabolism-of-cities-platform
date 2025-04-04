@@ -1181,7 +1181,7 @@ class LibraryItem(Record):
     part_of_project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True, related_name="library_items")
 
     # Many-to-Many Relationship with the User model to let user saved the library items
-    saved_by_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="saved_library_items", blank=True)
+    saved_by_users = models.ManyToManyField(User, related_name="saved_library_items", blank=True)
 
     STATUS = (
         ("pending", "Pending"),
