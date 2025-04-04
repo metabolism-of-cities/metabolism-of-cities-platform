@@ -33,6 +33,7 @@ urlpatterns = baseline_urlpatterns + baseline_library_urlpatterns + baseline_sta
     path("resources/courses/", RedirectView.as_view(url="/courses/", permanent=False)),
     path("resources/reviews/", library.library_list, { "type": "reviews"}, name="reviews"),
     path("resources/islandindustrialecology/", library.library_list, { "type": "island_ie"}, name="island_ie"),
+    path("past-islands-visualisations/", views.past_islands_visualisations, name="past-islands-visualisations"),
 
     # Controlpanel
     path("controlpanel/organisations/", community.controlpanel_organizations),
