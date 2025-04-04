@@ -4,12 +4,11 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.db.models import Count
 from django.contrib import messages
-from django.http import Http404, HttpResponseRedirect, JsonResponse, FileResponse
+from django.http import Http404, JsonResponse, FileResponse
 from django.forms import modelform_factory
 from django.contrib.auth.decorators import login_required
 
 from django.core.cache import cache
-from django.views.decorators.csrf import csrf_exempt
 
 from django.utils import timezone
 import pytz
@@ -356,9 +355,7 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
             elif info.type.id == 10:
                 url_processing = project.slug + ":hub_processing_dataset"
 
-
-        if(LibraryItem.objects.filter(id=id, saved_by_users=request.user.id).exists()):
-            is_saved = True
+        is_saved = LibraryItem.objects.filter(id=id, saved_by_users=request.user.id).exists()
 
         # if user want to bookmark this item
         if request.method == "POST":

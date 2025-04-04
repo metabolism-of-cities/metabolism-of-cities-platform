@@ -10,6 +10,16 @@
   <!-- When we have fully figured all this out we can consider getting it indexed. Ensure there is a canonical link as this page is generated with various URLs -->
   <meta name="robots" content="noindex">
 
+  <style>
+    .bookmark-icon {
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .bookmark-icon:hover {
+        transform: scale(1.2);
+    }
+  </style>
+
 {% endblock %}
 
 {% block css %}
@@ -123,15 +133,6 @@
                 </span>
               </div>
             </li>
-            <style>
-              .bookmark-icon {
-                  transition: transform 0.3s ease-in-out;
-              }
-          
-              .bookmark-icon:hover {
-                  transform: scale(1.2);
-              }
-            </style>
           {% endif %}
           <li class="list-group-item table-item">
             <div><i class="fal fa-fw fa-{{ info.type.icon }} mr-1"></i>
@@ -1112,33 +1113,32 @@
     {% endif %}
     
     // Handle bookmark library item
-    document.addEventListener("DOMContentLoaded", function() {
-    document.querySelectorAll(".bookmark-btn").forEach(button => {
-      button.addEventListener("click", function() {
-          let itemId = this.dataset.itemId;
-          let button = this;
-          let saveURL = window.location.href; // send the request back to the current url
-          fetch(saveURL, {
-              method: "POST",
-              headers: {
-                  "Content-Type": "application/json",
-                  "X-CSRFToken": "{{ csrf_token }}"
-              },
-          })
-          .then(response => response.json())
-          .then(data => {
-              if (data.success) {
-                  if (data.action === "added") {
-                    this.innerHTML = '<i class="fas fa-fw fa-bookmark bookmark-icon" style="margin-right: 5px; color: gold;"></i>';
-                  } else {
-                    this.innerHTML = '<i class="fal fa-fw fa-bookmark bookmark-icon" style="margin-right: 5px;"></i>';
-                  }
+    $(document).ready(function() {
+      $(".bookmark-btn").on("click", function() {
+        const itemId = $(this).data("item-id");
+        const $button = $(this);
+        const saveURL = window.location.href;
+
+        $.ajax({
+          url: saveURL,
+          type: "POST",
+          headers: {
+            "X-CSRFToken": "{{ csrf_token }}"
+          },
+          contentType: "application/json",
+          success: function(data) {
+            if (data.success) {
+              if (data.action === "added") {
+                $button.html('<i class="fas fa-fw fa-bookmark bookmark-icon" style="margin-right: 5px; color: gold;"></i>');
               } else {
-                  alert("Error: " + data.error);
+                $button.html('<i class="fal fa-fw fa-bookmark bookmark-icon" style="margin-right: 5px;"></i>');
               }
-          });
+            } else {
+              alert("Error: " + data.error);
+            }
+          }
+        });
       });
     });
-  });
   </script>
 {% endblock %}

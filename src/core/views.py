@@ -914,6 +914,7 @@ def hub_bookmark_items(request):
         "show_creation" : True,
         "load_datatables" : True,
         "show_spaces" : True,
+        "menu": "bookmark", 
     }
     
     return render(request, "hub/bookmark_item.html", context)
