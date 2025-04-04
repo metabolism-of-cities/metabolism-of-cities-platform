@@ -2940,6 +2940,7 @@ class ZoteroItem(models.Model):
 
     def import_to_library(self):
         info = self.find_match()
+        print("Got past info, update the entry now: ", info)
         if not info:
             info = LibraryItem()
         info.name = self.title
@@ -3022,7 +3023,7 @@ class ZoteroItem(models.Model):
     def find_match(self):
         if self.library_item:
             return self.library_item
-        check = LibraryItem.objects_include_deleted.filter(name=self.title)
+        check = LibraryItem.objects_include_deleted.filter(name__iexact=self.title) # check for both uppercase and lowercase
         if not check and "doi" in self.data and self.data["doi"]:
             check = LibraryItem.objects_include_deleted.filter(doi=doi)
         if not check and "isbn" in self.data and self.data["isbn"]:
