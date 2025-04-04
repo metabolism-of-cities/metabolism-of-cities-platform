@@ -1115,28 +1115,33 @@
     // Handle bookmark library item
     $(document).ready(function() {
       $(".bookmark-btn").on("click", function() {
-        const itemId = $(this).data("item-id");
-        const $button = $(this);
-        const saveURL = window.location.href;
+        let itemId = $(this).data("item-id");
+        let button = $(this);
+        let saveURL = window.location.href;
 
         $.ajax({
           url: saveURL,
-          type: "POST",
+          method: "POST",
+          contentType: "application/json",
           headers: {
             "X-CSRFToken": "{{ csrf_token }}"
           },
-          contentType: "application/json",
-          success: function(data) {
-            if (data.success) {
-              if (data.action === "added") {
-                $button.html('<i class="fas fa-fw fa-bookmark bookmark-icon" style="margin-right: 5px; color: gold;"></i>');
-              } else {
-                $button.html('<i class="fal fa-fw fa-bookmark bookmark-icon" style="margin-right: 5px;"></i>');
-              }
+          data: JSON.stringify({ item_id: itemId })
+        })
+        .done(function (data) {
+          if (data.success) {
+            if (data.action === "added") {
+              button.html('<i class="fas fa-fw fa-bookmark bookmark-icon" style="margin-right: 5px; color: gold;"></i>');
             } else {
-              alert("Error: " + data.error);
+              button.html('<i class="fal fa-fw fa-bookmark bookmark-icon" style="margin-right: 5px;"></i>');
             }
+          } else {
+            alert("Something went wrong: " + data.error);
           }
+        })
+        .fail(function (xhr, status, error) {
+          alert("Request failed: " + error + "\nPlease try again or refresh the page.");
+          console.error("Bookmark AJAX error:", status, error);
         });
       });
     });
