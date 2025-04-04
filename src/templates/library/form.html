@@ -23,7 +23,7 @@
 
   {% if PROJECT.slug == "data" or PROJECT.slug == "islands" %}
     {% include "hub/_nav.html" %}
-    {% if not request.GET.parent and not info or warning_message %}
+    {% if not request.GET.parent and not info %}
       <h1 class="h5">{{ type }}</h1>
     {% endif %}
   {% else %}
@@ -195,25 +195,6 @@
         </button>
       {% endif %}
     {% endbuttons %}
-
-    {% if warning_message %}
-    <script>
-        window.onload = function () {
-            if (confirm("⚠️ There is an existing entry with the same title, URL, or DOI in our library. Do you still want to proceed?")) {
-                console.log("URL: ", window.location.href);
-
-                // Set the hidden input values
-                document.getElementById("proceedInput").value = "true";  // or just true if it's a boolean
-                document.getElementById("typeInput").value = "{{ type.id }}";
-
-                // Trigger form submission by clicking the submit button
-                document.querySelector("button[type='submit']").click();
-            } else {
-                window.history.back(); // Go back if the user cancels
-            }
-        };
-    </script>
-    {% endif %}
 
     <input type="hidden" name="type" value="{{ type.id }}" />
 

@@ -362,10 +362,9 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
         if "delete" in request.GET:
             info.is_deleted = True
             info.save()
-            back_url = "publications" if info.type.name == "Publications" else "shapefiles"
             messages.success(
                 request,
-                f'This item was deleted successfully. <a href="/islands/controlpanel/{back_url}/" style="padding: 5px 10px; background: #006400; color: #fff; text-decoration: none; border-radius: 5px;">Go Back</a>',
+                f'This item was deleted successfully. <a href="/islands/controlpanel/shapefiles/" style="padding: 5px 10px; background: #006400; color: #fff; text-decoration: none; border-radius: 5px;">Go Back</a>',
                 extra_tags="safe",
             )
 
@@ -459,9 +458,6 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
     data_layout = False
     if info.type.name == "Dataset":
         data_layout = True if project.slug == "water" or "data-layout" in request.GET else False
-
-    if info.type.name == "Publications":
-        info.tags.set({}) # no need for tags when requesting the publications
 
     context = {
         "info": info,

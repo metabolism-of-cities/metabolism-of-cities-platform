@@ -2232,7 +2232,6 @@ def hub_processing_dataset_classify(request, id, space=None):
                 completed = True
         except:
             completed = False
-        print("Completed here: ", completed)
         if completed:
             return redirect("../save/")
         else:
