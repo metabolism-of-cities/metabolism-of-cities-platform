@@ -692,7 +692,6 @@ def add_to_zotero(info: LibraryItem, journal):
                 authors.append(full_name)
 
             authors = get_authors(author_list=authors)
-            print("Authors got from scraping: ", authors)
         else:
             print(f"Error fetching metadata: {response.status_code}")
 
@@ -700,7 +699,7 @@ def add_to_zotero(info: LibraryItem, journal):
         data = [{
             "itemType": item_type,
             "title": title,
-            "creators": authors, # if the user did not input the authors name we can use the authors from the scraping
+            "creators": authors, 
             "publicationTitle": publication_title,  
             "volume": volume,  
             "issue": issue,
@@ -1074,7 +1073,7 @@ from django_recaptcha.widgets import ReCaptchaV2Checkbox
 from django_ratelimit.decorators import ratelimit
 
 @login_required
-# @ratelimit(key='ip', rate='3/m', method='POST')
+@ratelimit(key='ip', rate='3/m', method='POST')
 def form(request, id=None, project_name="library", type=None, slug=None, tag=None, space=None, referencespace_photo=None):
 
     # Slug is only there because one of the subsites has it in the URL; it does not do anything

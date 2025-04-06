@@ -61,7 +61,6 @@
           var linkElement = document.getElementById("instructionLink");
           var typeNameElement = document.getElementById("typeName").innerHTML;
 
-          console.log(`Type name: ${typeNameElement}`)
 
           // Define different URLs based on type.name
           var tutorialLinks = {
@@ -265,75 +264,68 @@
     /*
       Upload file transition
     */
-    document.addEventListener("DOMContentLoaded", function () {
-      const fileInput = document.querySelector(".file-input");
-      const fileUploadWrapper = document.querySelector(".file-upload-wrapper");
-      const fileList = document.getElementById("file-list");
+    $(document).ready(function () {
+      const $fileInput = $(".file-input");
+      const $fileUploadWrapper = $(".file-upload-wrapper");
+      const $fileList = $("#file-list");
 
-      let uploadedFiles = []; // Array to hold files
+      let uploadedFiles = [];
 
-      fileUploadWrapper.addEventListener("dragover", function (e) {
+      $fileUploadWrapper.on("dragover", function (e) {
         e.preventDefault();
-        fileUploadWrapper.classList.add("drag-over");
+        $(this).addClass("drag-over");
       });
 
-      fileUploadWrapper.addEventListener("dragleave", function () {
-        fileUploadWrapper.classList.remove("drag-over");
+      $fileUploadWrapper.on("dragleave", function () {
+        $(this).removeClass("drag-over");
       });
 
-      fileUploadWrapper.addEventListener("drop", function (e) {
+      $fileUploadWrapper.on("drop", function (e) {
         e.preventDefault();
-        fileUploadWrapper.classList.remove("drag-over");
-        // Handle file drop
-        const newFiles = Array.from(e.dataTransfer.files);
-        uploadedFiles = [...uploadedFiles, ...newFiles]; // Add new files to the list
-        fileInput.files = createFileList(uploadedFiles); // Update the file input's files list
-        updateFileList(); // Update the UI
+        $(this).removeClass("drag-over");
+
+        const newFiles = Array.from(e.originalEvent.dataTransfer.files);
+        uploadedFiles = [...uploadedFiles, ...newFiles];
+        $fileInput[0].files = createFileList(uploadedFiles);
+        updateFileList();
       });
 
-      fileInput.addEventListener("change", function () {
-        const newFiles = Array.from(fileInput.files);
-        uploadedFiles = [...uploadedFiles, ...newFiles]; // Add new files to the list
-        updateFileList(); // Update the UI
+      $fileInput.on("change", function () {
+        const newFiles = Array.from(this.files);
+        uploadedFiles = [...uploadedFiles, ...newFiles];
+        updateFileList();
       });
 
       function updateFileList() {
-        fileList.innerHTML = ""; // Clear the current list
+        $fileList.empty();
 
         uploadedFiles.forEach(file => {
-          const listItem = document.createElement("div");
-          listItem.classList.add("file-item");
+          const $listItem = $("<div>").addClass("file-item");
 
-          // Create file name element
-          const fileName = document.createElement("span");
-          fileName.textContent = `📄 ${file.name}`;
-          listItem.appendChild(fileName);
+          const $fileName = $("<span>").text(`📄 ${file.name}`);
+          const $deleteBtn = $("<button>")
+            .addClass("delete-btn")
+            .text("Delete")
+            .on("click", function () {
+              removeFile(file);
+              $listItem.remove();
+            });
 
-          // Create delete button
-          const deleteBtn = document.createElement("button");
-          deleteBtn.textContent = "Delete";
-          deleteBtn.classList.add("delete-btn");
-          deleteBtn.addEventListener("click", function () {
-            removeFile(file);
-            listItem.remove();
-          });
-          listItem.appendChild(deleteBtn);
-
-          fileList.appendChild(listItem);
+          $listItem.append($fileName, $deleteBtn);
+          $fileList.append($listItem);
         });
       }
 
       function removeFile(fileToRemove) {
-        uploadedFiles = uploadedFiles.filter(file => file !== fileToRemove); // Remove file from list
-        fileInput.files = createFileList(uploadedFiles); // Update file input with new list
-        updateFileList(); // Update the file list UI
+        uploadedFiles = uploadedFiles.filter(file => file !== fileToRemove);
+        $fileInput[0].files = createFileList(uploadedFiles);
+        updateFileList();
       }
 
-      // Helper function to create a DataTransfer object from uploadedFiles
       function createFileList(files) {
         const dataTransfer = new DataTransfer();
-        files.forEach(file => dataTransfer.items.add(file)); // Add each file to the DataTransfer object
-        return dataTransfer.files; // Return the updated files list
+        files.forEach(file => dataTransfer.items.add(file));
+        return dataTransfer.files;
       }
     });
   </script>

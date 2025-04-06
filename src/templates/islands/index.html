@@ -382,11 +382,9 @@
         },
       ]
     });
-    document.addEventListener("DOMContentLoaded", function () {
-      document.querySelectorAll(".clickable-card").forEach(function (card) {
-        card.addEventListener("click", function () {
-          window.location.href = card.getAttribute("data-url");
-        });
+    $(document).ready(function () {
+      $(".clickable-card").on("click", function () {
+        window.location.href = $(this).data("url");
       });
     });
   </script>

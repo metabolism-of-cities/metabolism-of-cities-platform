@@ -176,42 +176,38 @@
     </style>
     <script>
         let unit = "{{ each.unit__name|default:'various units' }}";
-        document.addEventListener("DOMContentLoaded", function () {
-            const track = document.querySelector(".carousel-images");
-    
-            // Clone images for seamless looping
-            const images = [...track.children];
-            images.forEach(img => {
-                let clone = img.cloneNode(true);
-                track.appendChild(clone);
-            });
-    
-            // Pause animation on hover
-            document.querySelector(".carousel").addEventListener("mouseenter", () => {
-                track.style.animationPlayState = "paused";
-            });
-    
-            // Resume animation when mouse leaves
-            document.querySelector(".carousel").addEventListener("mouseleave", () => {
-                track.style.animationPlayState = "running";
-            });
-        });
+        $(document).ready(function () {
+            const $track = $(".carousel-images");
 
-        document.addEventListener("DOMContentLoaded", function () {
-            const sections = document.querySelectorAll(".fade-in");
+            // Clone images for seamless looping
+            const $images = $track.children().clone();
+            $track.append($images);
+
+            // Pause animation on hover
+            $(".carousel").on("mouseenter", function () {
+                $track.css("animation-play-state", "paused");
+            });
+
+            // Resume animation on mouse leave
+            $(".carousel").on("mouseleave", function () {
+                $track.css("animation-play-state", "running");
+            });
+
+            // Scroll-triggered fade-in
+            const $sections = $(".fade-in");
 
             function revealOnScroll() {
-                sections.forEach(section => {
-                    const sectionTop = section.getBoundingClientRect().top;
-                    const triggerPoint = window.innerHeight * 0.5; // Adjust trigger point
+                $sections.each(function () {
+                const sectionTop = this.getBoundingClientRect().top;
+                const triggerPoint = window.innerHeight * 0.5;
 
-                    if (sectionTop < triggerPoint) {
-                        section.classList.add("show");
-                    }
+                if (sectionTop < triggerPoint) {
+                    $(this).addClass("show");
+                }
                 });
             }
 
-            window.addEventListener("scroll", revealOnScroll);
+            $(window).on("scroll", revealOnScroll);
             revealOnScroll(); // Run on page load
         });
     </script>

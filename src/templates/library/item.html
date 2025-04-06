@@ -1223,26 +1223,24 @@
       });
     {% endif %}
 
-    // Function to open the popup
     function openSharePopup() {
-        document.getElementById("sharePopup").style.display = "block";
-        document.getElementById("overlay").style.display = "block";
+      $("#sharePopup").css("display", "block");
+      $("#overlay").css("display", "block");
 
-        // Add animation class after a small delay
-        setTimeout(() => {
-            document.getElementById("sharePopup").classList.add("show");
-        }, 100);
+      // Add animation class after a small delay
+      setTimeout(() => {
+        $("#sharePopup").addClass("show");
+      }, 100);
     }
 
-    // Function to close the popup
     function closeSharePopup() {
-        document.getElementById("sharePopup").classList.remove("show");
+      $("#sharePopup").removeClass("show");
 
-        // Hide the popup after animation
-        setTimeout(() => {
-            document.getElementById("sharePopup").style.display = "none";
-            document.getElementById("overlay").style.display = "none";
-        }, 300);
+      // Hide the popup after animation
+      setTimeout(() => {
+        $("#sharePopup").css("display", "none");
+        $("#overlay").css("display", "none");
+      }, 300);
     }
 
     // URL to be shared
@@ -1269,7 +1267,7 @@
 
     // Share via Twitter (X)
     function shareTwitter() {
-        window.open(`https://twitter.com/intent/tweet?url=${shareURL}&text=Check this out!`, "_blank");
+      window.open(`https://twitter.com/intent/tweet?url=${shareURL}&text=Check this out!`, "_blank");
     }
 
     // Share via LinkedIn
@@ -1279,7 +1277,7 @@
 
     // Share via Reddit
     function shareReddit() {
-        window.open(`https://www.reddit.com/submit?url=${shareURL}&title=Check this out!`, "_blank");
+      window.open(`https://www.reddit.com/submit?url=${shareURL}&title=Check this out!`, "_blank");
     }
   </script>
 {% endblock %}

@@ -131,7 +131,6 @@ def forum_list(request, parent=None, section=None):
         list = list.filter(parent_id=parent)
 
     list = list.select_related("last_update")
-    print("List forum got: ", list)
     projects = Project.objects.filter(id__in=OPEN_WORK_PROJECTS).order_by("name")
     context = {
         "list": list,
@@ -280,7 +279,6 @@ def forum_edit(request, id, edit, project_name=None, section=None):
 def forum_form(request, id=False, parent=None, section=None):
 
     # Limit the request per minute to prevent the users from spamming
-    print(request.limited)
     if request.limited:
         return JsonResponse({'error': 'Too many requests. Please try again later.'}, status=429)
 
