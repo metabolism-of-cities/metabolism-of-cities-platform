@@ -1459,8 +1459,6 @@ body.library.search .select2-container--bootstrap4 .select2-dropdown {
   box-shadow: 1px 1px 2px 0px rgba(0, 0, 0, 0.2);
   border: none; }
 
-body.library.search .advanced-options {
-  display: none; }
 
 body.library.search .large-icon-box .statistic {
   font-size: 1rem; }
@@ -1818,8 +1816,8 @@ body.volunteer.portal.latest th.date {
 
 .resource-list th.title,
 .resource-list td.title {
-  width: 200px !important;
-  max-width: 250px; }
+  width: 400px !important;
+  max-width: 500px; }
 
 .resource-list th:not(.title),
 .resource-list td:not(.title) {

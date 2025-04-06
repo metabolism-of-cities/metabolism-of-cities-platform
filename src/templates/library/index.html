@@ -1,20 +1,179 @@
 {% extends "_base.html" %}
 
+{% load static %}
+{% load custom_filters %}
+
 {% block page_name %}library search{% endblock %}
 
 {% block css %}
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css"/>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1.3.2/dist/select2-bootstrap4.min.css"/>
-  {% if request.GET.before or request.GET.after or request.GET.type or request.GET.space %}
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+  {% if request.GET.before or request.GET.after or request.GET.type or request.GET.space or request.GET.terms %}
     <style type="text/css">
-      body.library.search .advanced-options {
-        display:block;
+      body.library.search .expand-advanced-search-bar {
+        display: flex !important;
       }
-      .btn-advanced {
-        display:none;
+      body.library.search .advanced-options {
+        display: block;
+      }
+      body.library.search .advanced-options .row,
+      body.library.search .advanced-options .row-1,
+      body.library.search .advanced-options .row-2,
+      body.library.search .advanced-options .row-3 {
+        display: none;
+      }
+      body.library.search .advanced-options .row-4 {
+        display: show !important; 
+      }
+      body.library.search .search-select {
+        display: none;
+      }
+    </style>
+  {% else %}
+    <style type="text/css">
+      body.library.search .expand-advanced-search-bar {
+        display: none;
       }
     </style>
   {% endif %}
+
+  <style>
+    /* Styling for the expand-advanced-search-bar */
+    body.library.search .expand-advanced-search-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+      display: none;
+    }
+
+    body.library.search .advanced-options {
+      display: none; }
+
+    body.library.search .advanced-options .row-1 {
+      display: flex;
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+      margin-right: -15px;
+      margin-left: -15px;
+    }
+
+    body.library.search .advanced-options .row-2 {
+      display: flex;
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+      margin-right: -15px;
+      margin-left: -15px;
+      width: 100%;  /* Ensure the row takes full width */
+      /* padding: 0 15px; Add some padding to prevent elements from touching the edges */
+    }
+
+    body.library.search .advanced-options .row-3 {
+      display: flex;
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+      margin-top: 30px;
+      margin-right: -15px;
+      margin-left: -15px;
+    }
+
+    /* General Styling */
+    body.library.search .advanced-options .row-4 {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px; /* Space between words */
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+      line-height: 1.6;
+    }
+
+    body.library.search .advanced-options .row-4 > div {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      background-color: transparent;
+      box-shadow: none;
+      opacity: 0; /* Initially hidden */
+      transform: translateY(10px); /* Initially moved down slightly */
+      transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    }
+
+    /* When the row has the show class */
+    body.library.search .advanced-options .row-4 > div.show {
+      opacity: 1; /* Fade in */
+      transform: translateY(0); /* Move to original position */
+    }
+
+    /* Make spans behave like inline text */
+    body.library.search .advanced-options .row-4 span {
+      display: inline-block;
+      transition: color 0.3s ease-in-out;
+    }
+
+    /* Boolean Span (e.g., AND/OR) */
+    body.library.search .advanced-options .row-4 #boolean-span {
+      font-weight: bold;
+      color: #007bff;
+      transition: color 0.3s ease-in-out;
+    }
+
+    /* Field Span (e.g., Author/Creator) */
+    body.library.search .advanced-options .row-4 #field-span {
+      font-weight: bold;
+      color: #333;
+    }
+
+    /* Contains Span (e.g., contains, equals, etc.) */
+    body.library.search .advanced-options .row-4 #contains-span {
+      font-style: italic;
+      color: #666;
+    }
+
+    /* Search term span */
+    body.library.search .advanced-options .row-4 #term-span {
+      font-weight: normal;
+      color: #555;
+      padding: 2px 6px;
+      background-color: #eee;
+      border-radius: 4px;
+    }
+
+    /* Underline effect when changing */
+    body.library.search .advanced-options .row-4 #boolean-span.changing,
+    body.library.search .advanced-options .row-4 #field-span.changing,
+    body.library.search .advanced-options .row-4 #contains-span.changing,
+    body.library.search .advanced-options .row-4 #term-span.changing {
+      color: #ff4500; /* Highlight color */
+      position: relative;
+    }
+
+    /* Add animated underline when changing */
+    body.library.search .advanced-options .row-4 #boolean-span.changing::after,
+    body.library.search .advanced-options .row-4 #field-span.changing::after,
+    body.library.search .advanced-options .row-4 #contains-span.changing::after,
+    body.library.search .advanced-options .row-4 #term-span.changing::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -2px;
+      width: 100%;
+      height: 2px;
+      background-color: #ff4500;
+      transform: scaleX(1);
+      transition: background-color 0.3s ease-in-out;
+    }
+  </style>
 {% endblock %}
 
 {% block content %}
@@ -41,9 +200,14 @@
               Only show work on {{ SYSTEM_NAME_PLURAL }}
             </label>
           </div>
-          <div class="btn btn-primary-basic btn-advanced mt-2"><i class="far fa-tools"></i> Show advanced options</div>
+          <div class="btn btn-primary-basic btn-advanced mt-2"><i class="far fa-tools"></i> Advanced search</div>
         </div>
       {% endspaceless %}
+
+      <div class="expand-advanced-search-bar" onclick="toggleAdvancedSearch()">
+        <i class="fas fa-arrow-down"></i> 
+        <span>Expand advanced search bar</span>
+      </div>
 
       <section class="advanced-options mt-4">
         <div class="row">
@@ -75,6 +239,16 @@
               </select>
             </div>
           </div>
+          <!-- <div class="col-sm-6 col-md-8">
+            <div class="form-group">
+              <label for="language">Restrict by language</label>
+              <select name="language" class="language" multiple>
+                {% for key,value in languages %}
+                  <option value="{{ key }}" {% if key in active_languages %}selected{% endif %}>{{ value }}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div> -->
           {% if search_space %}
             <div class="col-sm-6 col-md-4">
               <div class="form-group">
@@ -87,6 +261,415 @@
             </div>
           {% endif %}
         </div>
+
+        {% with active_fields_count=active_fields|length active_contains_count=active_contains|length active_boolean_count=active_boolean|length active_terms_count=active_terms|length %}
+        <div class="row-1">
+          <div class="col-sm-6 col-md-2">
+            <div class="form-group">
+              <label for="fields">Search fields</label>
+              <select name="fields" class="fields" data-row="1">  
+                {% for key, value in fields %}
+                  <option value="{{ key }}" {% if active_fields_count > 0 and key == active_fields.0 %}selected{% endif %}>
+                    {{ value }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-3">
+            <div class="form-group">
+              <label for="contains">Contains</label>
+              <select name="contains" class="contains" data-row="1">
+                {% for key, value in contains %}
+                  <option value="{{ key }}" {% if active_contains_count > 0 and key == active_contains.0 %}selected{% endif %}>
+                    {{ value }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-5">
+            <div class="form-group">
+              <label for="terms">Enter a search term for row</label>
+              {% if active_terms_count > 0 and active_terms.0|isdigit %}
+                <select class="form-control" id="terms" name="terms" data-row="1">
+                    {% for each in tags %}
+                        <option value="{{ each.id }}" {% if each.id == active_terms.0|to_int %}selected{% endif %}>
+                            {{ each }}
+                        </option>
+                    {% endfor %}
+                </select>
+              {% else %}
+                <input type="text" data-row="1" class="form-control" id="terms" name="terms"
+                      value="{{ active_terms.0|default:'' }}"
+                      placeholder="Enter a search term for row">
+              {% endif %}
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-1">
+            <div class="form-group">
+              <label for="clear-row-btn-1"></label>
+              <button type="button" class="btn btn-primary clear-row-btn-1">Clear</button>
+            </div>
+          </div>
+          <style>
+            .clear-row-btn-1 {
+              margin-left: 4.25rem; 
+              margin-top: 0.5rem;
+            }
+          </style>
+        </div>
+
+        <div class="row-2">
+          <div class="col-sm-6 col-md-2">
+            <div class="form-group">
+              <label for="boolean"></label>
+              <select name="boolean" class="boolean" data-row="2">
+                {% for key, value in boolean %}
+                <option value="{{ key }}" {% if active_boolean_count > 0 and key == active_boolean.0 %}selected{% endif %}>
+                  {{ value }} 
+                </option>
+              {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-2">
+            <div class="form-group">
+              <label for="fields"></label>
+              <select name="fields" class="fields" data-row="2">  
+                {% for key, value in fields %}
+                  <option value="{{ key }}" {% if active_fields_count > 1 and key == active_fields.1 %}selected{% endif %}>
+                    {{ value }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-2">
+            <div class="form-group">
+              <label for="contains"></label>
+              <select name="contains" class="contains" data-row="2">
+                {% for key, value in contains %}
+                  <option value="{{ key }}" {% if active_contains_count > 1 and key == active_contains.1 %}selected{% endif %}>
+                    {{ value }}
+                  </option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-4">
+            <div class="form-group">
+              <label for="terms"></label>
+              {% if active_terms_count > 1 and active_terms.1|isdigit %}
+                <select class="form-control" id="terms" name="terms" data-row="2">
+                    {% for each in tags %}
+                        <option value="{{ each.id }}" {% if each.id == active_terms.1|to_int %}selected{% endif %}>
+                            {{ each }}
+                        </option>
+                    {% endfor %}
+                </select>
+              {% else %}
+                <input type="text" data-row="2" class="form-control" id="terms" name="terms"
+                      value="{{ active_terms.1|default:'' }}"
+                      placeholder="Enter a search term for row">
+              {% endif %}
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-1">
+            <div class="form-group">
+              <label for="delete-row-btn"></label>
+              <button type="button" class="btn btn-primary delete-row-btn">Delete</button>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-1">
+            <div class="form-group">
+              <label for="clear-row-btn"></label>
+              <button type="button" class="btn btn-primary clear-row-btn">Clear</button>
+            </div>
+          </div>
+        </div>
+        
+        {% for i in active_fields %}
+        {% with forloop.counter0 as index %}
+        {% if index >= 2 %}
+          <div class="row-2">
+            <div class="col-sm-6 col-md-2">
+              <div class="form-group">
+                <label for="boolean"></label>
+                <select name="boolean" class="boolean">
+                  {% for key, value in boolean %}
+                    <option value="{{ key }}" {% if key == active_boolean|get_item:index %}selected{% endif %}>
+                      {{ value }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="col-sm-6 col-md-2">
+              <div class="form-group">
+                <label for="fields"></label>
+                <select name="fields" class="fields">
+                  {% for key, value in fields %}
+                    <option value="{{ key }}" {% if key == active_fields|get_item:index %}selected{% endif %}>
+                      {{ value }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="col-sm-6 col-md-2">
+              <div class="form-group">
+                <label for="contains"></label>
+                <select name="contains" class="contains">
+                  {% for key, value in contains %}
+                    <option value="{{ key }}" {% if key == active_contains|get_item:index %}selected{% endif %}>
+                      {{ value }}
+                    </option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div class="col-sm-6 col-md-4">
+              <div class="form-group">
+                <label for="terms"></label>
+                  <!-- <p>Current index: {{ index|add:1 }}</p> -->
+                  {% if active_terms|get_item:index|isdigit %}
+                  <select class="form-control" id="terms" name="terms" data-row="{{ index|add:1 }}">
+                      {% for each in tags %}
+                          <option value="{{ each.id }}" {% if each.id == active_terms|get_item:index|to_int %}selected{% endif %}>
+                              {{ each }}
+                          </option>
+                      {% endfor %}
+                  </select>
+                  {% else %}
+                    <input type="text" class="form-control" id="terms" name="terms" data-row="{{ index|add:1 }}"
+                          value="{{ active_terms|get_item:index|default:'' }}"
+                          placeholder="Enter a search term for row">
+                  {% endif %}
+              </div>
+            </div>
+            <div class="col-sm-6 col-md-1">
+              <div class="form-group">
+                <label for="delete-row-btn"></label>
+                <button type="button" class="btn btn-primary delete-row-btn">Delete</button>
+              </div>
+            </div>
+            <div class="col-sm-6 col-md-1">
+              <div class="form-group">
+                <label for="clear-row-btn"></label>
+                <button type="button" class="btn btn-primary clear-row-btn">Clear</button>
+              </div>
+            </div>
+          </div>
+        {% endif %}
+        {% endwith %}
+        {% endfor %}
+
+        <div class="row-3">
+          <div class="col-sm-6 col-md-2">
+            <div class="form-group">
+              <label for="add-row-btn"></label>
+              <button id="add-row-btn" type="button" class="btn btn-primary"><i class="fas fa-plus"></i>ADD A ROW</button>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-2">
+            <div class="form-group">
+              <label for="clear-all-btn"></label>
+              <button id="clear-all-btn" type="button" class="btn btn-primary"><i class="fas fa-undo"></i> CLEAR ROWS</button>
+            </div>
+          </div>
+          <div class="col-sm-6 col-md-2">
+            <div class="form-group">
+              <label for="simple-search-btn"></label>
+              <button id="simple-search-btn" type="button" class="btn btn-primary">SIMPLE SEARCH</button>
+            </div>
+          </div>
+          <style>
+            #advanced-search-submit {
+              color: black;
+              margin-top: -12px;
+              padding: 12px 24px; 
+              width: 100%;
+              font-size: 1.2rem;
+              border: none;
+              font-weight: bold;
+              transition: box-shadow 0.3s ease-in-out, background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+            }
+            #advanced-search-submit:hover {
+              box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.2); /* Shadow beneath the button */
+            }
+          </style>
+          <div class="col-sm-6 col-md-2">
+            <div class="form-group">
+              <button id="advanced-search-submit" class="btn btn-primary-advanced-search" name="find" value="true" type="submit" form="search"><i class="fas fa-search"></i> SEARCH</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row-4">
+          <div class="sample-row-1" data-row="1">
+            <span id="field-span">
+              {% for key, value in fields %}
+                {% if active_fields_count > 0 and key == active_fields.0 %}
+                  {{ value }}
+                {% endif %}
+              {% endfor %}
+              {% if active_fields_count == 0 %}
+                Author/Creator
+              {% endif %}
+            </span>
+            <span id="contains-span">
+              {% for key, value in contains %}
+                {% if active_contains_count > 0 and key == active_contains.0 %}
+                  {{ value }}
+                {% endif %}
+              {% endfor %}
+              {% if active_contains_count == 0 %}
+                contains
+              {% endif %}
+            </span>
+            <span id="term-span">
+              {% if active_terms_count > 0 %}
+                {% with active_term=active_terms.0 %}
+                
+                {# Check if active_term is a number #}
+                {% if active_term|isdigit %}
+                  {% with tag_id=active_term %}
+                  
+                  {# Loop through tags and find the one with the matching id #}
+                  {% for each in tags %}
+                    {% if each.id == tag_id|to_int %}
+                      {{ each }}  {# Render the tag's value #}
+                    {% endif %}
+                  {% endfor %}
+                  
+                  {% endwith %}
+                {% else %}
+                  {{ active_term }}  {# Render the term if it's not a number #}
+                {% endif %}
+                
+                {% endwith %}
+              {% else %}
+                Enter a search term for row
+              {% endif %}
+            </span>
+          </div>
+          <div class="sample-row-2" data-row="2">
+            <span id="boolean-span">
+              {% for key, value in boolean %}
+                {% if active_boolean_count > 1 and key == active_boolean.1 %}
+                  {{ value }}
+                {% endif %}
+              {% endfor %}
+              {% if active_boolean_count <= 1 %}
+                AND                
+              {% endif %}
+            </span>
+            <span id="field-span">
+              {% for key, value in fields %}
+                {% if active_fields_count > 1 and key == active_fields.1 %}
+                  {{ value }}
+                {% endif %}
+              {% endfor %}
+              {% if active_fields_count <= 1 %}
+                Author/Creator
+              {% endif %}
+            </span>
+            <span id="contains-span">
+              {% for key, value in contains %}
+                {% if active_contains_count > 1 and key == active_contains.1 %}
+                  {{ value }}
+                {% endif %}
+              {% endfor %}
+              {% if active_contains_count <= 1 %}
+                contains
+              {% endif %}
+            </span>
+            <span id="term-span">
+              <span id="term-span">
+                {% if active_terms_count > 1 %}
+                {% with active_term=active_terms.1 %}
+                
+                {# Check if active_term is a number #}
+                {% if active_term|isdigit %}
+                  {% with tag_id=active_term %}
+                  
+                  {# Loop through tags and find the one with the matching id #}
+                  {% for each in tags %}
+                    {% if each.id == tag_id|to_int %}
+                      {{ each }}  {# Render the tag's value #}
+                    {% endif %}
+                  {% endfor %}
+                  
+                  {% endwith %}
+                {% else %}
+                  {{ active_term }}  {# Render the term if it's not a number #}
+                {% endif %}
+                
+                {% endwith %}
+              {% else %}
+                Enter a search term for row
+              {% endif %}
+            </span>
+          </div>
+          
+          <!-- Dynamically generated sample rows from the loop -->
+          {% for i in active_fields %}
+          {% with forloop.counter0 as index %}
+            {% if index >= 2 %}
+            <div class="sample-row-2" data-row="{{ index|add:1 }}">
+              <span id="boolean-span">
+                {% for key, value in boolean %}
+                  {% if key == active_boolean|get_item:index %}
+                    {{ value }}
+                  {% endif %}
+                {% endfor %}
+              </span>
+              <span id="field-span">
+                {% for key, value in fields %}
+                  {% if key == active_fields|get_item:index %}
+                    {{ value }}
+                  {% endif %}
+                {% endfor %}
+              </span>
+              <span id="contains-span">
+                {% for key, value in contains %}
+                  {% if key == active_contains|get_item:index %}
+                    {{ value }}
+                  {% endif %}
+                {% endfor %}
+              </span>
+              <span id="term-span">
+                {% if active_terms|get_item:index %}
+                {% with active_term=active_terms|get_item:index %}
+                
+                {# Check if active_term is a number #}
+                {% if active_term|isdigit %}
+                  {% with tag_id=active_term %}
+                  
+                  {# Loop through tags and find the one with the matching id #}
+                  {% for each in tags %}
+                    {% if each.id == tag_id|to_int %}
+                      {{ each }}  {# Render the tag's value #}
+                    {% endif %}
+                  {% endfor %}
+                  
+                  {% endwith %}
+                {% else %}
+                  {{ active_term }}  {# Render the term if it's not a number #}
+                {% endif %}
+                
+                {% endwith %}
+              {% else %}
+                Enter a search term for row
+              {% endif %}
+              </span>
+            </div>
+            {% endif %}
+          {% endwith %}
+        {% endfor %}
+        </div>
+        {% endwith %}
       </section>
     </form>
   </section>
@@ -266,6 +849,7 @@
   $(".btn-advanced").click(function() {
     $("section.advanced-options").show();
     $(this).hide();
+    $("div.search-select").children().hide(); // Hide all elements except the advanced search button
   })
 
   $("select.search").select2({
@@ -273,8 +857,521 @@
     theme: "bootstrap4",
   });
 
+  $("select.boolean").select2({
+    theme: "bootstrap4",
+  });
+
+  $("select.fields").select2({
+    theme: "bootstrap4",
+  });
+
+  $("select.contains").select2({
+    theme: "bootstrap4",
+  });
+
   $("select.type").select2({
     theme: "bootstrap4",
+  });
+
+  $("select.language").select2({
+    theme: "bootstrap4",
+  });
+
+  // Event listener for the advanced search button click
+  $('.btn-advanced').on('click', function () {
+    const $bar = $('body.library.search .expand-advanced-search-bar');
+    const $options = $('body.library.search .advanced-options');
+    const $select = $('body.library.search .search-select');
+    const $icon = $bar.find('i');
+    const $span = $bar.find('span');
+
+    $bar.slideDown(1000, function () {
+      $(this).css('display', 'flex');
+    });
+
+    $options.slideDown(1000);
+
+    $select.slideUp(1000);
+
+    $icon.removeClass('fa-arrow-down').addClass('fa-arrow-up');
+    $span.text('Collapse advanced search bar');
+  });
+
+  function toggleAdvancedSearch() {
+    const $row = $('.advanced-options .row');
+    const $row1 = $('.advanced-options .row-1');
+    const $row2 = $('.advanced-options .row-2');
+    const $row3 = $('.advanced-options .row-3');
+    const $icon = $('.expand-advanced-search-bar i');
+    const $span = $('.expand-advanced-search-bar span');
+
+    const allVisible = $row.is(':visible') && $row1.is(':visible') && $row2.first().is(':visible') && $row3.is(':visible');
+
+    if (allVisible) {
+      $row.slideUp(500, function () {
+        $(this).css('display', 'none');
+      });
+      $row1.slideUp(500, function () {
+        $(this).css('display', 'none');
+      });
+      $row3.slideUp(500, function () {
+        $(this).css('display', 'none');
+      });
+      $row2.each(function () {
+        $(this).slideUp(500, function () {
+          $(this).css('display', 'none');
+        });
+      });
+
+      $icon.removeClass('fa-arrow-up').addClass('fa-arrow-down');
+      $span.text('Expand advanced search bar');
+    } else {
+      $row.css('display', 'flex').hide().slideDown(500);
+      $row1.css('display', 'flex').hide().slideDown(500);
+      $row3.css('display', 'flex').hide().slideDown(500);
+      $row2.each(function () {
+        $(this).css('display', 'flex').hide().slideDown(500);
+      });
+
+      $icon.removeClass('fa-arrow-down').addClass('fa-arrow-up');
+      $span.text('Collapse advanced search bar');
+    }
+  }
+
+  // simple search button to redirect the user back to the simple search page
+  $('#simple-search-btn').on('click', function () {
+    if (window.location.pathname.includes('/islands/')) {
+      window.location.href = '/islands/library';
+    } else {
+      window.location.href = '/library';
+    }
+  });
+
+  $(document).ready(function () {
+    setTimeout(function () {
+      $(".row-4 > div").each(function () {
+        $(this).addClass("show"); 
+      });
+    }, 1000); 
+
+    $("#add-row-btn").on("click", function () {
+      const $firstRow = $(".row-2").first(); // Base row for cloning
+      const $lastRow = $(".row-3").first();  // Reference for inserting
+      const $row4Sample = $(".row-4 .sample-row-2").first(); // Sample row
+
+      if ($firstRow.length && $lastRow.length) {
+        // Clone the rows
+        const $newRow = $firstRow.clone();
+        const $newSampleRow = $row4Sample.clone();
+
+        // Get highest data-row value
+        let lastRowNumber = Math.max(...$("[data-row]").map(function () {
+          return parseInt($(this).attr("data-row"));
+        }).get(), 0);
+        console.log(`Last row number: ${lastRowNumber}`);
+
+        // Update data-row values
+        $newRow.find("[data-row]").each(function () {
+          $(this).attr("data-row", lastRowNumber + 1);
+        });
+
+        // Clear values in cloned row
+        $newRow.find("input, select").each(function () {
+          if ($(this).is("input")) {
+            $(this).val("");
+          } else {
+            $(this).prop("selectedIndex", 0);
+          }
+        });
+
+        // Reset sample row spans
+        $newSampleRow.find("#boolean-span").text("AND");
+        $newSampleRow.find("#field-span").text("Author/Creator");
+        $newSampleRow.find("#contains-span").text("contains");
+        $newSampleRow.find("#term-span").text("Enter a search term for row");
+        $newSampleRow.attr("data-row", lastRowNumber + 1);
+
+        // Destroy existing Select2
+        $newRow.find("select").each(function () {
+          const $this = $(this);
+          if ($this.data("select2")) {
+            $this.select2("destroy");
+          }
+          $this.removeAttr("data-select2-id")
+              .removeClass("select2-hidden-accessible")
+              .next(".select2-container").remove();
+        });
+
+        // Replace terms field if it's a select
+        const $termsField = $newRow.find(".terms");
+        if ($termsField.is("select")) {
+          const $inputField = $("<input>", {
+            id: $termsField.attr("id"),
+            type: "text",
+            name: $termsField.attr("name"),
+            class: "terms form-control",
+            placeholder: "Enter a search term for row",
+            value: $termsField.attr("value"),
+          });
+          $termsField.replaceWith($inputField);
+        }
+
+        // Insert cloned row before last row and fade in
+        $newRow.hide();
+        $lastRow.before($newRow);
+        $newRow.fadeIn(800);
+
+        // Sample row transition
+        $newSampleRow.css({
+          opacity: 0,
+          transform: "translateY(10px)"
+        });
+
+        setTimeout(() => {
+          $newSampleRow.css({
+            opacity: 1,
+            transform: "translateY(0px)"
+          });
+        }, 500);
+
+        // Insert cloned sample row
+        const $lastSampleRow = $(".row-4").children().last();
+        $lastSampleRow.after($newSampleRow);
+
+        // Reinitialize Select2
+        $newRow.find("select.boolean").select2({ theme: "bootstrap4" });
+        $newRow.find("select.fields").select2({ theme: "bootstrap4" });
+        $newRow.find("select.contains").select2({ theme: "bootstrap4" });
+
+        $firstRow.find("select.boolean").select2({ theme: "bootstrap4" });
+        $firstRow.find("select.fields").select2({ theme: "bootstrap4" });
+        $firstRow.find("select.contains").select2({ theme: "bootstrap4" });
+      }
+    });
+  });
+
+  $(document).on("select2:select", ".fields", function(e) {
+    let selectedValue = $(this).val();
+    let rowContainer = $(this).closest(".row-1, .row-2"); // Handles both row-1 and row-2
+    let termsContainer = rowContainer.find(".form-group input[name='terms'], .form-group select.terms");
+    let selectTermsContainer = rowContainer.find(".form-group select[name='terms'], .form-group input.terms");
+
+    let rowNumber = termsContainer.data('row');
+    
+    if(termsContainer.length === 0)
+      rowNumber = selectTermsContainer.data('row');
+
+    // change the values of row 4
+    let capitalizedText = selectedValue.charAt(0).toUpperCase() + selectedValue.slice(1);
+    
+    let fieldSpan = $(".row-4 [data-row='" + rowNumber + "'] #field-span").text(capitalizedText);
+
+    fieldSpan.text(capitalizedText).addClass("changing");
+
+    // Remove the effect after 2000ms
+    setTimeout(() => {
+      fieldSpan.removeClass("changing");
+    }, 2000);
+
+    if (selectedValue === "tag") {
+        // Replace input with a Bootstrap-styled select dropdown
+        let selectDropdown = `
+            <select name="terms" class="form-control terms" data-row="${rowNumber}">
+                {% for each in tags %}
+                  <option value="{{ each.id }}" {% if each == tag %}selected {% endif %}>{{ each }}</option>
+                {% endfor %}
+            </select>
+        `;
+        termsContainer.replaceWith(selectDropdown);
+        let firstTagValue = $(".form-group select[name='terms'] option:first").text();
+
+        $(".row-4 [data-row='" + rowNumber + "'] #term-span").text(firstTagValue); // Update termSpan with the first tag value
+    } else {
+        if (termsContainer.length === 0) {
+          termsContainer = selectTermsContainer;
+        }
+
+        // Replace dropdown with a Bootstrap-styled text input if not "tag"
+        if (termsContainer.is("select")) {
+          console.log(`here`);
+          let textInput = `<input type="text" class="form-control" name="terms" placeholder="Enter a search term for row" data-row="${rowNumber}">`;
+          termsContainer.replaceWith(textInput);
+          $(".row-4 [data-row='" + rowNumber + "'] #term-span").text("Enter a search term for row"); 
+        }
+    }
+  });
+
+  $(document).on("select2:select", ".contains", function(e) {
+    let selectedValue = $(this).val();
+    let rowNumber = $(this).data('row');
+    let containsSpan = $(".row-4 [data-row='" + rowNumber + "'] #contains-span").text(selectedValue);
+    containsSpan.text(selectedValue).addClass("changing");
+    setTimeout(() => {
+      containsSpan.removeClass("changing");
+    }, 2000);
+  });
+
+  $(document).on("select2:select", ".boolean", function(e) {
+    let selectedValue = $(this).val();
+    let rowNumber = $(this).data('row');
+    let capitalizedText = selectedValue.toUpperCase();
+    let booleanSpan = $(".row-4 [data-row='" + rowNumber + "'] #boolean-span").text(capitalizedText);
+    booleanSpan.text(capitalizedText).addClass("changing");
+    // Remove the effect after 2000ms
+    setTimeout(() => {
+      booleanSpan.removeClass("changing");
+    }, 2000);
+  });
+
+  $(document).ready(function() {
+    // Use event delegation to listen for the input event on all input fields with the name "terms"
+    $(document).on("input", "input[name='terms']", function() {
+      let searchTerm = $(this).val();
+      let rowNumber = $(this).data("row");
+
+      let termSpan = $(".row-4 [data-row='" + rowNumber + "'] #term-span");
+
+      termSpan.text(searchTerm).addClass("changing");
+
+      // Remove the effect after 2000ms
+      setTimeout(() => {
+        termSpan.removeClass("changing");
+      }, 2000);
+    });
+
+    // Listen for the change event on the select dropdown
+    $(document).on("change", "select[name='terms']", function() {
+      let selectedValue = $(this).val();  // Get the selected tag's ID
+      let rowNumber = $(this).data("row"); // Get the row number
+
+      // Find the term span for the corresponding row
+      let termSpan = $(".row-4 [data-row='" + rowNumber + "'] #term-span");
+
+      // Assuming you have the tags available in the form or somewhere else in the DOM
+      // Replace the `selectedValue` with the text of the corresponding tag
+      let selectedTagText = "";
+      
+      // Loop through the available tags and find the matching ID
+      $("select[name='terms'] option").each(function() {
+        if ($(this).val() === selectedValue) {
+          selectedTagText = $(this).text();  // Get the text of the selected tag
+        }
+      });
+
+      // Set the selected tag's text to the term span and add the 'changing' effect
+      termSpan.text(selectedTagText).addClass("changing");
+
+      // Remove the effect after 2000ms
+      setTimeout(() => {
+        termSpan.removeClass("changing");
+      }, 2000);
+    });
+  });
+
+  $(document).ready(function () {
+    let firstRow = $(".row-2").first();
+    
+    // Hide delete button for the first row
+    firstRow.find(".delete-row-btn").hide();
+
+    // Delete only the corresponding .row-2 when delete button is clicked
+    $(document).on("click", ".delete-row-btn", function () {
+      let row = $(this).closest(".row-2");
+
+      // Extract data-row from one of the child elements
+      let rowData = row.find(".boolean").data("row") || 
+                row.find(".fields").data("row") || 
+                row.find(".contains").data("row") || 
+                row.find("#terms").data("row");
+
+      // Find the corresponding sample-row in row-4 and delete it
+      let sampleRow = $(".row-4 [data-row='" + rowData + "']");
+
+      if (sampleRow.length > 0) {
+        sampleRow.slideUp(800, function () {
+          $(this).remove();
+        });
+      }
+      row.fadeOut(800, function () {
+        $(this).remove();
+      });
+    });
+
+    // Clear input/select fields and reset select elements to default values for row-1
+    $(document).on("click", ".clear-row-btn-1", function () {
+      let row = $(this).closest(".row-1");
+      
+      row.find("input").val(""); // Clear all input fields
+
+      // Reset selects and trigger change event for Select2
+      row.find(".fields").val(row.find(".fields option:first").val()).trigger("change");
+      row.find(".contains").val(row.find(".contains option:first").val()).trigger("change");
+
+      // Extract data-row from one of the child elements
+      let rowData = row.find(".boolean").data("row") || 
+                  row.find(".fields").data("row") || 
+                  row.find(".contains").data("row") || 
+                  row.find("#terms").data("row");
+
+      // Find the corresponding sample-row in row-4 and reset values
+      let sampleRow = $(".row-4 [data-row='" + rowData + "']");
+
+      if (sampleRow.length > 0) {
+        let booleanSpan = sampleRow.find("#boolean-span");
+        let fieldSpan = sampleRow.find("#field-span");
+        let containsSpan = sampleRow.find("#contains-span");
+        let termSpan = sampleRow.find("#term-span");
+
+        booleanSpan.text("AND").addClass("changing");
+        fieldSpan.text("Author/Creator").addClass("changing");
+        containsSpan.text("contains").addClass("changing");
+        termSpan.text("Enter a search term for row").addClass("changing");
+
+        // Remove "changing" class after 1.5 seconds
+        setTimeout(() => {
+          booleanSpan.removeClass("changing");
+          fieldSpan.removeClass("changing");
+          containsSpan.removeClass("changing");
+          termSpan.removeClass("changing");
+        }, 1500);
+      }
+
+      // Reset the terms field back to input if it was changed to a select
+      let termsField = row.find(".terms");
+      if (termsField.is("select")) {
+          let textInput = $("<input>", {
+              type: "text",
+              class: "form-control terms",
+              name: "terms",
+              placeholder: "Enter a search term for row"
+          });
+          termsField.replaceWith(textInput);
+      }
+    });
+
+    // Clear input/select fields and reset select elements to default values for row-2
+    $(document).on("click", ".clear-row-btn", function () {
+      let row = $(this).closest(".row-2");
+      
+      row.find("input").val(""); // Clear all input fields
+
+      // Reset selects and trigger change event for Select2
+      row.find(".boolean").val(row.find(".boolean option:first").val()).trigger("change");
+      row.find(".fields").val(row.find(".fields option:first").val()).trigger("change");
+      row.find(".contains").val(row.find(".contains option:first").val()).trigger("change");
+
+      // Extract data-row from one of the child elements
+      let rowData = row.find(".boolean").data("row") || 
+                row.find(".fields").data("row") || 
+                row.find(".contains").data("row") || 
+                row.find("#terms").data("row");
+
+      // Find the corresponding sample-row in row-4 and reset values
+      let sampleRow = $(".row-4 [data-row='" + rowData + "']");
+
+      if (sampleRow.length > 0) {
+        let booleanSpan = sampleRow.find("#boolean-span");
+        let fieldSpan = sampleRow.find("#field-span");
+        let containsSpan = sampleRow.find("#contains-span");
+        let termSpan = sampleRow.find("#term-span");
+
+        booleanSpan.text("AND").addClass("changing");
+        fieldSpan.text("Author/Creator").addClass("changing");
+        containsSpan.text("contains").addClass("changing");
+        termSpan.text("Enter a search term for row").addClass("changing");
+
+        // Remove "changing" class after 1.5 seconds
+        setTimeout(() => {
+            booleanSpan.removeClass("changing");
+            fieldSpan.removeClass("changing");
+            containsSpan.removeClass("changing");
+            termSpan.removeClass("changing");
+        }, 1500);
+      }
+
+      // Reset the terms field back to input if it was changed to a select
+      let termsField = row.find(".terms");
+      if (termsField.is("select")) {
+          let textInput = $("<input>", {
+              type: "text",
+              class: "form-control terms",
+              name: "terms",
+              placeholder: "Enter a search term for row"
+          });
+          termsField.replaceWith(textInput);
+      }
+    });
+
+    $(document).on("click", "#clear-all-btn", function () {
+      // Delete all cloned .row-2 elements, leaving only the first .row-2 and .row-1
+      $(".row-2").not(":first").remove(); // Remove all cloned .row-2 except the first
+
+      // Now target the remaining .row-1 and the first .row-2
+      let firstRow = $(".row-1");
+      let firstRow2 = $(".row-2").first();
+
+      // Clear input fields in both .row-1 and the first .row-2 row
+      firstRow.find("input").val("");
+      firstRow2.find("input").val(""); // Clear .row-2 inputs
+
+      // Reset selects and trigger change event for Select2 in .row-1 and .row-2
+      firstRow.find(".boolean").val(firstRow.find(".boolean option:first").val()).trigger("change");
+      firstRow.find(".fields").val(firstRow.find(".fields option:first").val()).trigger("change");
+      firstRow.find(".contains").val(firstRow.find(".contains option:first").val()).trigger("change");
+
+      firstRow2.find(".boolean").val(firstRow2.find(".boolean option:first").val()).trigger("change");
+      firstRow2.find(".fields").val(firstRow2.find(".fields option:first").val()).trigger("change");
+      firstRow2.find(".contains").val(firstRow2.find(".contains option:first").val()).trigger("change");
+
+      // Reset the terms field back to input if it was changed to a select (in both rows)
+      let termsField1 = firstRow.find(".terms");
+      if (termsField1.is("select")) {
+        let textInput1 = $("<input>", {
+          type: "text",
+          class: "form-control terms",
+          name: "terms",
+          placeholder: "Enter a search term for row"
+        });
+        termsField1.replaceWith(textInput1);
+      }
+
+      let termsField2 = firstRow2.find(".terms");
+      if (termsField2.is("select")) {
+        let textInput2 = $("<input>", {
+          type: "text",
+          class: "form-control terms",
+          name: "terms",
+          placeholder: "Enter a search term for row"
+        });
+        termsField2.replaceWith(textInput2);
+      }
+
+      // Now, clear all the spans inside row-4 and reset row-4 to its initial state
+      let row4 = $(".row-4");
+
+      $(".row-4 .sample-row-2").not(":first").remove();
+
+      // Reset the values in the first sample-row-1 and sample-row-2
+      let sampleRow1 = $(".row-4 .sample-row-1");
+      let sampleRow2 = $(".row-4 .sample-row-2").first();
+
+      // Reset text inside sample-row-1
+      sampleRow1.find("#field-span").text("Author/Creator");
+      sampleRow1.find("#contains-span").text("contains");
+      sampleRow1.find("#term-span").text("Enter a search term for row");
+
+      // Reset text inside sample-row-2
+      sampleRow2.find("#boolean-span").text("AND");
+      sampleRow2.find("#field-span").text("Author/Creator");
+      sampleRow2.find("#contains-span").text("contains");
+      sampleRow2.find("#term-span").text("Enter a search term for row");
+    });
+
+    // When a new row is added, ensure its delete button is visible
+    $("#add-row-btn").on("click", function () {
+      let newRow = $(".row-2").last();
+      newRow.find(".delete-row-btn").show(); // Ensure delete button is shown
+    });
   });
 </script>
 {% endblock %}
