@@ -21,15 +21,15 @@
           </li>
           
           <script>
-            document.addEventListener("DOMContentLoaded", function() {
-              const dashboardLink = document.getElementById('dashboard-link');
+            $(document).ready(function () {
               const currentUrl = window.location.pathname;
-          
+              const $dashboardLink = $('#dashboard-link');
+
               if (currentUrl.includes('/islands/dashboards/')) {
-                dashboardLink.setAttribute('href', '/islands/overview/');
+                $dashboardLink.attr('href', '/islands/overview/');
               } else {
                 const dashboardUrl = "{% url URLS.DASHBOARD space.slug %}";
-                dashboardLink.setAttribute('href', dashboardUrl);
+                $dashboardLink.attr('href', dashboardUrl);
               }
             });
           </script>
