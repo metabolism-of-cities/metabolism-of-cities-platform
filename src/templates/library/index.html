@@ -37,6 +37,143 @@
       }
     </style>
   {% endif %}
+
+  <style>
+    /* Styling for the expand-advanced-search-bar */
+    body.library.search .expand-advanced-search-bar {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+      display: none;
+    }
+
+    body.library.search .advanced-options {
+      display: none; }
+
+    body.library.search .advanced-options .row-1 {
+      display: flex;
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+      margin-right: -15px;
+      margin-left: -15px;
+    }
+
+    body.library.search .advanced-options .row-2 {
+      display: flex;
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+      margin-right: -15px;
+      margin-left: -15px;
+      width: 100%;  /* Ensure the row takes full width */
+      /* padding: 0 15px; Add some padding to prevent elements from touching the edges */
+    }
+
+    body.library.search .advanced-options .row-3 {
+      display: flex;
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+      margin-top: 30px;
+      margin-right: -15px;
+      margin-left: -15px;
+    }
+
+    /* General Styling */
+    body.library.search .advanced-options .row-4 {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px; /* Space between words */
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background-color: #f9f9f9;
+      line-height: 1.6;
+    }
+
+    body.library.search .advanced-options .row-4 > div {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      background-color: transparent;
+      box-shadow: none;
+      opacity: 0; /* Initially hidden */
+      transform: translateY(10px); /* Initially moved down slightly */
+      transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    }
+
+    /* When the row has the show class */
+    body.library.search .advanced-options .row-4 > div.show {
+      opacity: 1; /* Fade in */
+      transform: translateY(0); /* Move to original position */
+    }
+
+    /* Make spans behave like inline text */
+    body.library.search .advanced-options .row-4 span {
+      display: inline-block;
+      transition: color 0.3s ease-in-out;
+    }
+
+    /* Boolean Span (e.g., AND/OR) */
+    body.library.search .advanced-options .row-4 #boolean-span {
+      font-weight: bold;
+      color: #007bff;
+      transition: color 0.3s ease-in-out;
+    }
+
+    /* Field Span (e.g., Author/Creator) */
+    body.library.search .advanced-options .row-4 #field-span {
+      font-weight: bold;
+      color: #333;
+    }
+
+    /* Contains Span (e.g., contains, equals, etc.) */
+    body.library.search .advanced-options .row-4 #contains-span {
+      font-style: italic;
+      color: #666;
+    }
+
+    /* Search term span */
+    body.library.search .advanced-options .row-4 #term-span {
+      font-weight: normal;
+      color: #555;
+      padding: 2px 6px;
+      background-color: #eee;
+      border-radius: 4px;
+    }
+
+    /* Underline effect when changing */
+    body.library.search .advanced-options .row-4 #boolean-span.changing,
+    body.library.search .advanced-options .row-4 #field-span.changing,
+    body.library.search .advanced-options .row-4 #contains-span.changing,
+    body.library.search .advanced-options .row-4 #term-span.changing {
+      color: #ff4500; /* Highlight color */
+      position: relative;
+    }
+
+    /* Add animated underline when changing */
+    body.library.search .advanced-options .row-4 #boolean-span.changing::after,
+    body.library.search .advanced-options .row-4 #field-span.changing::after,
+    body.library.search .advanced-options .row-4 #contains-span.changing::after,
+    body.library.search .advanced-options .row-4 #term-span.changing::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -2px;
+      width: 100%;
+      height: 2px;
+      background-color: #ff4500;
+      transform: scaleX(1);
+      transition: background-color 0.3s ease-in-out;
+    }
+  </style>
 {% endblock %}
 
 {% block content %}
@@ -741,192 +878,177 @@
   });
 
   // Event listener for the advanced search button click
-  document.querySelector('.btn-advanced').addEventListener('click', function() {
-    // Use jQuery to show the advanced search bar and options with a slideDown effect
-    const icon = document.querySelector('.expand-advanced-search-bar i');
-    const span = document.querySelector('.expand-advanced-search-bar span');
-    $('body.library.search .expand-advanced-search-bar').slideDown(1000, function() {
-        // After the slide down effect is complete, set display: flex
-        $(this).css('display', 'flex');
+  $('.btn-advanced').on('click', function () {
+    const $bar = $('body.library.search .expand-advanced-search-bar');
+    const $options = $('body.library.search .advanced-options');
+    const $select = $('body.library.search .search-select');
+    const $icon = $bar.find('i');
+    const $span = $bar.find('span');
+
+    $bar.slideDown(1000, function () {
+      $(this).css('display', 'flex');
     });
-    $('body.library.search .advanced-options').slideDown(1000); // Slide down the advanced options
 
-    // Use jQuery to hide the search select with a slideUp effect
-    $('body.library.search .search-select').slideUp(1000); // Slide up the search select
+    $options.slideDown(1000);
 
-    // Change the icon to up arrow and update the text to "Collapse advanced search bar"
-    icon.classList.remove('fa-arrow-down');
-    icon.classList.add('fa-arrow-up');
-    span.textContent = 'Collapse advanced search bar';
+    $select.slideUp(1000);
+
+    $icon.removeClass('fa-arrow-down').addClass('fa-arrow-up');
+    $span.text('Collapse advanced search bar');
   });
 
   function toggleAdvancedSearch() {
-    // Get the rows to be toggled
-    const row = document.querySelector('.advanced-options .row');
-    const row1 = document.querySelector('.advanced-options .row-1');
-    const row2 = document.querySelectorAll('.advanced-options .row-2');
-    const row3 = document.querySelector('.advanced-options .row-3');
-    const icon = document.querySelector('.expand-advanced-search-bar i');
-    const span = document.querySelector('.expand-advanced-search-bar span');
+    const $row = $('.advanced-options .row');
+    const $row1 = $('.advanced-options .row-1');
+    const $row2 = $('.advanced-options .row-2');
+    const $row3 = $('.advanced-options .row-3');
+    const $icon = $('.expand-advanced-search-bar i');
+    const $span = $('.expand-advanced-search-bar span');
 
-    // Toggle the display property with slideDown and slideUp
-    if ($(row).is(':visible') && $(row1).is(':visible') && $(row2[0]).is(':visible') && $(row3).is(':visible')) {
-        $(row).slideUp(500, function() {
-            row.style.display = 'none';  // Set to 'none' after slideUp
-        });
-        $(row1).slideUp(500, function() {
-            row1.style.display = 'none';  // Set to 'none' after slideUp
-        });
-        $(row3).slideUp(500, function() {
-            row3.style.display = 'none';  // Set to 'none' after slideUp
-        });
-        $(row2).each(function() {
-            $(this).slideUp(500, function() {
-                this.style.display = 'none';  // Set to 'none' after slideUp
-            });
-        });
+    const allVisible = $row.is(':visible') && $row1.is(':visible') && $row2.first().is(':visible') && $row3.is(':visible');
 
-        // Change the icon to a down arrow and update text
-        icon.classList.remove('fa-arrow-up');
-        icon.classList.add('fa-arrow-down');
-        span.textContent = 'Expand advanced search bar';
+    if (allVisible) {
+      $row.slideUp(500, function () {
+        $(this).css('display', 'none');
+      });
+      $row1.slideUp(500, function () {
+        $(this).css('display', 'none');
+      });
+      $row3.slideUp(500, function () {
+        $(this).css('display', 'none');
+      });
+      $row2.each(function () {
+        $(this).slideUp(500, function () {
+          $(this).css('display', 'none');
+        });
+      });
+
+      $icon.removeClass('fa-arrow-up').addClass('fa-arrow-down');
+      $span.text('Expand advanced search bar');
     } else {
-        // Show rows with slideDown and maintain flex display
-        $(row).css('display', 'flex').hide().slideDown(500);
-        $(row1).css('display', 'flex').hide().slideDown(500);
-        $(row3).css('display', 'flex').hide().slideDown(500);
-        $(row2).each(function() {
-            $(this).css('display', 'flex').hide().slideDown(500);
-        });
+      $row.css('display', 'flex').hide().slideDown(500);
+      $row1.css('display', 'flex').hide().slideDown(500);
+      $row3.css('display', 'flex').hide().slideDown(500);
+      $row2.each(function () {
+        $(this).css('display', 'flex').hide().slideDown(500);
+      });
 
-        // Change the icon to an up arrow and update text
-        icon.classList.remove('fa-arrow-down');
-        icon.classList.add('fa-arrow-up');
-        span.textContent = 'Collapse advanced search bar';
+      $icon.removeClass('fa-arrow-down').addClass('fa-arrow-up');
+      $span.text('Collapse advanced search bar');
     }
-}
+  }
 
   // simple search button to redirect the user back to the simple search page
-  document.getElementById("simple-search-btn").addEventListener("click", function() {
-    if (window.location.pathname.includes("/islands/")) {
-        window.location.href = "/islands/library";
+  $('#simple-search-btn').on('click', function () {
+    if (window.location.pathname.includes('/islands/')) {
+      window.location.href = '/islands/library';
     } else {
-        window.location.href = "/library";
+      window.location.href = '/library';
     }
   });
 
-  document.addEventListener("DOMContentLoaded", function() {
-    // Add transition to existing rows after page load
-    document.querySelectorAll(".row-4 > div").forEach(div => {
-      setTimeout(() => {
-        div.classList.add("show"); // Trigger transition for initial rows
-      }, 1000); // Slightly adjust the delay for the transition to kick in
-    });
-  });
-
-// Add new form row button
-document.getElementById("add-row-btn").addEventListener("click", function() {
-  const firstRow = document.querySelector(".row-2"); // Base row for cloning
-  const lastRow = document.querySelector(".row-3");  // Reference for inserting new rows
-
-  const row4 = document.querySelector(".row-4 .sample-row-2");  // Reference for row-4
-
-  if (firstRow && lastRow) {
-    // Clone the row
-    const newRow = firstRow.cloneNode(true);
-
-    // Clone the sample row as well
-    const newSampleRow = row4.cloneNode(true);
-
-    // Get the highest current data-row value
-    let lastRowNumber = Math.max(...Array.from(document.querySelectorAll('[data-row]')).map(el => parseInt(el.getAttribute('data-row'))), 0);
-    console.log(`Last row number: ${lastRowNumber}`);
-
-    // Increment the row's data-row values
-    $(newRow).find("[data-row]").each(function () {
-      $(this).attr("data-row", lastRowNumber + 1); // Increment the data-row value
-    });
-
-    // Clear values in cloned row
-    $(newRow).find("input, select").each(function () {
-      if ($(this).is("input")) {
-        $(this).val(""); // Clear input fields
-      } else {
-        $(this).prop("selectedIndex", 0); // Reset selects to first option
-      }
-    });
-
-    // Also clear values in the cloned sample row
-    $(newSampleRow).find("#boolean-span").text("AND"); // Reset the boolean value
-    $(newSampleRow).find("#field-span").text("Author/Creator"); // Reset the field value
-    $(newSampleRow).find("#contains-span").text("contains"); // Reset the contains value
-    $(newSampleRow).find("#term-span").text("Enter a search term for row"); // Reset the term value
-
-    // Increment the data-row value for the entire sample row
-    $(newSampleRow).each(function() {
-      $(this).attr("data-row", lastRowNumber + 1);
-    });
-
-    // Remove any Select2-generated elements before reinserting into DOM
-    $(newRow).find("select").each(function () {
-      let $this = $(this);
-
-      // Destroy Select2 safely (only if initialized)
-      if ($this.data('select2')) {
-        $this.select2('destroy');
-      }
-
-      // Remove any Select2-related attributes
-      $this.removeAttr('data-select2-id');
-      $this.removeClass('select2-hidden-accessible');
-      $this.next('.select2-container').remove();
-    });
-
-    // Replace the terms field with a fresh input
-    const termsField = $(newRow).find(".terms"); // Assuming .terms is the class
-    if (termsField.is("select")) {
-      const inputField = $("<input>", {
-        id: termsField.attr("id"),
-        type: "text",
-        name: termsField.attr("name"),
-        class: "terms form-control",
-        placeholder: "Enter a search term for row",
-        value: termsField.attr("value"),
+  $(document).ready(function () {
+    setTimeout(function () {
+      $(".row-4 > div").each(function () {
+        $(this).addClass("show"); 
       });
-      termsField.replaceWith(inputField);
-    }
+    }, 1000); 
 
-    // Insert cloned row before the last row
-    $(newRow).hide(); // Hide the row initially using jQuery method
-    $(lastRow).before(newRow); // Insert the row into the DOM
-    $(newRow).fadeIn(800); // Slide it down after insertion
+    $("#add-row-btn").on("click", function () {
+      const $firstRow = $(".row-2").first(); // Base row for cloning
+      const $lastRow = $(".row-3").first();  // Reference for inserting
+      const $row4Sample = $(".row-4 .sample-row-2").first(); // Sample row
 
-    newSampleRow.style.opacity = 0;
-    newSampleRow.style.transform = "translateY(10px)";
+      if ($firstRow.length && $lastRow.length) {
+        // Clone the rows
+        const $newRow = $firstRow.clone();
+        const $newSampleRow = $row4Sample.clone();
 
-    // Allow time for transition effect
-    setTimeout(() => {
-      newSampleRow.style.opacity = 1;
-      newSampleRow.style.transform = "translateY(0px)";
-    }, 500); // Short delay
+        // Get highest data-row value
+        let lastRowNumber = Math.max(...$("[data-row]").map(function () {
+          return parseInt($(this).attr("data-row"));
+        }).get(), 0);
+        console.log(`Last row number: ${lastRowNumber}`);
 
-    // Insert the cloned sample row
-    const lastSampleRow = document.querySelector('.row-4').lastElementChild;
-    $(lastSampleRow).after(newSampleRow);
+        // Update data-row values
+        $newRow.find("[data-row]").each(function () {
+          $(this).attr("data-row", lastRowNumber + 1);
+        });
 
-    // Reinitialize Select2 AFTER adding newRow to DOM
-    $(newRow).find("select.boolean").select2({ theme: "bootstrap4" });
-    $(newRow).find("select.fields").select2({ theme: "bootstrap4" });
-    $(newRow).find("select.contains").select2({ theme: "bootstrap4" });
+        // Clear values in cloned row
+        $newRow.find("input, select").each(function () {
+          if ($(this).is("input")) {
+            $(this).val("");
+          } else {
+            $(this).prop("selectedIndex", 0);
+          }
+        });
 
-    // Restore Select2 on the original row
-    $(firstRow).find("select.boolean").select2({ theme: "bootstrap4" });
-    $(firstRow).find("select.fields").select2({ theme: "bootstrap4" });
-    $(firstRow).find("select.contains").select2({ theme: "bootstrap4" });
+        // Reset sample row spans
+        $newSampleRow.find("#boolean-span").text("AND");
+        $newSampleRow.find("#field-span").text("Author/Creator");
+        $newSampleRow.find("#contains-span").text("contains");
+        $newSampleRow.find("#term-span").text("Enter a search term for row");
+        $newSampleRow.attr("data-row", lastRowNumber + 1);
 
-    console.log("New row added and Select2 reinitialized.");
-  }
-});
+        // Destroy existing Select2
+        $newRow.find("select").each(function () {
+          const $this = $(this);
+          if ($this.data("select2")) {
+            $this.select2("destroy");
+          }
+          $this.removeAttr("data-select2-id")
+              .removeClass("select2-hidden-accessible")
+              .next(".select2-container").remove();
+        });
+
+        // Replace terms field if it's a select
+        const $termsField = $newRow.find(".terms");
+        if ($termsField.is("select")) {
+          const $inputField = $("<input>", {
+            id: $termsField.attr("id"),
+            type: "text",
+            name: $termsField.attr("name"),
+            class: "terms form-control",
+            placeholder: "Enter a search term for row",
+            value: $termsField.attr("value"),
+          });
+          $termsField.replaceWith($inputField);
+        }
+
+        // Insert cloned row before last row and fade in
+        $newRow.hide();
+        $lastRow.before($newRow);
+        $newRow.fadeIn(800);
+
+        // Sample row transition
+        $newSampleRow.css({
+          opacity: 0,
+          transform: "translateY(10px)"
+        });
+
+        setTimeout(() => {
+          $newSampleRow.css({
+            opacity: 1,
+            transform: "translateY(0px)"
+          });
+        }, 500);
+
+        // Insert cloned sample row
+        const $lastSampleRow = $(".row-4").children().last();
+        $lastSampleRow.after($newSampleRow);
+
+        // Reinitialize Select2
+        $newRow.find("select.boolean").select2({ theme: "bootstrap4" });
+        $newRow.find("select.fields").select2({ theme: "bootstrap4" });
+        $newRow.find("select.contains").select2({ theme: "bootstrap4" });
+
+        $firstRow.find("select.boolean").select2({ theme: "bootstrap4" });
+        $firstRow.find("select.fields").select2({ theme: "bootstrap4" });
+        $firstRow.find("select.contains").select2({ theme: "bootstrap4" });
+      }
+    });
+  });
 
   $(document).on("select2:select", ".fields", function(e) {
     let selectedValue = $(this).val();
@@ -944,8 +1066,6 @@ document.getElementById("add-row-btn").addEventListener("click", function() {
     
     let fieldSpan = $(".row-4 [data-row='" + rowNumber + "'] #field-span").text(capitalizedText);
 
-    console.log(`Row number: ${rowNumber}`);
-
     fieldSpan.text(capitalizedText).addClass("changing");
 
     // Remove the effect after 2000ms
@@ -954,8 +1074,6 @@ document.getElementById("add-row-btn").addEventListener("click", function() {
     }, 2000);
 
     if (selectedValue === "tag") {
-        console.log("Switching input to dropdown");
-
         // Replace input with a Bootstrap-styled select dropdown
         let selectDropdown = `
             <select name="terms" class="form-control terms" data-row="${rowNumber}">
@@ -969,13 +1087,7 @@ document.getElementById("add-row-btn").addEventListener("click", function() {
 
         $(".row-4 [data-row='" + rowNumber + "'] #term-span").text(firstTagValue); // Update termSpan with the first tag value
     } else {
-        console.log("Keeping normal input");
-
         if (termsContainer.length === 0) {
-          // let textInput = `<input type="text" class="form-control" name="terms" placeholder="Enter a search term for row" data-row="${rowNumber}">`;
-          // selectTermsContainer.replaceWith(textInput);
-          // $(".row-4 [data-row='" + rowNumber + "'] #term-span").text("Enter a search term for row"); 
-          // return;
           termsContainer = selectTermsContainer;
         }
 
@@ -989,36 +1101,33 @@ document.getElementById("add-row-btn").addEventListener("click", function() {
     }
   });
 
-$(document).on("select2:select", ".contains", function(e) {
+  $(document).on("select2:select", ".contains", function(e) {
     let selectedValue = $(this).val();
     let rowNumber = $(this).data('row');
     let containsSpan = $(".row-4 [data-row='" + rowNumber + "'] #contains-span").text(selectedValue);
     containsSpan.text(selectedValue).addClass("changing");
-    // Remove the effect after 2000ms
     setTimeout(() => {
       containsSpan.removeClass("changing");
     }, 2000);
-});
+  });
 
-$(document).on("select2:select", ".boolean", function(e) {
-  let selectedValue = $(this).val();
-  let rowNumber = $(this).data('row');
-  let capitalizedText = selectedValue.toUpperCase();
-  let booleanSpan = $(".row-4 [data-row='" + rowNumber + "'] #boolean-span").text(capitalizedText);
-  booleanSpan.text(capitalizedText).addClass("changing");
-  // Remove the effect after 2000ms
-  setTimeout(() => {
-    booleanSpan.removeClass("changing");
-  }, 2000);
-});
+  $(document).on("select2:select", ".boolean", function(e) {
+    let selectedValue = $(this).val();
+    let rowNumber = $(this).data('row');
+    let capitalizedText = selectedValue.toUpperCase();
+    let booleanSpan = $(".row-4 [data-row='" + rowNumber + "'] #boolean-span").text(capitalizedText);
+    booleanSpan.text(capitalizedText).addClass("changing");
+    // Remove the effect after 2000ms
+    setTimeout(() => {
+      booleanSpan.removeClass("changing");
+    }, 2000);
+  });
 
   $(document).ready(function() {
     // Use event delegation to listen for the input event on all input fields with the name "terms"
     $(document).on("input", "input[name='terms']", function() {
       let searchTerm = $(this).val();
       let rowNumber = $(this).data("row");
-      
-      console.log(`Input data row: ${rowNumber}`);
 
       let termSpan = $(".row-4 [data-row='" + rowNumber + "'] #term-span");
 
@@ -1044,9 +1153,9 @@ $(document).on("select2:select", ".boolean", function(e) {
       
       // Loop through the available tags and find the matching ID
       $("select[name='terms'] option").each(function() {
-          if ($(this).val() === selectedValue) {
-              selectedTagText = $(this).text();  // Get the text of the selected tag
-          }
+        if ($(this).val() === selectedValue) {
+          selectedTagText = $(this).text();  // Get the text of the selected tag
+        }
       });
 
       // Set the selected tag's text to the term span and add the 'changing' effect
@@ -1054,12 +1163,12 @@ $(document).on("select2:select", ".boolean", function(e) {
 
       // Remove the effect after 2000ms
       setTimeout(() => {
-          termSpan.removeClass("changing");
+        termSpan.removeClass("changing");
       }, 2000);
     });
   });
 
-$(document).ready(function () {
+  $(document).ready(function () {
     let firstRow = $(".row-2").first();
     
     // Hide delete button for the first row
@@ -1142,55 +1251,55 @@ $(document).ready(function () {
 
     // Clear input/select fields and reset select elements to default values for row-2
     $(document).on("click", ".clear-row-btn", function () {
-        let row = $(this).closest(".row-2");
-        
-        row.find("input").val(""); // Clear all input fields
+      let row = $(this).closest(".row-2");
+      
+      row.find("input").val(""); // Clear all input fields
 
-        // Reset selects and trigger change event for Select2
-        row.find(".boolean").val(row.find(".boolean option:first").val()).trigger("change");
-        row.find(".fields").val(row.find(".fields option:first").val()).trigger("change");
-        row.find(".contains").val(row.find(".contains option:first").val()).trigger("change");
+      // Reset selects and trigger change event for Select2
+      row.find(".boolean").val(row.find(".boolean option:first").val()).trigger("change");
+      row.find(".fields").val(row.find(".fields option:first").val()).trigger("change");
+      row.find(".contains").val(row.find(".contains option:first").val()).trigger("change");
 
-        // Extract data-row from one of the child elements
-        let rowData = row.find(".boolean").data("row") || 
-                  row.find(".fields").data("row") || 
-                  row.find(".contains").data("row") || 
-                  row.find("#terms").data("row");
+      // Extract data-row from one of the child elements
+      let rowData = row.find(".boolean").data("row") || 
+                row.find(".fields").data("row") || 
+                row.find(".contains").data("row") || 
+                row.find("#terms").data("row");
 
-        // Find the corresponding sample-row in row-4 and reset values
-        let sampleRow = $(".row-4 [data-row='" + rowData + "']");
+      // Find the corresponding sample-row in row-4 and reset values
+      let sampleRow = $(".row-4 [data-row='" + rowData + "']");
 
-        if (sampleRow.length > 0) {
-          let booleanSpan = sampleRow.find("#boolean-span");
-          let fieldSpan = sampleRow.find("#field-span");
-          let containsSpan = sampleRow.find("#contains-span");
-          let termSpan = sampleRow.find("#term-span");
+      if (sampleRow.length > 0) {
+        let booleanSpan = sampleRow.find("#boolean-span");
+        let fieldSpan = sampleRow.find("#field-span");
+        let containsSpan = sampleRow.find("#contains-span");
+        let termSpan = sampleRow.find("#term-span");
 
-          booleanSpan.text("AND").addClass("changing");
-          fieldSpan.text("Author/Creator").addClass("changing");
-          containsSpan.text("contains").addClass("changing");
-          termSpan.text("Enter a search term for row").addClass("changing");
+        booleanSpan.text("AND").addClass("changing");
+        fieldSpan.text("Author/Creator").addClass("changing");
+        containsSpan.text("contains").addClass("changing");
+        termSpan.text("Enter a search term for row").addClass("changing");
 
-          // Remove "changing" class after 1.5 seconds
-          setTimeout(() => {
-              booleanSpan.removeClass("changing");
-              fieldSpan.removeClass("changing");
-              containsSpan.removeClass("changing");
-              termSpan.removeClass("changing");
-          }, 1500);
-        }
+        // Remove "changing" class after 1.5 seconds
+        setTimeout(() => {
+            booleanSpan.removeClass("changing");
+            fieldSpan.removeClass("changing");
+            containsSpan.removeClass("changing");
+            termSpan.removeClass("changing");
+        }, 1500);
+      }
 
-        // Reset the terms field back to input if it was changed to a select
-        let termsField = row.find(".terms");
-        if (termsField.is("select")) {
-            let textInput = $("<input>", {
-                type: "text",
-                class: "form-control terms",
-                name: "terms",
-                placeholder: "Enter a search term for row"
-            });
-            termsField.replaceWith(textInput);
-        }
+      // Reset the terms field back to input if it was changed to a select
+      let termsField = row.find(".terms");
+      if (termsField.is("select")) {
+          let textInput = $("<input>", {
+              type: "text",
+              class: "form-control terms",
+              name: "terms",
+              placeholder: "Enter a search term for row"
+          });
+          termsField.replaceWith(textInput);
+      }
     });
 
     $(document).on("click", "#clear-all-btn", function () {
@@ -1217,24 +1326,24 @@ $(document).ready(function () {
       // Reset the terms field back to input if it was changed to a select (in both rows)
       let termsField1 = firstRow.find(".terms");
       if (termsField1.is("select")) {
-          let textInput1 = $("<input>", {
-              type: "text",
-              class: "form-control terms",
-              name: "terms",
-              placeholder: "Enter a search term for row"
-          });
-          termsField1.replaceWith(textInput1);
+        let textInput1 = $("<input>", {
+          type: "text",
+          class: "form-control terms",
+          name: "terms",
+          placeholder: "Enter a search term for row"
+        });
+        termsField1.replaceWith(textInput1);
       }
 
       let termsField2 = firstRow2.find(".terms");
       if (termsField2.is("select")) {
-          let textInput2 = $("<input>", {
-              type: "text",
-              class: "form-control terms",
-              name: "terms",
-              placeholder: "Enter a search term for row"
-          });
-          termsField2.replaceWith(textInput2);
+        let textInput2 = $("<input>", {
+          type: "text",
+          class: "form-control terms",
+          name: "terms",
+          placeholder: "Enter a search term for row"
+        });
+        termsField2.replaceWith(textInput2);
       }
 
       // Now, clear all the spans inside row-4 and reset row-4 to its initial state
@@ -1260,9 +1369,9 @@ $(document).ready(function () {
 
     // When a new row is added, ensure its delete button is visible
     $("#add-row-btn").on("click", function () {
-        let newRow = $(".row-2").last();
-        newRow.find(".delete-row-btn").show(); // Ensure delete button is shown
+      let newRow = $(".row-2").last();
+      newRow.find(".delete-row-btn").show(); // Ensure delete button is shown
     });
-});
+  });
 </script>
 {% endblock %}

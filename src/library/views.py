@@ -220,7 +220,6 @@ def final_results_filter(all_query_one_items: set, booleans_map: dict) -> set:
             if valid: # this item contains at least one OR field so it is considered valid
                 final_results.add(item)
     
-    # print("Final result got: ", final_results)
     return final_results
 
 def index(request):
@@ -252,11 +251,6 @@ def index(request):
         terms = request.GET.getlist('terms')
         booleans = request.GET.getlist('boolean')
 
-        print("Fields got: ", fields)
-        print("Contains got: ", contains)
-        print("Terms got: ", terms)
-        print("Booleans got: ", booleans)
-
         length = len(fields)
 
         booleans_mp = {} # this map will be responsible for grouping "AND", "OR" and "NOT" together and qualify the final result
@@ -285,9 +279,6 @@ def index(request):
                 booleans_mp["and"] = set()
                 booleans_mp["and"].add((field, contain, term))
             
-            print(all_query_one_items)
-            print(booleans_mp)
-            
         # qualify/disqualify the query by one results based on the booleans
         results_id = final_results_filter(all_query_one_items, booleans_mp)
         results = LibraryItem.objects.filter(id__in=results_id)
@@ -296,7 +287,7 @@ def index(request):
             results = results.filter(type__group__in=request.GET.getlist("type"))
 
         if not request.GET.get("urban_only"):
-                urban_only = False
+            urban_only = False
         if urban_only:
             results = results.filter(tags__id=core_filter)
         if "space" in request.GET and request.GET["space"]:
@@ -340,9 +331,6 @@ def index(request):
 
     if project.slug == "water":
         results = available_library_items(request).all()
-
-    # if results:
-    #     results = results.select_related("type")
 
     def is_number(s):
         return bool(re.match(r"^-?\d+(\.\d+)?$", s))
