@@ -1444,20 +1444,23 @@
 
       // Export as PDF file
       $("#exportPdf").on("click", function () {
-        const element = document.body; 
+        // Close the modal before generating the PDF
+        closeModal(); // Ensure this closes any modals containing loading content
 
-        const opt = {
-          margin:       0.5,
-          filename:     'page-export.pdf',
-          image:        { type: 'jpeg', quality: 0.98 },
-          html2canvas:  { scale: 2 },
-          jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-        };
+        // Delay PDF generation to ensure the modal is fully closed
+        setTimeout(function() {
+          const element = document.body; 
 
-        // Convert and save
-        html2pdf().set(opt).from(element).save();
+          const opt = {
+            margin:       0.5,
+            filename:     'page-export.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2 },
+            jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+          };
 
-        closeModal(); // close the modal after export
+          html2pdf().set(opt).from(element).save();
+        }, 1000);  // Delay to ensure modal is hidden before export
       });
 
       // add to zotero library
@@ -1515,7 +1518,7 @@
         }, 4000);
       }
     });
-    
+
     function openSharePopup() {
       $("#sharePopup").css("display", "block");
       $("#overlay").css("display", "block");
