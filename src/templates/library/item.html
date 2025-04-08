@@ -9,7 +9,7 @@
   <link rel="canonical" href="{{ info.get_full_url }}" />
   <!-- When we have fully figured all this out we can consider getting it indexed. Ensure there is a canonical link as this page is generated with various URLs -->
   <meta name="robots" content="noindex">
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Share Popup</title>
@@ -158,6 +158,92 @@
       #metadata .alert:hover {color:black;cursor:pointer}
     {% endif %}
     .admin-option{display:none}
+  
+    /* Overlay background */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      z-index: 999;
+    }
+
+    /* Modal */
+    .export-modal {
+      display: none;
+      position: fixed;
+      top: -100%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 400px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      padding: 25px;
+      z-index: 1000;
+      transition: all 0.5s ease;
+    }
+
+    /* Show state for animation */
+    .export-modal.show {
+      top: 20%;
+    }
+
+    .export-modal-content h4 {
+      margin-top: 0;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 22px;
+      cursor: pointer;
+      color: #999;
+    }
+
+    .close-modal:hover {
+      color: #333;
+    }
+
+    .export-options {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 20px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .export-card {
+      background-color: #f9f9f9;
+      border-radius: 10px;
+      padding: 20px 25px;
+      width: 100px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.3s ease, background-color 0.3s;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .export-card:hover {
+      background-color: #f0f0f0;
+      transform: translateY(-5px);
+    }
+
+    .export-card i {
+      display: block;
+      margin-bottom: 10px;
+      color: #4a4a4a;
+    }
+
+    .export-card span {
+      font-size: 14px;
+      color: #333;
+    }
+
   </style>
 {% endblock %}
 
@@ -199,6 +285,70 @@
 
       <div class="border rounded bg-white my-4">
         <ul class="list-group list-group-flush">
+          <!-- export item -->
+          {% if request.user.is_authenticated %}
+            <div id="exportModalOverlay" class="modal-overlay"></div>
+
+            <div id="exportModal" class="export-modal">
+              <div class="export-modal-content">
+                <span class="close-modal">&times;</span>
+                <h5>Please choose the format to export:</h5>
+                
+                <h6>File(s):</h6>
+                <div class="export-options">
+                  <div class="export-card" id="exportTxt">
+                    <i class="fal fa-file-alt fa-2x"></i>
+                    <span>.TXT</span>
+                  </div>
+                  {% if attachments %}
+                    <div class="export-card" id="exportCsv">
+                      <i class="fal fa-file-csv fa-2x"></i>
+                      <span>.CSV</span>
+                    </div>
+
+                    <script>
+                      const attachments = {{ attachments|safe|json_script:"attachment-data" }};
+                    </script>
+                  {% endif %}
+                  <div class="export-card" id="exportPdf">
+                    <i class="fal fa-file-pdf fa-2x"></i>
+                    <span>.PDF</span>
+                  </div>
+                </div>
+                <br>
+                <h6>Reference Manager:</h6>
+                <div class="export-options">
+                  <div class="export-card" id="exportZotero">
+                    <i class="fal fa-book fa-2x"></i>
+                    <span>Zotero</span>
+                  </div>
+                </div>
+              </div>
+            </div>    
+
+            <li class="list-group-item table-item">
+              <div><i class="fal fa-fw fa-bookmark mr-1"></i>Export</div>
+              <div>
+                <span class="export-btn" data-item-id="{{ info.id }}" role="button" tabindex="0"
+                  style="cursor: pointer; color: inherit; background: none; border: none; padding: 0; font: inherit; display: inline-flex; align-items: center;">
+                  <i class="fal fa-upload"></i>
+                </span>
+              </div>
+            </li>
+
+            <div id="zoteroSuccessModalOverlay" class="modal-overlay"></div>
+
+            <div id="zoteroSuccessModal" class="export-modal">
+              <div class="export-modal-content">
+                <span class="close-modal">&times;</span>
+                <h4 style="text-align:center;">
+                  <i class="fas fa-check-circle" style="color:green;"></i><br>
+                  Successfully Exported to Zotero!
+                </h4>
+                <p style="text-align:center;">This item was added to your Zotero library.</p>
+              </div>
+            </div>
+          {% endif %}
           <li class="list-group-item table-item">
             <div><i class="fal fa-fw fa-{{ info.type.icon }} mr-1"></i>
               {% if PROJECT.slug == "peeide" %}Reference{% endif %}
@@ -1145,6 +1295,42 @@
     {% include "_chart.footer.html" %}
   {% endif %}
 
+  {% if attachments %}
+    <script>
+      // Add csv
+      const attachments = JSON.parse(document.getElementById("attachment-data").textContent);
+
+      $("#exportCsv").on("click", function () {
+        if (!attachments || attachments.length === 0) return;
+
+        // Convert attachments to CSV format
+        const headers = Object.keys(attachments[0]);
+        const csvRows = [
+          headers.join(","), // header row
+          ...attachments.map(row =>
+            headers.map(fieldName => `"${(row[fieldName] ?? "").toString().replace(/"/g, '""')}"`).join(",")
+          )
+        ];
+
+        const csvContent = csvRows.join("\n");
+
+        // Create a Blob and trigger download
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "attachments_export.csv";
+        a.style.display = "none";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        closeModal();
+      });
+    </script>
+  {% endif %}
+
   <script>
     let loadedBib = false
     let loadedRis = false
@@ -1223,6 +1409,113 @@
       });
     {% endif %}
 
+    $(document).ready(function () {
+      $(".export-btn").on("click", function () {
+        $("#exportModalOverlay").fadeIn(200);
+        $("#exportModal").show().addClass("show");
+      });
+
+      $(".close-modal, #exportModalOverlay").on("click", function () {
+        $("#exportModal").removeClass("show");
+        setTimeout(() => {
+          $("#exportModal").hide();
+          $("#exportModalOverlay").fadeOut(200);
+        }, 300);
+      });
+
+      // Export TXT functionality
+      $("#exportTxt").on("click", function () {
+        // Get all visible text content from the page
+        const content = $("body").text().trim();
+
+        const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "page-export.txt";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+
+        closeModal();
+      });
+
+      // Export as PDF file
+      $("#exportPdf").on("click", function () {
+        const element = document.body; 
+
+        const opt = {
+          margin:       0.5,
+          filename:     'page-export.pdf',
+          image:        { type: 'jpeg', quality: 0.98 },
+          html2canvas:  { scale: 2 },
+          jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+
+        // Convert and save
+        html2pdf().set(opt).from(element).save();
+
+        closeModal(); // close the modal after export
+      });
+
+      // add to zotero library
+      $('#exportZotero').on('click', function () {
+        window.location.href = 'zotero/oauth/start/';
+      });
+
+      // If add this item to the user's zotero successfully
+      $(document).ready(function() {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("zotero_export") === "success") {
+          $("#zoteroSuccessModal").fadeIn();
+
+          // Optional: close modal on click
+          $(".close-modal").on("click", function () {
+            $("#zoteroSuccessModal").fadeOut();
+          });
+
+          // Optional: auto-hide after 5 seconds
+          setTimeout(() => {
+            $("#zoteroSuccessModal").fadeOut();
+          }, 5000);
+        }
+      });
+
+
+      // Close modal helper
+      function closeModal() {
+        $("#exportModal").removeClass("show");
+        setTimeout(() => {
+          $("#exportModal").hide();
+          $("#exportModalOverlay").fadeOut(200);
+        }, 300);
+      }
+    });
+
+    // this will show whenever the item is added successfully into the user's zotero library
+    $(document).ready(function () {
+      const params = new URLSearchParams(window.location.search);
+
+      if (params.get("zotero_export") === "success") {
+        $("#zoteroSuccessModal").addClass("show");
+        $("#zoteroSuccessModalOverlay").fadeIn();
+
+        // Close manually
+        $(".close-modal").on("click", function () {
+          $("#zoteroSuccessModal").removeClass("show");
+          $("#zoteroSuccessModalOverlay").fadeOut();
+        });
+
+        // Auto close after 4 seconds
+        setTimeout(() => {
+          $("#zoteroSuccessModal").removeClass("show");
+          $("#zoteroSuccessModalOverlay").fadeOut();
+        }, 4000);
+      }
+    });
+    
     function openSharePopup() {
       $("#sharePopup").css("display", "block");
       $("#overlay").css("display", "block");

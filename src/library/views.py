@@ -263,6 +263,83 @@ def journal(request, slug):
     }
     return render(request, "library/journal.html", context)
 
+'''
+    Export the library item to the user's zotero
+'''
+
+from requests_oauthlib import OAuth1Session
+from django.conf import settings
+from django.shortcuts import redirect
+
+REQUEST_TOKEN_URL = 'https://www.zotero.org/oauth/request'
+AUTHORIZE_URL = 'https://www.zotero.org/oauth/authorize'
+ACCESS_TOKEN_URL = 'https://www.zotero.org/oauth/access'
+
+@login_required
+def zotero_oauth_start(request, id):
+    oauth = OAuth1Session(
+        client_key=settings.ZOTERO_KEY,
+        client_secret=settings.ZOTERO_SECRET,
+        callback_uri=f'http://0.0.0.0:8000/islands/library/{id}/zotero/oauth/callback/'
+    )
+
+    fetch_response = oauth.fetch_request_token(REQUEST_TOKEN_URL)
+    request.session['oauth_token'] = fetch_response.get('oauth_token')
+    request.session['oauth_token_secret'] = fetch_response.get('oauth_token_secret')
+
+    auth_url = oauth.authorization_url(
+        AUTHORIZE_URL,
+        library_access='1',
+        write_access='1', # allow to write to the user's Zotero Library
+    )
+
+    return redirect(auth_url)
+
+ACCESS_TOKEN_URL = "https://www.zotero.org/oauth/access"
+
+@login_required
+def zotero_oauth_callback(request, id):
+    oauth_token = request.GET.get('oauth_token')
+    oauth_verifier = request.GET.get('oauth_verifier')
+
+    # Create OAuth session to exchange verifier for access token
+    oauth = OAuth1Session(
+        client_key=settings.ZOTERO_KEY,
+        client_secret=settings.ZOTERO_SECRET,
+        resource_owner_key=request.session.get('oauth_token'),
+        resource_owner_secret=request.session.get('oauth_token_secret'),
+        verifier=oauth_verifier
+    )
+
+    try:
+        access_token_data = oauth.fetch_access_token(ACCESS_TOKEN_URL)
+    except Exception as e:
+        return JsonResponse({"error": f"Failed to fetch access token: {str(e)}"}, status=400)
+
+    # Extract token and secret from returned dict
+    access_token = access_token_data.get("oauth_token")
+    access_token_secret = access_token_data.get("oauth_token_secret")
+
+    # Create a new OAuth session with the access token
+    newOauth = OAuth1Session(
+        client_key=settings.ZOTERO_KEY,
+        client_secret=settings.ZOTERO_SECRET,
+        resource_owner_key=access_token,
+        resource_owner_secret=access_token_secret
+    )
+
+    # Get user info
+    user_id = access_token_data.get("userID")
+    if not user_id:
+        return JsonResponse({"error": "Zotero user ID not found in access token response."}, status=400)
+
+    # Save the library item to Zotero
+    info = LibraryItem.objects.filter(id=id).first()
+    add_to_zotero(info=info, journal=None, userId=user_id, oauth=newOauth, access_token=access_token)
+
+    # return the user back to the library item page
+    return redirect(f'/islands/library/{id}/?zotero_export=success')
+
 def item(request, id, show_export=True, space=None, layer=None, data_section_type=None, json=False):
     project = get_project(request)
     tag_id = get_parent_layer(request)
@@ -589,17 +666,19 @@ def item(request, id, show_export=True, space=None, layer=None, data_section_typ
 import requests
 from django.http import JsonResponse
 from django.conf import settings
-ZOTERO_API_URL = "https://api.zotero.org/groups/{groupId}/items"
-def add_to_zotero(info: LibraryItem, journal):
+
+def add_to_zotero(info: LibraryItem, journal, userId=None, oauth=None, access_token=None):
+
     groupId = settings.ZOTERO_GROUP_ID
     api_key = settings.ZOTERO_API_KEY
+    ZOTERO_API_URL = "https://api.zotero.org/groups/{groupId}/items"
 
     if not groupId or not api_key:
         return JsonResponse({
             "error": "Missing Zotero credentials"
         }, status=400)
     
-    # we use the Zotero Web API Write Requests to let the curator add the item into their Zotero
+    # we use the Zotero Web API Write Requests to write into the zotero web library
 
     def get_authors(author_list):
 
@@ -626,9 +705,6 @@ def add_to_zotero(info: LibraryItem, journal):
     
     def get_short_title(title):
         return title.split(":")[0].split("-")[0].strip()
-    
-    # get the tags from the user's form
-    tags = [tag.name for tag in info.tags.all()]
 
     # map the type to the zotero item type
     zotero_item_type_mapping = {
@@ -698,22 +774,22 @@ def add_to_zotero(info: LibraryItem, journal):
 
         data = [{
             "itemType": item_type,
-            "title": title,
+            "title": info.name if info.name else title,
             "creators": authors, 
-            "publicationTitle": publication_title,  
+            "publicationTitle": journal if journal else publication_title,  
             "volume": volume,  
             "issue": issue,
             "pages": pages, 
-            "date": year, 
-            "language": language,  
+            "date": info.year if info.year else year, 
+            "language": info.language if info.language else language,  
             "doi": info.doi,
             "issn": issn,  
             "shortTitle": short_title,  
             "url": info.url,
             "libraryCatalog": publisher,
             "rights": rights,  
-            "abstractNote": abstract,  
-            "tags": info.tags,
+            "abstractNote": info.description if info.description else abstract,  
+            "tags": [],
             "collections": [],
             "relations": {}
         }]
@@ -737,21 +813,31 @@ def add_to_zotero(info: LibraryItem, journal):
             "shortTitle": short_title,
             "url": info.url if info.url else None,
             "abstractNote": info.description if info.description else None,
-            "tags": tags,
+            "tags": [],
             "collections": [],
             "relations": {}
         }]
 
-    headers = {
-        "Zotero-API-Key": api_key,
-        "Content-Type": "application/json",
-    }
+    if not userId:
+        headers = {
+            "Zotero-API-Key": api_key,
+            "Content-Type": "application/json",
+        }
 
-    response = requests.post(ZOTERO_API_URL.format(groupId=groupId), headers=headers, json=data)
+        response = requests.post(ZOTERO_API_URL.format(groupId=groupId), headers=headers, json=data)
+    
+    else:
+        # adding to user's zotero library using oauth
+        ZOTERO_USER_API_URL = f"https://api.zotero.org/users/{userId}/items"
+
+        response = oauth.post(ZOTERO_USER_API_URL, json=data, headers={
+            "Zotero-API-Key": access_token,
+            "Content-Type": "application/json",
+        })
 
     if response.status_code == 200 or response.status_code == 201:
         return JsonResponse({"message": "Item successfully added to Zotero!"})
-    
+        
     # Handle the case where the response is not 200 or 201
     try:
         # Attempt to parse the response as JSON
