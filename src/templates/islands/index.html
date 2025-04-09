@@ -136,7 +136,7 @@
     <h2 class="text-center font-weight-bold my-4 ">What we do</h2>
     <div class="row pt-4">
       <div class="col-md-6 col-lg-3 mb-4">
-        <div class="card icon-card">
+        <div class="card icon-card clickable-card" data-url="/islands/hub/harvesting/">
           <div class="icon bg-primary">
             <i class="fal fa-fw fa-file-chart-line text-light"></i>
           </div>
@@ -151,7 +151,7 @@
         </div>
       </div>
       <div class="col-md-6 col-lg-3 mb-4">
-        <div class="card icon-card">
+        <div class="card icon-card clickable-card" data-url="/islands/library">
           <div class="icon bg-{% if alternative_design %}light{% else %}primary{% endif %}">
             <i class="fal fa-fw fa-share-alt {% if not alternative_design %} text-light{% endif %}"></i>
           </div>
@@ -175,13 +175,13 @@
           </div>
           <div class="card-body">
             <p class="what-text">
-              We help policy makers and practitioners to tackle their challenges with Island Metabolism thinking.
+              We process and visualise data to help policy makers and practitioners to tackle their challenges with Island Metabolism thinking.
             </p>
           </div>
         </div>
       </div>
       <div class="col-md-6 col-lg-3 mb-4">
-        <div class="card icon-card">
+        <div class="card icon-card clickable-card" data-url="/hub/forum">
           <div class="icon bg-{% if alternative_design %}light{% else %}primary{% endif %}">
             <i class="fal fa-fw fa-user-friends {% if not alternative_design %} text-light{% endif %}"></i>
           </div>
@@ -191,6 +191,74 @@
           <div class="card-body">
             <p class="what-text">
               We believe that tackling the island sustainability challenge can not be done alone. We want to foster a community of stakeholders that collaborates on developing solutions.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <h2 class="text-center font-weight-bold my-4 ">Check out these instructions videos on how to contribute to our website</h2>
+    <div class="row pt-4">
+      <div class="col-md-6 col-lg-3 mb-4">
+        <div class="card icon-card clickable-card" data-url="https://multimedia.metabolismofcities.org/videos/collection/754/">
+          <div class="icon bg-primary">
+            <i class="fal fa-fw fa-upload text-light"></i>
+          </div>
+          <div class="card-header bg-primary text-light">
+            <h5>Contribute Dataset</h5>
+          </div>
+          <div class="card-body">
+            <p class="what-text">
+              Watch these videos to familiarize yourselves with uploading your data to our website.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3 mb-4">
+        <div class="card icon-card clickable-card" data-url="">
+          <div class="icon bg-{% if alternative_design %}light{% else %}primary{% endif %}">
+            <i class="fal fa-fw fa-book {% if not alternative_design %} text-light{% endif %}"></i>
+          </div>
+          <div class="card-header bg-{% if alternative_design %}light text-dark{% else %}primary text-light{% endif %}">
+            <h5>Contribute Publications</h5>
+          </div>
+          <div class="card-body">
+            <p class="what-text">
+              Watch these videos to familiarize yourselves with uploading your publications to our website.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3 mb-4">
+        <div class="card icon-card clickable-card" data-url="past-islands-visualisations/">
+          <div class="icon bg-{% if alternative_design %}light{% else %}primary{% endif %}">
+            <i class="fal fa-fw fa-image {% if not alternative_design %} text-light{% endif %}"></i>
+          </div>
+          <div class="card-header bg-{% if alternative_design %}light text-dark{% else %}primary text-light{% endif %}">
+            <h5>Data Visualisations</h5>
+          </div>
+          <div class="card-body">
+            <p class="what-text">
+              Take a look at how we process and help you visualise your own data.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3 mb-4">
+        <div class="card icon-card clickable-card" data-url="https://education.metabolismofcities.org/courses/data-and-urban-metabolism-data-processing/">
+          <div class="icon bg-{% if alternative_design %}light{% else %}primary{% endif %}">
+            <i class="fal fa-fw fa-chalkboard-teacher {% if not alternative_design %} text-light{% endif %}"></i>
+          </div>
+          <div class="card-header bg-{% if alternative_design %}light text-dark{% else %}primary text-light{% endif %}">
+            <h5>Course</h5>
+          </div>
+          <div class="card-body">
+            <p class="what-text">
+              Need to process and visualize data? Take this online course!
             </p>
           </div>
         </div>
@@ -313,6 +381,11 @@
           }
         },
       ]
+    });
+    $(document).ready(function () {
+      $(".clickable-card").on("click", function () {
+        window.location.href = $(this).data("url");
+      });
     });
   </script>
 {% endblock %}

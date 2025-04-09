@@ -399,6 +399,7 @@ class Record(models.Model):
             elif "country_name" in self.meta_data:
                 del(self.meta_data["country_name"])
 
+
         super().save(*args, **kwargs)
 
     objects = PublicActiveRecordManager()
@@ -1180,6 +1181,8 @@ class LibraryItem(Record):
     geocodes = models.ManyToManyField("Geocode", blank=True)
     part_of_project = models.ForeignKey(Project, on_delete=models.SET_NULL, null=True, blank=True, related_name="library_items")
 
+    contact_email = models.EmailField(max_length=255, null=True, blank=True) # this is a method for the MOI to contact the uploader directly regarding their publications upload
+
     STATUS = (
         ("pending", "Pending"),
         ("active", "Active"),
@@ -1735,8 +1738,7 @@ class LibraryItem(Record):
                 try:
                     Data.objects.bulk_create(items)
                 except Exception as e:
-                    error = f"We were unable to save the records - this is the error that came back: {e}"
-
+                    error = f"We were unable to save the records - this is the error that came back: {e}"        
         self.meta_data["ready_for_processing"] = False
         if error:
             self.meta_data["processing_error"] = error
@@ -2109,7 +2111,7 @@ class LibraryItem(Record):
             try:
                 url = self.doi
                 if url[:4] == "http":
-                    self.doi = url.rsplit("/", 1)[-1]
+                    self.doi = url.split("doi.org/")[-1]
             except:
                 pass
         if self.type_id == 40:

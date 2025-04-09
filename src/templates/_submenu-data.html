@@ -14,10 +14,25 @@
       <div class="collapse navbar-collapse" id="city-navbar">
         <ul class="navbar-nav mr-auto ml-3 ml-md-0">
           <li class="nav-item m-0">
-            <a class="nav-link pr-3{% if dashboard %} px-3 active{% endif %}" href="{% url URLS.DASHBOARD space.slug %}">
-              <i class="fal fa-fw fa-home"></i>
+            <a class="nav-link pr-3{% if dashboard %} px-3 active{% endif %}" id="dashboard-link">
+              <i class="fal fa-fw fa-arrow-left"></i>
+              <span>Overview</span>
             </a>
           </li>
+          
+          <script>
+            $(document).ready(function () {
+              const currentUrl = window.location.pathname;
+              const $dashboardLink = $('#dashboard-link');
+
+              if (currentUrl.includes('/islands/dashboards/')) {
+                $dashboardLink.attr('href', '/islands/overview/');
+              } else {
+                const dashboardUrl = "{% url URLS.DASHBOARD space.slug %}";
+                $dashboardLink.attr('href', dashboardUrl);
+              }
+            });
+          </script>
           {% if PROJECT.slug == "cityloops" %}
             <li class="nav-item m-0">
               <a class="nav-link px-3{% if layer.slug == 'urban-context' %} active{% endif %}" href="{% url URLS.LAYER_OVERVIEW space.slug 'urban-context' %}">

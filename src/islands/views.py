@@ -107,3 +107,42 @@ def map(request):
     }
     return render(request, "islands/map.html", context)
 
+def past_islands_visualisations(request):
+    
+    all_items = LibraryItem.objects.filter(
+        spaces="14473"
+    ).filter(
+        Q(type__name="Dataset") | Q(type__name="Data Visualization")
+    ) # get all dataset and data visualisations of Singapore for visualizations references
+
+    info = all_items[0]
+    data = info.data
+    properties = info.get_dataviz_properties
+    units = data.values("unit__name").filter(quantity__isnull=False).order_by("unit__name").distinct()
+    if units.count() == 1:
+        unit = units[0]
+
+    info2 = all_items[1]
+    data2 = info2.data
+    properties2 = info2.get_dataviz_properties
+    units2 = data2.values("unit__name").filter(quantity__isnull=False).order_by("unit__name").distinct()
+    if units2.count() == 1:
+        unit2 = units[0]   
+
+    context = {
+        "info": info,
+        "data": data,
+        "show_export": True,
+        "show_relationship": info.id,
+        "load_highcharts": True,
+        "load_datatables": False,
+        "properties": properties,
+        "unit": unit,
+        "schemes": COLOR_SCHEMES,
+        "info2": info2,
+        "data2": data2,
+        "unit2": unit2,
+        "properties2": properties2,
+    }
+
+    return render(request, "islands/past_islands_visualisations.html", context)

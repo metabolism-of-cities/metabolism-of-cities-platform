@@ -15,6 +15,15 @@ from django.template.loader import render_to_string, get_template
 
 from django.forms import modelform_factory
 
+# ReCaptcha to prevent spammers from the forum 
+from django import forms
+from django_recaptcha.fields import ReCaptchaField
+from django_recaptcha.widgets import ReCaptchaV2Checkbox
+from django_ratelimit.decorators import ratelimit
+
+class ForumForm(forms.Form):
+    captcha = ReCaptchaField(widget=ReCaptchaV2Checkbox())
+
 import logging
 logger = logging.getLogger(__name__)
 from core.mocfunctions import *
@@ -266,7 +275,12 @@ def forum_edit(request, id, edit, project_name=None, section=None):
     return render(request, "forum.topic.html", context)
 
 @login_required
+@ratelimit(key='ip', rate='1/m', method='POST')
 def forum_form(request, id=False, parent=None, section=None):
+
+    # Limit the request per minute to prevent the users from spamming
+    if request.limited:
+        return JsonResponse({'error': 'Too many requests. Please try again later.'}, status=429)
 
     project = None
     projects = Project.objects.filter(pk__in=OPEN_WORK_PROJECTS).exclude(pk=1)
@@ -275,52 +289,61 @@ def forum_form(request, id=False, parent=None, section=None):
         projects = [project]
 
     if request.method == "POST":
-        info = ForumTopic.objects.create(
-            part_of_project_id = request.POST["project"] if "project" in request.POST else request.project,
-            name = request.POST.get("title"),
-            parent_id = request.POST["parent"] if "parent" in request.POST else parent,
-            parent_url = request.POST.get("parent_url"),
-        )
-        set_author(request.user.people.id, info.id)
-        info.subscribers.add(request.user.people)
-        message = Message.objects.create(
-            name = request.POST.get("title"),
-            description = request.POST.get("text"),
-            parent = info,
-            posted_by = request.user.people,
-        )
-        set_author(request.user.people.id, message.id)
+        form = ForumForm(request.POST, request.FILES)
+        if(form.is_valid()):
+            info = ForumTopic.objects.create(
+                part_of_project_id = request.POST["project"] if "project" in request.POST else request.project,
+                name = request.POST.get("title"),
+                parent_id = request.POST["parent"] if "parent" in request.POST else parent,
+                parent_url = request.POST.get("parent_url"),
+            )
+            set_author(request.user.people.id, info.id)
+            info.subscribers.add(request.user.people)
+            message = Message.objects.create(
+                name = request.POST.get("title"),
+                description = request.POST.get("text"),
+                parent = info,
+                posted_by = request.user.people,
+            )
+            set_author(request.user.people.id, message.id)
 
-        if request.FILES:
-            files = request.FILES.getlist("files")
-            for file in files:
-                attachment = Document()
-                filename = str(file)
-                if filename.lower().endswith((".png", ".jpg", ".jpeg", ".bmp", ".gif")):
-                    attachment.image = file
-                else:
-                    attachment.file = file
-                attachment.name = file
-                attachment.save()
-                message.files.add(attachment)
+            if request.FILES:
+                files = request.FILES.getlist("files")
+                for file in files:
+                    attachment = Document()
+                    filename = str(file)
+                    if filename.lower().endswith((".png", ".jpg", ".jpeg", ".bmp", ".gif")):
+                        attachment.image = file
+                    else:
+                        attachment.file = file
+                    attachment.name = file
+                    attachment.save()
+                    message.files.add(attachment)
 
-        messages.success(request, "Your message has been posted.")
+            messages.success(request, "Your message has been posted.")
 
-        if "next" in request.POST:
-            return redirect(request.POST["next"])
+            if "next" in request.POST:
+                return redirect(request.POST["next"])
 
-        elif request.project != 1:
-            p = get_object_or_404(Project, pk=request.project)
-            page = "volunteer_forum" if section == "volunteer_hub" else "forum"
-            return redirect(p.slug + ":"+page, info.id)
+            elif request.project != 1:
+                p = get_object_or_404(Project, pk=request.project)
+                page = "volunteer_forum" if section == "volunteer_hub" else "forum"
+                return redirect(p.slug + ":"+page, info.id)
+        else:
+            messages.error(request, "There was an error with the form, please try again.")
+            return render(request, "forum.form.html", {"form": form})
 
         return redirect(info.get_absolute_url())
+    
+    else:
+        form = ForumForm()
 
     context = {
         "load_messaging": True,
         "menu": "forum",
         "section": section,
         "projects": projects,
+        "form": form,
     }
     return render(request, "forum.form.html", context)
 

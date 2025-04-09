@@ -1,6 +1,8 @@
 {% extends "_base.html" %}
 {% load bootstrap4 %}
 
+{% load static %}
+
 {% block css %}
 <style>
   textarea#id_author_list {
@@ -14,6 +16,7 @@
 
 
 </style>
+<link rel="stylesheet" href="{% static 'css/main.css' %}">
 {% endblock %}
 
 {% block content %}
@@ -43,6 +46,45 @@
   {% endif %}
 
   <form method="post" enctype="multipart/form-data">
+
+    <!-- Attach the video for dataset, image upload -->
+    {% if type.name == "Dataset" or type.name == "Image"  %} 
+      <div class="alert alert-warning">
+        <i class="fa fa-fw fa-info-circle"></i>
+        Instructions: make sure you watch the video tutorial on how to upload the {{ type.name }}
+        <br>
+        <a id="instructionLink" href="" class="btn btn-primary mt-3">
+          <i class="fa fa-video"></i> Instruction video on how to upload <span id="typeName">{{ type.name }}</span>
+        </a>
+        <script>
+          // Get the link and text elements
+          var linkElement = document.getElementById("instructionLink");
+          var typeNameElement = document.getElementById("typeName").innerHTML;
+
+
+          // Define different URLs based on type.name
+          var tutorialLinks = {
+            "Dataset": "https://multimedia.metabolismofcities.org/videos/33030/",
+            "Image": "https://multimedia.metabolismofcities.org/videos/36548/",
+          };
+
+          // Set href dynamically based on type.name
+          linkElement.href = tutorialLinks[typeNameElement] || "https://example.com/default-tutorial";
+        </script>
+      </div>
+    {% endif %}
+
+    <!-- Attach the link to the sample data visualisation for the user to has some reviews on the previous work -->
+    {% if type.name == "Data visualisation" %} 
+    <div class="alert alert-warning">
+      <i class="fa fa-fw fa-info-circle"></i>
+      Check out some of our previous data visualisation work here: 
+      <br>
+      <a href="https://multimedia.metabolismofcities.org/datavisualizations/" class="btn btn-primary mt-3">
+        <i class="fa fa-link"></i> Our previous data visualisations work</span> 
+      </a>
+    </div>
+  {% endif %}
 
     {% if not info and not request.GET.parent and not hide_search_box and not request.GET.inventory %}
       <div class="alert alert-warning">
@@ -91,8 +133,15 @@
     {% if files %}
       <div class="form-group">
         <label>File(s)</label>
-        <input type="file" name="files" multiple class="form-control" />
-      </div>
+        <div class="file-upload-wrapper">
+          <input type="file" name="files" multiple class="file-input form-control">
+          <label class="file-upload-label">
+            <span class="file-upload-icon">📂</span>
+            <span class="file-upload-text">Drag & Drop or Click to Upload</span>
+          </label>
+        </div>
+        <div id="file-list"></div>
+      </div>    
       {% if info.attachments.all %}
         <div>
           <p>Existing files:</p>
@@ -123,6 +172,15 @@
         </div>
       </div>
     {% endif %}
+
+    <style>
+      .g-recaptcha-response {
+          display: none;
+      }
+    </style>
+
+    <input type="hidden" name="proceed" id="proceedInput">
+    <input type="hidden" name="type" id="typeInput">
 
     {% buttons %}
       <button type="submit" class="btn btn-success">
@@ -202,5 +260,73 @@
 
 
     $("select").addClass("custom-select");
+
+    /*
+      Upload file transition
+    */
+    $(document).ready(function () {
+      const $fileInput = $(".file-input");
+      const $fileUploadWrapper = $(".file-upload-wrapper");
+      const $fileList = $("#file-list");
+
+      let uploadedFiles = [];
+
+      $fileUploadWrapper.on("dragover", function (e) {
+        e.preventDefault();
+        $(this).addClass("drag-over");
+      });
+
+      $fileUploadWrapper.on("dragleave", function () {
+        $(this).removeClass("drag-over");
+      });
+
+      $fileUploadWrapper.on("drop", function (e) {
+        e.preventDefault();
+        $(this).removeClass("drag-over");
+
+        const newFiles = Array.from(e.originalEvent.dataTransfer.files);
+        uploadedFiles = [...uploadedFiles, ...newFiles];
+        $fileInput[0].files = createFileList(uploadedFiles);
+        updateFileList();
+      });
+
+      $fileInput.on("change", function () {
+        const newFiles = Array.from(this.files);
+        uploadedFiles = [...uploadedFiles, ...newFiles];
+        updateFileList();
+      });
+
+      function updateFileList() {
+        $fileList.empty();
+
+        uploadedFiles.forEach(file => {
+          const $listItem = $("<div>").addClass("file-item");
+
+          const $fileName = $("<span>").text(`📄 ${file.name}`);
+          const $deleteBtn = $("<button>")
+            .addClass("delete-btn")
+            .text("Delete")
+            .on("click", function () {
+              removeFile(file);
+              $listItem.remove();
+            });
+
+          $listItem.append($fileName, $deleteBtn);
+          $fileList.append($listItem);
+        });
+      }
+
+      function removeFile(fileToRemove) {
+        uploadedFiles = uploadedFiles.filter(file => file !== fileToRemove);
+        $fileInput[0].files = createFileList(uploadedFiles);
+        updateFileList();
+      }
+
+      function createFileList(files) {
+        const dataTransfer = new DataTransfer();
+        files.forEach(file => dataTransfer.items.add(file));
+        return dataTransfer.files;
+      }
+    });
   </script>
 {% endblock %}

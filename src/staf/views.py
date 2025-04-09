@@ -2224,6 +2224,7 @@ def hub_processing_dataset_classify(request, id, space=None):
             return redirect("../save/")
         try:
             if "processing_error" in info.meta_data:
+                print("Info meta data processing error: ", info.meta_data["processing_error"])
                 del info.meta_data["processing_error"]
                 info.save()
             info.convert_stocks_flows_data()

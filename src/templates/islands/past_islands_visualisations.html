@@ -1,0 +1,215 @@
+{% extends "_base.html" %}
+{% load humanize %}
+{% load static %}
+
+{% block header %}
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+{% endblock %}
+
+{% block content %}
+    <h1 class="fade-in"><strong>Data Visualisations</strong> <i class="fal fa-chart-bar fa-fw mr-1"></i></h1>
+    <br>
+    <section class="fade-in">
+        <h5>In October-December 2016, Metabolism of Islands ran a project around data visualisations. The goal was to explore ways in which information can be illustrated, take stock of work in this field, host online discussions and publish blog posts.</h5>
+    </section>
+    <section class="fade-in">
+        <h4>
+            <strong>
+                Why visualise urban metabolism data <i class="fal fa-question"></i>
+            </strong>   
+        </h4>
+        <br>
+        <h5>
+            When we think about urban metabolism and other urban environmental assessments, we often think about numbers, data analysis, formulas and tables. While we may be very familiar with our own case study, it is often very difficult to share the relevance of our results with other researchers or with the general public and to synthesise all this amount of knowledge into something easy to grasp. This is one of the main reasons why researchers use visualisation techniques. Visualising data can not only enable to summarise big amounts of numbers, but it can also make it easier to share them and use them as policy instruments.
+        </h5>
+    </section>
+    <section class="fade-in">
+        <h2><strong>Wonder how your data might look like on our website?</strong> <i class="fal fa-chart-area fa-fw"></i></h2>
+    
+        <!-- Carousel container -->
+        <div class="carousel">
+            <!-- Carousel images -->
+            <div class="carousel-images">
+                <img src="{% static "img/bar-data.png" %}" alt="Bar Chart">
+                <img src="{% static "img/column-data.png" %}" alt="Column Chart">
+                <img src="{% static "img/line-data.png" %}" alt="Line Chart">
+                <img src="{% static "img/pie-data.png" %}" alt="Pie Chart">
+            </div>
+    
+            <!-- Carousel controls -->
+            <button class="prev">&#10094;</button>
+            <button class="next">&#10095;</button>
+        </div>
+    </section>    
+
+    <section class="fade-in">
+        <h2><strong>Try our interactive data visualisation</strong> <i class="fas fa-hand-pointer"></i></h2>
+        <br>
+        <section>
+            {% include "_data.visualizations.html" %}
+        </section>
+        <br>
+        <h4>{{ info }}</h4>
+        {% if info.spaces %}
+            <section class="associated-spaces mt-3 hide-water">
+            <h4>Associated space{{ info.spaces.count|pluralize }}</h4>
+                {% for each in info.spaces.all %}
+                {% if forloop.counter < 10 or "allspaces" in request.GET %}
+                    {% if URLS.SPACE %}
+                    <a href="{% url URLS.SPACE each.id %}">{{ each }}</a>
+                    {% else %}
+                    {{ each }}
+                    {% endif %}
+                    {% if not forloop.last %},{% endif %}
+                {% endif %}
+                {% if forloop.last and forloop.counter > 10 and not "allspaces" in request.GET %}... <a class="badge badge-dark" href="?allspaces=true">view all ({{ spaces.count }})</a>{% endif %}
+                {% endfor %}
+            </section>
+        {% endif %}
+    </section>
+
+    <section class="fade-in">
+        <h2><strong>Interested in having your collected data visualised with us?</strong> <i class="fas fa-search"></i></h2>
+        <br>
+        <h4>Watch these videos to learn more about how you upload, we process and you visualise your data</h4>
+        <br>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/AgP59g9yQhA" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <br>
+        <div class="alert alert-warning">
+            <i class="fa fa-fw fa-info-circle"></i>
+            Link to tutorial videos and online courses
+            <br>
+            <a href="https://multimedia.metabolismofcities.org/videos/33030/" class="btn btn-primary mt-3">
+              <i class="fa fa-video"></i> Instruction video on how to upload an MFA data</span>
+            </a>
+            <a href="https://multimedia.metabolismofcities.org/videos/578418/" class="btn btn-primary mt-3">
+                <i class="fa fa-video"></i> Instruction video on how to process data</span>
+            </a>
+            <br>
+            <a href="https://education.metabolismofcities.org/courses/data-and-urban-metabolism-data-collection/" class="btn btn-primary mt-3">
+                <i class="fa fa-video"></i> Data uploading online course</span>
+            </a>
+            <a href="https://education.metabolismofcities.org/courses/data-and-urban-metabolism-data-processing/" class="btn btn-primary mt-3">
+                <i class="fa fa-video"></i> Data processing online course</span>
+            </a>
+        </div>
+    </section>
+{% endblock %}
+
+{% block footer %}
+    <style>
+        /* Carousel Container */
+        .carousel {
+            position: relative;
+            max-width: 80%;
+            height: 700px;
+            margin: auto;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Track for scrolling images */
+        .carousel-images {
+            display: flex;
+            gap: 15px;
+            width: max-content; /* Prevents wrap */
+            animation: scroll 15s linear infinite;
+        }
+
+        /* Keyframes for Infinite Scroll */
+        @keyframes scroll {
+            from { transform: translateX(0); }
+            to { transform: translateX(-50%); } /* Moves only half so it wraps seamlessly */
+        }
+
+        /* Individual Image Cards */
+        .carousel-images img {
+            width: 600px;
+            height: 600px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            object-fit: cover;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* Hover Effect */
+        .carousel-images img:hover {
+            transform: scale(1.1);
+        }
+
+        /* Pauses animation on hover */
+        .carousel:hover .carousel-images {
+            animation-play-state: paused;
+        }
+        .video-container {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .video-container iframe {
+            width: 100%;
+            height: 600px;
+        }
+        @media (max-width: 768px) {
+            .video-container iframe {
+                width: 100%;
+                height: 300px;
+            }
+        }
+
+        /* Smooth fade-in and slide-up effect */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        /* Make elements visible when they enter the viewport */
+        .fade-in.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+    <script>
+        let unit = "{{ each.unit__name|default:'various units' }}";
+        $(document).ready(function () {
+            const $track = $(".carousel-images");
+
+            // Clone images for seamless looping
+            const $images = $track.children().clone();
+            $track.append($images);
+
+            // Pause animation on hover
+            $(".carousel").on("mouseenter", function () {
+                $track.css("animation-play-state", "paused");
+            });
+
+            // Resume animation on mouse leave
+            $(".carousel").on("mouseleave", function () {
+                $track.css("animation-play-state", "running");
+            });
+
+            // Scroll-triggered fade-in
+            const $sections = $(".fade-in");
+
+            function revealOnScroll() {
+                $sections.each(function () {
+                const sectionTop = this.getBoundingClientRect().top;
+                const triggerPoint = window.innerHeight * 0.5;
+
+                if (sectionTop < triggerPoint) {
+                    $(this).addClass("show");
+                }
+                });
+            }
+
+            $(window).on("scroll", revealOnScroll);
+            revealOnScroll(); // Run on page load
+        });
+    </script>
+    {% include "_chart.footer.html" %}
+{% endblock %}
