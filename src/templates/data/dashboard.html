@@ -246,15 +246,11 @@
     var geojson = {{ space.geometry.geojson|safe }};
     var geojsonlayer = L.geoJSON(geojson).addTo(map);
 
-    L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWV0YWJvbGlzbW9mY2l0aWVzIiwiYSI6ImNqcHA5YXh6aTAxcmY0Mm8yMGF3MGZjdGcifQ.lVZaiSy76Om31uXLP3hw-Q", {
-      attribution: "Map data &copy; <a href='http://openstreetmap.org'>OpenStreetMap</a> contributors, " +
-        "<a href='http://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>, " +
-        "Imagery © <a href='http://mapbox.com'>Mapbox</a>",
-      id: "mapbox/streets-v11",
+  var tileLayer = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "Map data &copy; <a href='https://www.openstreetmap.org/'>OpenStreetMap</a> contributors, <a href='https://creativecommons.org/licenses/by-sa/2.0/'>CC-BY-SA</a>",
       maxZoom: 18,
       tileSize: 512,
       zoomOffset: -1,
-      accessToken: "{{ MAPBOX_API_KEY }}"
     }).addTo(map);
 
     map.scrollWheelZoom.disable();
