@@ -1,5 +1,20 @@
 User-Agent: *
+Disallow: /accounts/
+
+User-Agent: *
+Disallow: /forum/
+
+User-Agent: *
 Disallow: /media/
+
+User-Agent: *
+Disallow: /referencespaces/
+
+User-Agent: *
+Disallow: /static/
+
+User-Agent: *
+Disallow: /tasks/
 
 User-Agent: *
 Disallow: /theme/
@@ -20,4 +35,7 @@ User-agent: TurnitinBot
 Disallow: /
 
 User-agent: BLEXBot
+Disallow: /
+
+User-agent: ClaudeBot
 Disallow: /
