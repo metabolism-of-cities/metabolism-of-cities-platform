@@ -8,6 +8,9 @@ User-Agent: *
 Disallow: /media/
 
 User-Agent: *
+Disallow: /library/
+
+User-Agent: *
 Disallow: /referencespaces/
 
 User-Agent: *
@@ -38,4 +41,10 @@ User-agent: BLEXBot
 Disallow: /
 
 User-agent: ClaudeBot
+Disallow: /
+
+User-agent: meta-externalagent
+Disallow: /
+
+User-agent: barkrowler
 Disallow: /
