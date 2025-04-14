@@ -22,29 +22,63 @@ Disallow: /tasks/
 User-Agent: *
 Disallow: /theme/
 
-User-agent: PetalBot
-Disallow: /
+User-Agent: *
+Disallow: /items/
 
+User-agent: AI2Bot
 User-agent: AhrefsBot
-Disallow: / 
-
-User-agent: MJ12bot
-Disallow: /
-
+User-agent: Ai2Bot-Dolma
 User-agent: Amazonbot
-Disallow: /
-
-User-agent: TurnitinBot
-Disallow: /
-
+User-agent: Applebot
+User-agent: Applebot-Extended
+User-agent: AwarioRssBot
+User-agent: AwarioSmartBot
 User-agent: BLEXBot
-Disallow: /
-
+User-agent: Brightbot 1.0
+User-agent: Bytespider
+User-agent: CCBot
+User-agent: ChatGPT-User
+User-agent: Claude-Web
 User-agent: ClaudeBot
-Disallow: /
-
-User-agent: meta-externalagent
-Disallow: /
-
+User-agent: Crawlspace
+User-agent: Diffbot
+User-agent: DuckAssistBot
+User-agent: FacebookBot
+User-agent: FriendlyCrawler
+User-agent: GPTBot
+User-agent: Google-Extended
+User-agent: GoogleOther
+User-agent: GoogleOther-Image
+User-agent: GoogleOther-Video
+User-agent: ICC-Crawler
+User-agent: ISSCyberRiskCrawler
+User-agent: ImagesiftBot
+User-agent: Kangaroo Bot
+User-agent: MJ12bot
+User-agent: Meta-ExternalAgent
+User-agent: Meta-ExternalFetcher
+User-agent: OAI-SearchBot
+User-agent: PanguBot
+User-agent: Perplexity-User
+User-agent: PerplexityBot
+User-agent: PetalBot
+User-agent: Scrapy
+User-agent: SemrushBot-OCOB
+User-agent: SemrushBot-SWA
+User-agent: Sidetrade indexer bot
+User-agent: Timpibot
+User-agent: TurnitinBot
+User-agent: VelenPublicWebCrawler
+User-agent: Webzio-Extended
+User-agent: YouBot
+User-agent: anthropic-ai
 User-agent: barkrowler
+User-agent: cohere-ai
+User-agent: cohere-training-data-crawler
+User-agent: iaskspider/2.0
+User-agent: img2dataset
+User-agent: imgproxy
+User-agent: meta-externalagent
+User-agent: omgili
+User-agent: omgilibot
 Disallow: /
