@@ -1,29 +1,14 @@
 User-Agent: *
 Disallow: /accounts/
-
-User-Agent: *
 Disallow: /forum/
-
-User-Agent: *
-Disallow: /media/
-
-User-Agent: *
-Disallow: /library/
-
-User-Agent: *
-Disallow: /referencespaces/
-
-User-Agent: *
-Disallow: /static/
-
-User-Agent: *
-Disallow: /tasks/
-
-User-Agent: *
-Disallow: /theme/
-
-User-Agent: *
+Disallow: /hub/
 Disallow: /items/
+Disallow: /library/
+Disallow: /media/
+Disallow: /referencespaces/
+Disallow: /static/
+Disallow: /tasks/
+Disallow: /theme/
 
 User-agent: AI2Bot
 User-agent: AhrefsBot
