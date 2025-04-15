@@ -42,7 +42,6 @@ from django.contrib.contenttypes.models import ContentType
 
 from django.utils import timezone
 import pytz
-import time
 
 from functools import wraps
 import json
@@ -206,6 +205,10 @@ def user_login(request, project=None):
     redirect_url = project.get_website()
     if request.GET.get("next"):
         redirect_url = request.GET.get("next")
+
+        if redirect_url.count("accounts") > 2:
+            # Spammers have indexed some URL where this appears many times... blocking en masse:
+            raise Http404("Page not found")
 
     if request.user.is_authenticated:
         return redirect(redirect_url)
