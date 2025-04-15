@@ -42,6 +42,7 @@ from django.contrib.contenttypes.models import ContentType
 
 from django.utils import timezone
 import pytz
+import time
 
 from functools import wraps
 import json
@@ -64,6 +65,7 @@ def user_register(request, project="core", section=None):
         redirect_url = request.GET.get("next")
         if redirect_url.count("accounts") > 2:
             # Spammers have indexed some URL where this appears many times... blocking en masse:
+            time.sleep(20)
             raise Http404("Page not found")
     elif project:
         redirect_url = project.get_website()
