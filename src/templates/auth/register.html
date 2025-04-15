@@ -94,7 +94,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="tw">Please prove you are human: write <strong>hello</strong> in the box below</label>
+            <label for="tw">Please prove you are human: write <strong id="cw">checkword</strong> in the box below</label>
             <input type="tw" class="form-control" id="tw" name="tw" required value="{{ request.POST.tw }}">
           </div>
           <button type="submit" class="btn btn-primary"><i class="fal fa-fw fa-user-plus"></i> Register</button>
@@ -102,4 +102,13 @@
       </div>
     </div>
   </div>
+
+{% endblock %}
+
+{% block footer %}
+  <script type="text/javascript">
+  $(function(){
+    $("#cw").text("metabolism");
+  });
+  </script>
 {% endblock %}

@@ -62,6 +62,9 @@ def user_register(request, project="core", section=None):
 
     if request.GET.get("next"):
         redirect_url = request.GET.get("next")
+        if redirect_url.count("accounts") > 2:
+            # Spammers have indexed some URL where this appears many times... blocking en masse:
+            raise Http404("Page not found")
     elif project:
         redirect_url = project.get_website()
     else:
@@ -76,8 +79,8 @@ def user_register(request, project="core", section=None):
         password = request.POST.get("password")
         email = request.POST.get("email")
         name = request.POST.get("name")
-        if request.POST.get("tw").lower() != "hello":
-            messages.error(request, "Please enter 'hello' in the last box.")
+        if request.POST.get("tw").lower() != "metabolism":
+            messages.error(request, "Please enter the right phrase in the last box.")
             error = True
         if not password:
             messages.error(request, "You did not enter a password.")
