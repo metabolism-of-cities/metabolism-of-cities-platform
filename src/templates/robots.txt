@@ -9,6 +9,7 @@ Disallow: /referencespaces/
 Disallow: /static/
 Disallow: /tasks/
 Disallow: /theme/
+Crawl-delay: 60
 
 User-agent: AhrefsBot
 User-agent: AI2Bot
@@ -59,14 +60,15 @@ User-agent: Perplexity-User
 User-agent: PerplexityBot
 User-agent: PetalBot
 User-agent: Scrapy
+User-agent: SeekportBot
 User-agent: SemrushBot-BA
 User-agent: SemrushBot-FT
 User-agent: SemrushBot-OCOB
 User-agent: SemrushBot-SI
 User-agent: SemrushBot-SWA
+User-agent: Sidetrade indexer bot
 User-agent: SiteAuditBot
 User-agent: SplitSignalBot
-User-agent: Sidetrade indexer bot
 User-agent: Timpibot
 User-agent: TurnitinBot
 User-agent: VelenPublicWebCrawler
