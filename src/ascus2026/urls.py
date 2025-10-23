@@ -6,7 +6,7 @@ from community import views as community
 from core import views as core
 from library import views as library
 
-app_name = "ascus2024"
+app_name = "ascus2026"
 
 urlpatterns = baseline_urlpatterns + [
     path("", views.index, name="index"),
