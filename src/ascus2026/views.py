@@ -50,6 +50,7 @@ def check_ascus_admin_access(function):
 
 
 def index(request):
+    project = get_project(request)
     context = {
         "show_project_design": True,
         "header_title": str(project),
