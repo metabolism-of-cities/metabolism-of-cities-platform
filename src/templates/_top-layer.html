@@ -25,7 +25,7 @@
     <div class="dark-cover"></div>
   {% endif %}
 
-  {% if PROJECT.slug == "ascus2020" or PROJECT.slug == "ascus2021" or PROJECT.slug == "ascus2022" or PROJECT.slug == "ascus2023" or PROJECT.slug == "ascus2024" %}
+  {% if PROJECT.slug == "ascus2020" or PROJECT.slug == "ascus2021" or PROJECT.slug == "ascus2022" or PROJECT.slug == "ascus2023" or PROJECT.slug == "ascus2024" or PROJECT.slug == "ascus2026" %}
     <div class="return-bar">
       <div class="container">
         <a href="https://ascus-society.org/">
@@ -183,6 +183,8 @@
             {% include "_menu-ascus2021.html" %}
           {% elif PROJECT.slug == "ascus2024" %}
             {% include "_menu-ascus2024.html" %}
+          {% elif PROJECT.slug == "ascus2026" %}
+            {% include "_menu-ascus2026.html" %}
           {% elif PROJECT.slug == "water" %}
             {% include "_menu-water.html" %}
           {% endif %}
@@ -221,6 +223,8 @@
   {% include "_submenu-ascus2021.html" %}
 {% elif PROJECT.slug == "ascus2024" and request.user.is_authenticated %}
   {% include "_submenu-ascus2024.html" %}
+{% elif PROJECT.slug == "ascus2026" and request.user.is_authenticated %}
+  {% include "_submenu-ascus2026.html" %}
 {% elif PROJECT.id == 16 and request.user.is_authenticated %}
   {% if my_organization %}
     {% include "_submenu-platformu.html" %}
