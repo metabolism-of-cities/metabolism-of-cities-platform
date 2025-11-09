@@ -54,7 +54,7 @@ def index(request):
         "show_project_design": True,
         "header_title": str(project),
         "title": str(project),
-        "info": get_object_or_404(Webpage, part_of_project_id=request.project, slug="/homepage/")
+        "info": get_object_or_404(Webpage, part_of_project_id=request.project, slug="/homepage/"),
         "hide_title": True,
     }
     return render(request, "article.html", context)
