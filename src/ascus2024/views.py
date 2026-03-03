@@ -738,14 +738,15 @@ def ascus_admin_list(request, type="participant"):
         "session": "Session organizer", # 16
     }
     get_type = types[type]
-    list = RecordRelationship.objects.filter(
+    people_list = RecordRelationship.objects.filter(
         record_child = get_project(request),
         relationship = Relationship.objects.get(name=get_type),
     ).order_by("record_parent__name")
+
     context = {
         "header_title": "AScUS Admin",
         "header_subtitle": get_subtitle(request),
-        "list": list,
+        "people_list": people_list,
         "load_datatables": True,
         "types": types,
         "this_type": type,

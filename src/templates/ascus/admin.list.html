@@ -20,9 +20,14 @@
       </tr>
     </thead>
     <tbody>
-      {% for each in list %}
+      {% for each in people_list %}
         <tr>
-          <td>{{ each.record_parent }}</td>
+          <td>
+            <a onclick="javascript:return confirm('Are you sure you want to delete this person from this list?')" href="?delete={{ each.id }}">
+              <i class="fa fa-trash text-danger mr-2"></i>
+            </a>
+            {{ each.record_parent }}
+          </td>
           <td>{{ each.record_parent.people.email }}</td>
           <td>{{ each.relationship.name }}</td>
         </tr>
@@ -32,7 +37,7 @@
 
   <p class="mt-5">
   {% with link=PROJECT.slug|add:":admin_massmail" %}
-    <a href="{% url link %}?people={% for each in list %}{{ each.record_parent.people.id }},{% endfor %}" class="btn btn-info"><i class="fa fa-envelope"></i> Send mass mail</a>
+    <a href="{% url link %}?people={% for each in people_list %}{{ each.record_parent.people.id }},{% endfor %}" class="btn btn-info"><i class="fa fa-envelope"></i> Send mass mail</a>
   {% endwith %}
   {% with link=PROJECT.slug|add:":controlpanel_relationship" %}
     <a href="{% url link %}?type={{ get_type }}&amp;manage_users=true&amp;next={{ request.get_full_path }}" class="btn btn-info"><i class="fa fa-plus"></i> Add person</a>

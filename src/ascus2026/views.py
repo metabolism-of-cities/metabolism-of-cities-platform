@@ -738,14 +738,21 @@ def ascus_admin_list(request, type="participant"):
         "session": "Session organizer", # 16
     }
     get_type = types[type]
-    list = RecordRelationship.objects.filter(
+    people_list = RecordRelationship.objects.filter(
         record_child = get_project(request),
         relationship = Relationship.objects.get(name=get_type),
     ).order_by("record_parent__name")
+    
+    if "delete" in request.GET:
+        item_to_delete = people_list.get(pk=request.GET["delete"])
+        item_to_delete.delete()
+        messages.success(request, "Person was removed successfully")
+        return redirect(request.path)
+
     context = {
         "header_title": "AScUS Admin",
         "header_subtitle": get_subtitle(request),
-        "list": list,
+        "people_list": people_list,
         "load_datatables": True,
         "types": types,
         "this_type": type,
@@ -1006,6 +1013,7 @@ def controlpanel_vote(request):
     # This is all very spaggheti but it works, and will only be opened a few times
     # In the future we could do a proper COUNT but I am rushing here
     best = RecordRelationship.objects.filter(relationship__id=37)
+    best.delete()
     best_list = {}
     for each in best:
         item = each.record_child
