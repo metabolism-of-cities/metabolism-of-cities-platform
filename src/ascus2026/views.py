@@ -490,7 +490,7 @@ def ascus_account_presentation(request, introvideo=False):
         form = ModelForm(request.POST or None, request.FILES or None)
         html_page = "ascus/account.introvideo.html"
     else:
-        info = get_object_or_404(Webpage, part_of_project_id=request.project, slug="/abstract/")
+        info = get_object_or_404(Webpage, slug="/abstract/")
         my_documents = LibraryItem.objects_include_private \
             .filter(child_list__record_parent=request.user.people) \
             .filter(parent_list__record_child__id=request.project) \

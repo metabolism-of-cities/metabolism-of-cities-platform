@@ -19,7 +19,7 @@ iframe {
 
   <div class="col mb-4">
     <div class="card">
-      <iframe class="video-embed youtube-video" src="https://www.youtube.com/embed/{{ each.video.get_embed_code }}?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      <iframe class="video-embed youtube-video" src="https://www.youtube-nocookie.com/embed/{{ each.video.get_embed_code }}?rel=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       <div class="card-body">
         {% with link=PROJECT.slug|add:":participant" %}
           <h5 class="card-title text-center"><a href="{% url link each.author.id %}">{{ each.author }}</a></h5>
