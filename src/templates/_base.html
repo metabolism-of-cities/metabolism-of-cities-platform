@@ -220,9 +220,9 @@
   {% endif %}
 
   {% if load_highcharts %}
-    <script src="https://code.highcharts.com/12.6/highcharts.js"></script>
-    <script src="https://code.highcharts.com/12.6/modules/exporting.js"></script>
-    <script src="https://code.highcharts.com/12.6/modules/drilldown.js"></script>
+    <script src="{% static "js/highcharts.js" %}"></script>
+    <script src="{% static "js/modules/exporting.js" %}"></script>
+    <script src="{% static "js/modules/drilldown.js" %}"></script>
   {% endif %}
 
   {% if load_datatables %}
