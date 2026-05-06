@@ -1013,7 +1013,6 @@ def controlpanel_vote(request):
     # This is all very spaggheti but it works, and will only be opened a few times
     # In the future we could do a proper COUNT but I am rushing here
     best = RecordRelationship.objects.filter(relationship__id=37)
-    best.delete()
     best_list = {}
     for each in best:
         item = each.record_child
